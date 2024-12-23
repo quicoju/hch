@@ -1,31 +1,9 @@
-#include <vector>
-#include <utility>
-#include <boost/date_time/gregorian/gregorian.hpp>
+#include "Room.hh"
 
-using Date = boost::gregorian::date;
-using Duration = boost::gregorian::date_duration;
-using Reservation = boost::gregorian::date_period;
-using Period = boost::gregorian::date_period;
-
-struct Room {
-  Room(const char* id, const std::vector<Reservation> r)
-    : id{ id }
-    , agenda{ r } {}
-  
-  bool is_available_on(Date date, Duration dur=Duration{1}) const {
-    /* Returns true if the room is available on the given
-     * DATE, otherwise returns false. */
-    Period p{date, dur};
-    
-    for (const auto reservation: agenda)
-      if (reservation.intersects(p)) return false;
-    return true;
-  }
-
-  const char* id;
-  const std::vector<Reservation> agenda;
-};
-
+/*
+ * TODO: For now write some unit tests here, maybe later
+ * rename this fileo
+ */
 #include<catch2/catch_test_macros.hpp>
 
 std::vector agenda = {
