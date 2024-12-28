@@ -1,2 +1,2 @@
-/src/Room.o
-/src/a.out
+/src/*.out
+/src/*.o
