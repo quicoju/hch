@@ -1,4 +1,4 @@
-#include "Room.hh"
+#include "Hotel.hh"
 
 /*
  * TODO: For now write some unit tests here, maybe later
@@ -25,29 +25,7 @@ TEST_CASE("is_available_on") {
   }
 }
 
-TEST_CASE("Build a hotel") {
-  std::vector hotel(10, Room{"101", agenda});
-  REQUIRE(hotel.size() == 10);
-}
-
-struct Hotel {
-  Hotel(std::vector<Room> rooms)
-    : rooms{rooms} {};
-
-  bool is_available_on(Date date, Duration dur=Duration{1}, size_t n_rooms=1) {
-    for (const auto &r: rooms) {
-      if (r.is_available_on(date, dur)) {
-        --n_rooms;
-        if (!n_rooms) return true;
-      }
-    }
-    return false;
-  }
-
-  std::vector<Room> rooms;
-};
-
-TEST_CASE("Build another hotel") {
+TEST_CASE("Hotel") {
   Hotel hotel {
     std::vector{
       Room{"101", std::vector{
