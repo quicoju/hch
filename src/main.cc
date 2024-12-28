@@ -34,6 +34,16 @@ struct Hotel {
   Hotel(std::vector<Room> rooms)
     : rooms{rooms} {};
 
+  bool is_available_on(Date date, Duration dur=Duration{1}, size_t n_rooms=1) {
+    for (const auto &r: rooms) {
+      if (r.is_available_on(date, dur)) {
+        --n_rooms;
+        if (!n_rooms) return true;
+      }
+    }
+    return false;
+  }
+
   std::vector<Room> rooms;
 };
 
@@ -52,4 +62,12 @@ TEST_CASE("Build another hotel") {
     }
   };
   REQUIRE(hotel.rooms.size() == 3);
+
+  SECTION("is_available_on") {
+    Date date{2025, 01, 02};
+    REQUIRE_FALSE(hotel.is_available_on(date, Duration{2}, 3));
+    REQUIRE(hotel.is_available_on(date, Duration{2}, 2));
+    REQUIRE(hotel.is_available_on(date));
+  }
 }
+
