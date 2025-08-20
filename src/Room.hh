@@ -17,7 +17,7 @@ struct Room {
   bool is_available_on(Date, Duration d=Days{1}) const;
 
   /* Properties */
-  const char* id;
+  const std::string id;
 
 private:
   const std::vector<Reservation> agenda;
