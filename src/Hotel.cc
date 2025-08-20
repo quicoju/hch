@@ -20,7 +20,7 @@ MatchingRooms Hotel::find_available_on(Date d, Duration dur)
 
   for (const auto &r: rooms) {
     if (r.is_available_on(d, dur))
-          available_rooms.push_back(r);
+      available_rooms.push_back(std::cref(r));
   }
   return available_rooms;
 }
