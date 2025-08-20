@@ -69,13 +69,14 @@ TEST_CASE("Hotel.find_available_on") {
   
   SECTION("available") {
     Date date{2024, 12, 19};
-    REQUIRE(hotel.find_available_on(date, Days{3}).size() == 1);
+    auto available = hotel.find_available_on(date, Days{3});
+    REQUIRE(available.size() == 1);
+    REQUIRE(available.front().get().id == "103");
   }
 
   SECTION("unavailable") {
     Date date{2024, 12, 1};
     REQUIRE(hotel.find_available_on(date, Days{40}).empty());
   }
-
 }
 
