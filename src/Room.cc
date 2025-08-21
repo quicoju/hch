@@ -2,7 +2,7 @@
 
 #include <exception>
 
-Room::Room(const char* id, const std::vector<Reservation> r)
+Room::Room(const char* id, const std::list<Reservation> r)
  : id{ id }
  , agenda{ r } {}
 

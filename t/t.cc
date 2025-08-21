@@ -3,12 +3,15 @@
 #include <catch2/catch_test_macros.hpp>
 #include <boost/date_time/gregorian/gregorian.hpp>
 
-std::vector agenda{
+std::list agenda{
   Reservation{ {2024, 12, 19}, Days{3} },
   Reservation{ {2024, 12, 25}, Days{5} },
 };
 
-TEST_CASE("Room.is_available_on") {
+/* Room Tests
+ * ==========
+ */
+TEST_CASE("Room::is_available_on") {
   Room room{ "101", agenda };
   SECTION("available") {
     Date date{2024, 12, 23};
@@ -16,7 +19,7 @@ TEST_CASE("Room.is_available_on") {
     REQUIRE(room.is_available_on(date));
     REQUIRE(room.is_available_on(date, Days{2}));
     REQUIRE(room.is_available_on({2024, 12, 23}, Days{2}));
-    std::cout << boost::gregorian::to_simple_string(agenda[1]) << std::endl;
+    std::cout << boost::gregorian::to_simple_string(agenda.front()) << std::endl;
     std::cout << agenda.size() << std::endl;
   }
   SECTION("unavailable") {
@@ -25,7 +28,7 @@ TEST_CASE("Room.is_available_on") {
   }
 }
 
-TEST_CASE("Room.reserve") {
+TEST_CASE("Room::reserve") {
   Room room{ "101", agenda };
   SECTION("success") {
     Date date{2024, 11, 10};
@@ -40,8 +43,11 @@ TEST_CASE("Room.reserve") {
   }
 }
 
+/* Hotel Tests
+ * ===========
+ */
 
-TEST_CASE("Hotel.is_available_on") {
+TEST_CASE("Hotel::is_available_on") {
   Hotel hotel{{
       Room{"101", {
           Reservation{ {2024, 12, 19}, Days{3} },
@@ -55,7 +61,7 @@ TEST_CASE("Hotel.is_available_on") {
     }};
   REQUIRE(hotel.rooms.size() == 3);
 
-  SECTION("is_available_on") {
+  SECTION("Hotel::is_available_on") {
     Date date{2025, 01, 02};
     REQUIRE_FALSE(hotel.is_available_on(date, Days{2}, 3));
     REQUIRE(hotel.is_available_on(date, Days{2}, 2));
@@ -63,7 +69,7 @@ TEST_CASE("Hotel.is_available_on") {
   }
 }
 
-TEST_CASE("Hotel.find_available_on") {
+TEST_CASE("Hotel::find_available_on") {
   Hotel hotel {{
       Room{"101", {
           Reservation{ {2024, 12, 19}, Days{3} },

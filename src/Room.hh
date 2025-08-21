@@ -1,10 +1,11 @@
 #ifndef ROOM_HH
 #define ROOM_HH
 
+#include <list>
 #include "concepts.hh"
 
 struct Room {
-  Room(const char*, const std::vector<Reservation>);
+  Room(const char*, const std::list<Reservation>);
 
   /**
    * @brief Returns true if the room is available on a given date.
@@ -30,7 +31,7 @@ struct Room {
   const std::string id;
 
 private:
-  std::vector<Reservation> agenda;
+  std::list<Reservation> agenda;
 };
 
 #endif
