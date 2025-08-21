@@ -1,13 +1,7 @@
 #ifndef ROOM_HH
 #define ROOM_HH
 
-#include <boost/date_time/gregorian/gregorian.hpp>
-
-using Date = boost::gregorian::date;
-using Days = boost::gregorian::days;
-using Duration = boost::gregorian::date_duration;
-using Reservation = boost::gregorian::date_period;
-using Period = boost::gregorian::date_period;
+#include "concepts.hh"
 
 struct Room {
   Room(const char*, const std::vector<Reservation>);

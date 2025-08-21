@@ -1,9 +1,10 @@
 #ifndef HOTEL_HH
 #define HOTEL_HH
 
+#include "concepts.hh"
 #include "Room.hh"
 
-using MatchingRooms = std::vector<std::reference_wrapper<const Room>>;
+using RoomSet = std::vector<std::reference_wrapper<const Room>>;
 
 struct Hotel {
   Hotel(std::vector<Room>);
@@ -13,7 +14,7 @@ struct Hotel {
   bool is_available_on(Date, Duration dur=Days{1}, size_t n_rooms=1)
     const noexcept;
 
-  MatchingRooms find_available_on(Date, Duration dur=Days{1})
+  RoomSet find_available_on(Date, Duration dur=Days{1})
     const noexcept;
   
   std::vector<Room> rooms;

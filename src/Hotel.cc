@@ -14,9 +14,9 @@ bool Hotel::is_available_on(Date date, Duration dur, size_t n_rooms)
   return false;
 }
 
-MatchingRooms Hotel::find_available_on(Date d, Duration dur)
+RoomSet Hotel::find_available_on(Date d, Duration dur)
   const noexcept {
-  MatchingRooms available_rooms;
+  RoomSet available_rooms;
 
   for (const auto &r: rooms) {
     if (r.is_available_on(d, dur))
