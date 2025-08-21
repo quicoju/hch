@@ -16,6 +16,7 @@ TEST_CASE("Room.is_available_on") {
   Room room{ "101", agenda };
   SECTION("available") {
     Date date{2024, 12, 23};
+    REQUIRE(room.is_available_on({2024, 12, 22}));
     REQUIRE(room.is_available_on(date));
     REQUIRE(room.is_available_on(date, Days{2}));
     REQUIRE(room.is_available_on(Date{2024, 12, 23}, Days{2}));
