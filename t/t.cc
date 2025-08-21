@@ -25,8 +25,24 @@ TEST_CASE("Room.is_available_on") {
   }
 }
 
+TEST_CASE("Room.reserve") {
+  Room room{ "101", agenda };
+  SECTION("success") {
+    Date date{2024, 11, 10};
+    room.reserve(date);
+    REQUIRE_FALSE(room.is_available_on(date));
+
+    room.reserve({2024, 11, 12}, Days{2});
+    REQUIRE_FALSE(room.is_available_on({2024, 11, 12}));
+  }
+  SECTION("failed") {
+    REQUIRE_THROWS_AS(room.reserve({2024, 12, 20}), std::logic_error);
+  }
+}
+
+
 TEST_CASE("Hotel.is_available_on") {
-  Hotel hotel{ {
+  Hotel hotel{{
       Room{"101", {
           Reservation{ {2024, 12, 19}, Days{3} },
         }},
@@ -48,8 +64,7 @@ TEST_CASE("Hotel.is_available_on") {
 }
 
 TEST_CASE("Hotel.find_available_on") {
-  Hotel hotel {
-    {
+  Hotel hotel {{
       Room{"101", {
           Reservation{ {2024, 12, 19}, Days{3} },
         }},
@@ -59,8 +74,7 @@ TEST_CASE("Hotel.find_available_on") {
       Room{"103", {
           Reservation{ {2024, 12, 31}, Days{4} },
         }},
-    }
-  };
+    }};
   
   SECTION("available") {
     Date date{2024, 12, 19};
