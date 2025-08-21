@@ -7,9 +7,9 @@
 #include <catch2/catch_test_macros.hpp>
 #include <boost/date_time/gregorian/gregorian.hpp>
 
-std::vector agenda = {
-  Reservation{ Date{2024, 12, 19}, Days{3} },
-  Reservation{ Date{2024, 12, 25}, Days{5} },
+std::vector agenda{
+  Reservation{ {2024, 12, 19}, Days{3} },
+  Reservation{ {2024, 12, 25}, Days{5} },
 };
 
 TEST_CASE("Room.is_available_on") {
@@ -19,30 +19,28 @@ TEST_CASE("Room.is_available_on") {
     REQUIRE(room.is_available_on({2024, 12, 22}));
     REQUIRE(room.is_available_on(date));
     REQUIRE(room.is_available_on(date, Days{2}));
-    REQUIRE(room.is_available_on(Date{2024, 12, 23}, Days{2}));
+    REQUIRE(room.is_available_on({2024, 12, 23}, Days{2}));
     std::cout << boost::gregorian::to_simple_string(agenda[1]) << std::endl;
     std::cout << agenda.size() << std::endl;
   }
   SECTION("unavailable") {
-    REQUIRE(!room.is_available_on(Date{2024, 12, 26}));
-    REQUIRE(!room.is_available_on(Date{2024, 12, 23}, Days{3}));
+    REQUIRE(!room.is_available_on({2024, 12, 26}));
+    REQUIRE(!room.is_available_on({2024, 12, 23}, Days{3}));
   }
 }
 
 TEST_CASE("Hotel.is_available_on") {
-  Hotel hotel {
-    std::vector{
-      Room{"101", std::vector{
-          Reservation{ Date{2024, 12, 19}, Days{3} },
+  Hotel hotel{ {
+      Room{"101", {
+          Reservation{ {2024, 12, 19}, Days{3} },
         }},
-      Room{"102", std::vector{
-          Reservation{ Date{2024, 12, 20}, Days{1} },
+      Room{"102", {
+          Reservation{ {2024, 12, 20}, Days{1} },
         }},
-      Room{"103", std::vector{
-          Reservation{ Date{2024, 12, 31}, Days{4} },
+      Room{"103", {
+          Reservation{ {2024, 12, 31}, Days{4} },
         }},
-    }
-  };
+    }};
   REQUIRE(hotel.rooms.size() == 3);
 
   SECTION("is_available_on") {
@@ -55,15 +53,15 @@ TEST_CASE("Hotel.is_available_on") {
 
 TEST_CASE("Hotel.find_available_on") {
   Hotel hotel {
-    std::vector{
-      Room{"101", std::vector{
-          Reservation{ Date{2024, 12, 19}, Days{3} },
+    {
+      Room{"101", {
+          Reservation{ {2024, 12, 19}, Days{3} },
         }},
-      Room{"102", std::vector{
-          Reservation{ Date{2024, 12, 20}, Days{1} },
+      Room{"102", {
+          Reservation{ {2024, 12, 20}, Days{1} },
         }},
-      Room{"103", std::vector{
-          Reservation{ Date{2024, 12, 31}, Days{4} },
+      Room{"103", {
+          Reservation{ {2024, 12, 31}, Days{4} },
         }},
     }
   };
