@@ -1,9 +1,5 @@
 #include "../src/Hotel.hh"
 
-/*
- * TODO: For now write some unit tests here, maybe later
- * rename this fileo
- */
 #include <catch2/catch_test_macros.hpp>
 #include <boost/date_time/gregorian/gregorian.hpp>
 
