@@ -20,7 +20,6 @@ TEST_CASE("Room::is_available_on") {
     REQUIRE(room.is_available_on(date, Days{2}));
     REQUIRE(room.is_available_on({2024, 12, 23}, Days{2}));
     std::cout << boost::gregorian::to_simple_string(agenda.front()) << std::endl;
-    std::cout << agenda.size() << std::endl;
   }
   SECTION("unavailable") {
     REQUIRE(!room.is_available_on({2024, 12, 26}));
