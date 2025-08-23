@@ -43,6 +43,18 @@ TEST_CASE("Room::reserve") {
   }
 }
 
+TEST_CASE("Room::cancel_reservation") {
+  Room room{ "101", agenda };
+  SECTION("success") {
+    room.cancel_reservation({2024, 12, 20});
+    REQUIRE(room.is_available_on({2024, 12, 21}));
+  }
+  SECTION("No reservation match") {
+    room.cancel_reservation({2024, 12, 12});
+    REQUIRE(!room.is_available_on({2024, 12, 25}));
+  }
+}
+
 /* Hotel Tests
  * ===========
  */

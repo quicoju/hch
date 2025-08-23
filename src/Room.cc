@@ -22,3 +22,15 @@ void  Room::reserve(Date date, Duration dur)
 
   agenda.push_back({date, dur});
 }
+
+void Room::cancel_reservation(Date date)
+{
+  const Period p{date, Days{1}};
+  auto end = agenda.end();
+
+  auto match = std::find_if(agenda.begin(), end,
+      [&p](Reservation r){ return r.intersects(p); } );
+
+  if (match != end)
+    agenda.erase(match);
+}
