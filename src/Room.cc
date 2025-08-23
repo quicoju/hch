@@ -8,11 +8,11 @@ Room::Room(const char* id, const std::list<Reservation> r)
 
 bool Room::is_available_on(Date date, Duration dur) const
 {
-  Period p{date, dur};
+  const Period p{date, dur};
+  auto end = agenda.cend();
 
-  for (const auto reservation: agenda)
-    if (reservation.intersects(p)) return false;
-  return true;
+  return end == std::find_if(agenda.cbegin(), end,
+      [&p](Reservation r){ return r.intersects(p); } );
 }
 
 void  Room::reserve(Date date, Duration dur)
