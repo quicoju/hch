@@ -1,5 +1,5 @@
-#ifndef HOTEL_HH
-#define HOTEL_HH
+#pragma once
+
 
 #include "concepts.hh"
 #include "Room.hh"
@@ -20,4 +20,4 @@ struct Hotel {
   std::vector<Room> rooms;
 };
 
-#endif
+

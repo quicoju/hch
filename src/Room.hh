@@ -1,5 +1,4 @@
-#ifndef ROOM_HH
-#define ROOM_HH
+#pragma once
 
 #include <list>
 #include "concepts.hh"
@@ -47,4 +46,3 @@ private:
   std::list<Reservation> agenda;
 };
 
-#endif
