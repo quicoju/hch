@@ -39,7 +39,15 @@ struct Room {
    */
   void cancel_reservation(Date);
 
+  /**
+   * @brief Provide a view of the agenda.
+   *
+   * The view is read only, it cannot be modified.
+   */
+  const std::list<Reservation>& reservations() const;
+
   /* Properties */
+  /* ========== */
   const std::string id;
 
 private:

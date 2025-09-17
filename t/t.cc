@@ -54,6 +54,11 @@ TEST_CASE("Room::cancel_reservation") {
   }
 }
 
+TEST_CASE("Room::reservations") {
+  Room room{ "101", agenda };
+  REQUIRE(room.reservations() == agenda);
+}
+
 /* Hotel Tests
  * ===========
  */

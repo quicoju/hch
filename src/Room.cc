@@ -34,3 +34,8 @@ void Room::cancel_reservation(Date date)
   if (match != end)
     agenda.erase(match);
 }
+
+const std::list<Reservation>& Room::reservations() const
+{
+  return agenda;
+}
