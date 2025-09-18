@@ -4,7 +4,8 @@ CXXFLAGS = -Wall -g -std=c++2a \
 	-I/usr/local/include -I./src
 
 LDFLAGS = -L/usr/local/lib \
-	-lboost_date_time
+	-lboost_date_time \
+	-lreadline
 
 OBJS = Room.o Hotel.o
 

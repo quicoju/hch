@@ -1,7 +1,12 @@
 #include <iostream>
 #include <regex>
 #include <stdexcept>
+#include <sstream>
 #include <string>
+#include <vector>
+
+#include <readline/readline.h>
+#include <readline/history.h>
 
 #include "Hotel.hh"
 
@@ -35,13 +40,14 @@ struct Repl {
   Repl(Hotel& h) : hotel{h} {}
 
   void run() {
-    std::string line;
 
     while (true) {
-      std::cout << get_prompt();
+      char *line = readline(get_prompt().c_str());
 
-      if (!std::getline(std::cin, line)) break;
+      if (!line) break;              /* EOF */
+      if (*line) add_history(line);  /* don't keep empty lines */
       execute_command(tokenize(line));
+      free(line);
     }
   }
 
@@ -92,7 +98,7 @@ private:
 
         if (current_room.empty() && tokens.size() >= 2)
           room_id = tokens[1];
-        
+
         if (current_room.empty()) throw std::invalid_argument{
             "Command usage: list-reservations ROOM"};
 
