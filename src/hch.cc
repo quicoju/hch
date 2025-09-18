@@ -40,10 +40,8 @@ struct Repl {
   Repl(Hotel& h) : hotel{h} {}
 
   void run() {
-
     while (true) {
       char *line = readline(get_prompt().c_str());
-
       if (!line) break;              /* EOF */
       if (*line) add_history(line);  /* don't keep empty lines */
       execute_command(tokenize(line));
@@ -96,10 +94,10 @@ private:
       if (command == "list-reservations") {
         string room_id{current_room};
 
-        if (current_room.empty() && tokens.size() >= 2)
+        if (room_id.empty() && tokens.size() >= 2)
           room_id = tokens[1];
 
-        if (current_room.empty()) throw std::invalid_argument{
+        if (room_id.empty()) throw std::invalid_argument{
             "Command usage: list-reservations ROOM"};
 
         auto &r = find_room(hotel, room_id);
