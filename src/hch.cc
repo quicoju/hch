@@ -100,8 +100,7 @@ private:
         if (room_id.empty()) throw std::invalid_argument{
             "Command usage: list-reservations ROOM"};
 
-        auto &r = find_room(hotel, room_id);
-        std::cout << "Reservations for " << r.id << ":\n";
+        auto r = find_room(hotel, room_id);
         for (const auto& reservation : r.reservations())
           std::cout << "  - " << str(reservation) << std::endl;
 
