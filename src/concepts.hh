@@ -8,3 +8,8 @@ using Duration = boost::gregorian::date_duration;
 using Reservation = boost::gregorian::date_period;
 using Period = boost::gregorian::date_period;
 
+static std::string (&str)(const Period&)
+  = boost::gregorian::to_simple_string;
+
+static Date (&from_string)(const std::string&)
+  = boost::gregorian::from_string;
