@@ -1,6 +1,176 @@
+#include <iostream>
+#include <regex>
+#include <stdexcept>
+#include <string>
+
 #include "Hotel.hh"
+
+// Parse date string like "2025-11-03" or "2025-11-03+3d"
+std::pair<Date, Duration> parse_date(const std::string &s)
+{
+  using namespace std;
+  regex re(R"((\d{4}-\d{2}-\d{2})(?:\+(\d+)d)?)");
+  smatch match;
+
+  if (!regex_match(s, match, re))
+    throw std::invalid_argument{"Invalid date format"};
+
+  Date date{from_string(match[1])};
+  Duration duration{match[2].matched ? stoi(match[2]) : 1};
+
+  return {date, duration};
+}
+
+
+// TODO: this is method should be implemented in `Hotel`
+Room& find_room(Hotel &hotel, const std::string id)
+{
+  for (auto &r : hotel.rooms)
+    if (r.id == id) return r;
+
+  throw std::runtime_error{std::string{"Room "} + id + " not found"};
+}
+
+struct Repl {
+  Repl(Hotel& h) : hotel{h} {}
+
+  void run() {
+    std::string line;
+
+    while (true) {
+      std::cout << get_prompt();
+
+      if (!std::getline(std::cin, line)) break;
+      execute_command(tokenize(line));
+    }
+  }
+
+private:
+
+  using string = std::string;
+  using Tokens = std::vector<string>;
+
+  Hotel& hotel;
+  string current_room;
+
+  string get_prompt() const {
+    return current_room.empty()
+      ? "(hch) "
+      : "(hch " + current_room + ") ";
+  }
+
+  Tokens tokenize(const string &line) {
+    std::istringstream iss(line);
+    string token;
+    Tokens tokens;
+
+    while (iss >> token)
+      tokens.push_back(token);
+
+    return tokens;
+  }
+
+  void execute_command(const Tokens &tokens) {
+    if (tokens.empty()) return;
+
+    const string &command = tokens[0];
+
+    try {
+      if (command == "set-room") {
+        if (tokens.size() < 2) throw std::invalid_argument{
+            "Command usage: set-room ROOM"};
+        current_room = find_room(hotel, tokens[1]).id;
+        return;
+      }
+
+      if (command == "unset-room") {
+        current_room.clear();
+      }
+
+      if (command == "list-reservations") {
+        string room_id{current_room};
+
+        if (current_room.empty() && tokens.size() >= 2)
+          room_id = tokens[1];
+        
+        if (current_room.empty()) throw std::invalid_argument{
+            "Command usage: list-reservations ROOM"};
+
+        auto &r = find_room(hotel, room_id);
+        std::cout << "Reservations for " << r.id << ":\n";
+        for (const auto& reservation : r.reservations())
+          std::cout << "  - " << str(reservation) << std::endl;
+
+        return;
+      }
+
+      if (command == "reserve") {
+        if (tokens.size() < 2) throw std::invalid_argument {
+          "Command usage: reserve DATE[+DAYS] [ROOM]"};
+
+        string date_str{tokens[1]};
+        string room_id{current_room};
+
+        if (room_id.empty()) {
+          if (tokens.size() < 3) throw std::invalid_argument {
+              "Command usage: reserve DATE[+DAYS] ROOM" };
+          else room_id = tokens[2];
+        }
+
+        auto [date, duration] = parse_date(date_str);
+        find_room(hotel, room_id).reserve(date, duration);
+        std::cout << "Room reserved successfully.\n";
+        return;
+      }
+
+      if (command == "cancel-reservation") {
+        if (tokens.size() < 2) throw std::invalid_argument {
+          "Command usage: cancel-reservation DATE[+DAYS] [ROOM]"};
+
+        string date_str{tokens[1]};
+        string room_id{current_room};
+
+        if (room_id.empty()) {
+          if (tokens.size() < 3) throw std::invalid_argument {
+              "Command usage: cancel-reservation DATE[+DAYS] ROOM" };
+          else room_id = tokens[2];
+        }
+
+        auto [date, _] = parse_date(date_str);
+        find_room(hotel, room_id).cancel_reservation(date);
+        std::cout << "Reservation cancelled.\n";
+        return;
+      }
+
+      if (command == "quit" || command == "exit")
+        std::exit(0);
+
+      std::cout << "Unknown command: " << command << std::endl;
+    }
+    catch (const std::exception& e) {
+      std::cout << "Error: " << e.what() << std::endl;
+    }
+  }
+};
+
 
 int main (int argc, char *argv[])
 {
+  // TODO: For now initialize a Hotel here
+  Hotel hotel{
+    {
+      Room{"room-101", {}},
+      Room{"room-102", {}},
+      Room{"room-103", {}},
+      Room{"room-201", {}},
+      Room{"room-202", {}},
+      Room{"room-203", {}},
+    }
+  };
+
+  Repl repl{hotel};
+  repl.run();
+
+  std::cout << "bye!\n";
   return 0;
 }
