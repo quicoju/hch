@@ -26,16 +26,6 @@ std::pair<Date, Duration> parse_date(const std::string &s)
   return {date, duration};
 }
 
-
-// TODO: this is method should be implemented in `Hotel`
-Room& find_room(Hotel &hotel, const std::string id)
-{
-  for (auto &r : hotel.rooms)
-    if (r.id == id) return r;
-
-  throw std::runtime_error{std::string{"Room "} + id + " not found"};
-}
-
 struct Repl {
   Repl(Hotel& h) : hotel{h} {}
 
@@ -83,7 +73,7 @@ private:
       if (command == "set-room") {
         if (tokens.size() < 2) throw std::invalid_argument{
             "Command usage: set-room ROOM"};
-        current_room = find_room(hotel, tokens[1]).id;
+        current_room = hotel.room(tokens[1]).id;
         return;
       }
 
@@ -100,7 +90,7 @@ private:
         if (room_id.empty()) throw std::invalid_argument{
             "Command usage: list-reservations ROOM"};
 
-        auto r = find_room(hotel, room_id);
+        auto r = hotel.room(room_id);
         for (const auto& reservation : r.reservations())
           std::cout << "  - " << str(reservation) << std::endl;
 
@@ -121,7 +111,7 @@ private:
         }
 
         auto [date, duration] = parse_date(date_str);
-        find_room(hotel, room_id).reserve(date, duration);
+        hotel.room(room_id).reserve(date, duration);
         std::cout << "Room reserved successfully.\n";
         return;
       }
@@ -140,7 +130,7 @@ private:
         }
 
         auto [date, _] = parse_date(date_str);
-        find_room(hotel, room_id).cancel_reservation(date);
+        hotel.room(room_id).cancel_reservation(date);
         std::cout << "Reservation cancelled.\n";
         return;
       }

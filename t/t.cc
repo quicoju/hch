@@ -111,3 +111,15 @@ TEST_CASE("Hotel::find_available_on") {
   }
 }
 
+TEST_CASE("Hotel::room") {
+  Hotel hotel {{
+      Room{"A-102", {}},
+    }};
+
+  SECTION("existing") {
+    REQUIRE(hotel.room("A-102").id == "A-102");
+  }
+  SECTION("non-existing") {
+    REQUIRE_THROWS_AS(hotel.room("102"), std::invalid_argument);
+  }
+}

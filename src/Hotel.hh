@@ -16,6 +16,8 @@ struct Hotel {
 
   RoomSet find_available_on(Date, Duration dur=Days{1})
     const noexcept;
+
+  Room &room(const std::string id);
   
   std::vector<Room> rooms;
 };
