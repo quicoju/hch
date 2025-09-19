@@ -22,7 +22,7 @@ hch: $(OBJS) hch.o
 HotelTests: $(OBJS) t.o
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -lCatch2 -lCatch2Main -o $@ $>
 
-db/hotel.db: db/Hotel.sql
+db/hotel.db: db/schema.sql
 	sqlite3 db/hotel.db ".read $>"
 
 # A clean target to remove the built files
