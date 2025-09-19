@@ -15,13 +15,40 @@ CREATE TABLE IF NOT EXISTS reservations (
 
 -- Indexes
 -- =======
-CREATE INDEX IF NOT EXISTS idx_reservtions_room_date
+-- This unique index provides basic protection for same day
+-- overlappings, the more complicated cases are handled by
+-- the "prervent_overlapping_reservations" trigger
+CREATE UNIQUE INDEX IF NOT EXISTS idx_reservtions_room_date
     ON reservations(room_id, begin_date);
 
--- TODOs
--- =====
- --Unique key restriction in the "rooms" table
--- Pre-insert trigger to avoid overlapping reservations
+-- Triggers
+-- ========
+CREATE TRIGGER IF NOT EXISTS prevent_overlapping_reservations
+BEFORE INSERT ON reservations
+FOR EACH ROW
+BEGIN
+    SELECT CASE
+      WHEN EXISTS (
+        SELECT 1 FROM reservations
+         WHERE room_id = NEW.room_id
+           AND (
+              -- New starts during existing reservation
+             (NEW.begin_date >= begin_date
+               AND NEW.begin_date < date(begin_date, '+' || duration_days || ' days'))
+             OR
+              -- New ends during existing reservation
+              (date(NEW.begin_date, '+' || NEW.duration_days || ' days') > begin_date
+                AND date(NEW.begin_date, '+' || NEW.duration_days || ' days') <= date(begin_date, '+' || duration_days || ' days'))
+             OR
+              -- New spans over existing reservation
+              (NEW.begin_date <= begin_date
+                AND date(NEW.begin_date, '+' || NEW.duration_days || ' days') >= date(begin_date, '+' || duration_days || ' days'))
+          )
+        ) THEN RAISE(ABORT, 'Room is already reserved for overlapping dates')
+    END;
+END;
+
+
 
 -- Insert some default rooms
 INSERT OR IGNORE INTO rooms (id) VALUES
@@ -31,4 +58,3 @@ INSERT OR IGNORE INTO rooms (id) VALUES
   ('A-201'),
   ('A-202'),
   ('A-203');
-
