@@ -79,6 +79,7 @@ private:
 
       if (command == "unset-room") {
         current_room.clear();
+        return;
       }
 
       if (command == "list-reservations") {
