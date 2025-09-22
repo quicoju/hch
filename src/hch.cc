@@ -151,17 +151,16 @@ private:
 int main (int argc, char *argv[])
 {
   // TODO: For now initialize a Hotel here
-  Hotel hotel{
-    {
+  Rooms rooms{
       Room{"room-101", {}},
       Room{"room-102", {}},
       Room{"room-103", {}},
       Room{"room-201", {}},
       Room{"room-202", {}},
       Room{"room-203", {}},
-    }
   };
 
+  Hotel hotel{&rooms};
   Repl repl{hotel};
   repl.run();
 

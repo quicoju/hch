@@ -1,11 +1,14 @@
 #include "Hotel.hh"
 
-Hotel::Hotel(std::vector<Room> rooms)
-  : rooms{rooms} {};
+Hotel::Hotel(void *data_source)
+  : src{src} {
+  // data_source is expected to point to a std::vector<Room> object
+};
 
 bool Hotel::is_available_on(Date date, Duration dur, size_t n_rooms)
   const noexcept {
-  for (const auto &r: rooms) {
+
+  for (const auto &r: rooms()) {
     if (r.is_available_on(date, dur)) {
       --n_rooms;
       if (!n_rooms) return true;
@@ -14,11 +17,11 @@ bool Hotel::is_available_on(Date date, Duration dur, size_t n_rooms)
   return false;
 }
 
-RoomSet Hotel::find_available_on(Date d, Duration dur)
+Rooms Hotel::find_available_on(Date d, Duration dur)
   const noexcept {
-  RoomSet available_rooms;
+  Rooms available_rooms;
 
-  for (const auto &r: rooms) {
+  for (const auto &r: rooms()) {
     if (r.is_available_on(d, dur))
       available_rooms.push_back(std::cref(r));
   }
@@ -26,7 +29,11 @@ RoomSet Hotel::find_available_on(Date d, Duration dur)
 }
 
 Room& Hotel::room(const std::string id) {
-  for (auto &r : rooms)
+  for (auto &r : rooms())
     if (r.id == id) return r;
   throw std::invalid_argument{std::string{"Room "} + id + " not found"};
+}
+
+Rooms& Hotel::rooms() const {
+    return *static_cast<std::vector<Room> *>(src);
 }

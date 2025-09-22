@@ -64,18 +64,20 @@ TEST_CASE("Room::reservations") {
  */
 
 TEST_CASE("Hotel::is_available_on") {
-  Hotel hotel{{
-      Room{"101", {
-          Reservation{ {2024, 12, 19}, Days{3} },
-        }},
-      Room{"102", {
-          Reservation{ {2024, 12, 20}, Days{1} },
-        }},
-      Room{"103", {
-          Reservation{ {2024, 12, 31}, Days{4} },
-        }},
-    }};
-  REQUIRE(hotel.rooms.size() == 3);
+  Rooms rooms{
+    Room{"101", {
+        Reservation{ {2024, 12, 19}, Days{3} },
+      }},
+    Room{"102", {
+        Reservation{ {2024, 12, 20}, Days{1} },
+      }},
+    Room{"103", {
+        Reservation{ {2024, 12, 31}, Days{4} },
+      }},
+  };
+  Hotel hotel{&rooms};
+
+  REQUIRE(hotel.rooms().size() == 3);
 
   SECTION("Hotel::is_available_on") {
     Date date{2025, 01, 02};
@@ -86,23 +88,24 @@ TEST_CASE("Hotel::is_available_on") {
 }
 
 TEST_CASE("Hotel::find_available_on") {
-  Hotel hotel {{
-      Room{"101", {
-          Reservation{ {2024, 12, 19}, Days{3} },
-        }},
-      Room{"102", {
-          Reservation{ {2024, 12, 20}, Days{1} },
-        }},
-      Room{"103", {
-          Reservation{ {2024, 12, 31}, Days{4} },
-        }},
-    }};
+  Rooms rooms{
+    Room{"101", {
+        Reservation{ {2024, 12, 19}, Days{3} },
+      }},
+    Room{"102", {
+        Reservation{ {2024, 12, 20}, Days{1} },
+      }},
+    Room{"103", {
+        Reservation{ {2024, 12, 31}, Days{4} },
+      }},
+  };
+  Hotel hotel{&rooms};
   
   SECTION("available") {
     Date date{2024, 12, 19};
     auto available = hotel.find_available_on(date, Days{3});
     REQUIRE(available.size() == 1);
-    REQUIRE(available.front().get().id == "103");
+    REQUIRE(available[0].id == "103");
   }
 
   SECTION("unavailable") {
@@ -112,10 +115,10 @@ TEST_CASE("Hotel::find_available_on") {
 }
 
 TEST_CASE("Hotel::room") {
-  Hotel hotel {{
-      Room{"A-102", {}},
-    }};
-
+  Rooms rooms{
+    Room{"A-102", {}},
+  };
+  Hotel hotel{&rooms};
   SECTION("existing") {
     REQUIRE(hotel.room("A-102").id == "A-102");
   }
