@@ -4,7 +4,7 @@
 #include "concepts.hh"
 
 struct Room {
-  Room(const char*, const std::list<Reservation>);
+  Room(const char*, void*);
 
   /**
    * @brief Returns true if the room is available on a given date.
@@ -51,6 +51,6 @@ struct Room {
   const std::string id;
 
 private:
-  std::list<Reservation> agenda;
+  void *src;
+  std::list<Reservation>& agenda() const;
 };
-

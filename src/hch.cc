@@ -151,13 +151,15 @@ private:
 int main (int argc, char *argv[])
 {
   // TODO: For now initialize a Hotel here
+  using Reservations = std::list<Reservation>;
+  std::vector<Reservations> r(6);
   Rooms rooms{
-      Room{"room-101", {}},
-      Room{"room-102", {}},
-      Room{"room-103", {}},
-      Room{"room-201", {}},
-      Room{"room-202", {}},
-      Room{"room-203", {}},
+    {"room-101", &r[0]},
+    {"room-102", &r[1]},
+    {"room-103", &r[2]},
+    {"room-201", &r[3]},
+    {"room-202", &r[4]},
+    {"room-203", &r[5]},
   };
 
   Hotel hotel{&rooms};

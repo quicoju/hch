@@ -1,7 +1,6 @@
 #include "../src/Hotel.hh"
 
 #include <catch2/catch_test_macros.hpp>
-#include <boost/date_time/gregorian/gregorian.hpp>
 
 std::list agenda{
   Reservation{ {2024, 12, 19}, Days{3} },
@@ -12,14 +11,15 @@ std::list agenda{
  * ==========
  */
 TEST_CASE("Room::is_available_on") {
-  Room room{ "101", agenda };
+  auto a = agenda;
+  Room room{ "101", &a };
   SECTION("available") {
     Date date{2024, 12, 23};
     REQUIRE(room.is_available_on({2024, 12, 22}));
     REQUIRE(room.is_available_on(date));
     REQUIRE(room.is_available_on(date, Days{2}));
     REQUIRE(room.is_available_on({2024, 12, 23}, Days{2}));
-    std::cout << boost::gregorian::to_simple_string(agenda.front()) << std::endl;
+    std::cout << str(a.front()) << std::endl;
   }
   SECTION("unavailable") {
     REQUIRE(!room.is_available_on({2024, 12, 26}));
@@ -28,7 +28,8 @@ TEST_CASE("Room::is_available_on") {
 }
 
 TEST_CASE("Room::reserve") {
-  Room room{ "101", agenda };
+  auto a = agenda;
+  Room room{ "101", &a };
   SECTION("success") {
     Date date{2024, 11, 10};
     room.reserve(date);
@@ -43,7 +44,8 @@ TEST_CASE("Room::reserve") {
 }
 
 TEST_CASE("Room::cancel_reservation") {
-  Room room{ "101", agenda };
+  auto a = agenda;
+  Room room{ "101", &a };
   SECTION("success") {
     room.cancel_reservation({2024, 12, 20});
     REQUIRE(room.is_available_on({2024, 12, 21}));
@@ -55,25 +57,24 @@ TEST_CASE("Room::cancel_reservation") {
 }
 
 TEST_CASE("Room::reservations") {
-  Room room{ "101", agenda };
+  auto a = agenda;
+  Room room{ "101", &a };
   REQUIRE(room.reservations() == agenda);
 }
 
 /* Hotel Tests
  * ===========
  */
+using Reservations = std::list<Reservation>;
 
 TEST_CASE("Hotel::is_available_on") {
+  Reservations r_101{ {{2024, 12, 19}, Days{3} }};
+  Reservations r_102{ {{2024, 12, 20}, Days{1} }};
+  Reservations r_103{ {{2024, 12, 31}, Days{4} }};
   Rooms rooms{
-    Room{"101", {
-        Reservation{ {2024, 12, 19}, Days{3} },
-      }},
-    Room{"102", {
-        Reservation{ {2024, 12, 20}, Days{1} },
-      }},
-    Room{"103", {
-        Reservation{ {2024, 12, 31}, Days{4} },
-      }},
+    {"101", &r_101},
+    {"102", &r_102},
+    {"103", &r_103},
   };
   Hotel hotel{&rooms};
 
@@ -88,16 +89,13 @@ TEST_CASE("Hotel::is_available_on") {
 }
 
 TEST_CASE("Hotel::find_available_on") {
+  Reservations r_101{ {{2024, 12, 19}, Days{3} }};
+  Reservations r_102{ {{2024, 12, 20}, Days{1} }};
+  Reservations r_103{ {{2024, 12, 31}, Days{4} }};
   Rooms rooms{
-    Room{"101", {
-        Reservation{ {2024, 12, 19}, Days{3} },
-      }},
-    Room{"102", {
-        Reservation{ {2024, 12, 20}, Days{1} },
-      }},
-    Room{"103", {
-        Reservation{ {2024, 12, 31}, Days{4} },
-      }},
+    {"101", &r_101},
+    {"102", &r_102},
+    {"103", &r_103},
   };
   Hotel hotel{&rooms};
   
@@ -115,9 +113,8 @@ TEST_CASE("Hotel::find_available_on") {
 }
 
 TEST_CASE("Hotel::room") {
-  Rooms rooms{
-    Room{"A-102", {}},
-  };
+  Reservations r{};
+  Rooms rooms{{"A-102", &r}};
   Hotel hotel{&rooms};
   SECTION("existing") {
     REQUIRE(hotel.room("A-102").id == "A-102");
