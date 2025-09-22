@@ -7,10 +7,21 @@ LDFLAGS = -L/usr/local/lib \
 	-lboost_date_time \
 	-lreadline
 
+# Possible backends are:
+#   - memory
+#   - sqlite
+BACKEND ?= memory
+BACKEND_DIR = src/backend/$(BACKEND)
+
+# Backend-specific flags
+.if $(BACKEND) == "sqlite"
+LDFLAGS += -lsqlite3
+.endif
+
 OBJS = Room.o Hotel.o
 
 .SUFFIXES: .o .cc .hh
-.PATH.cc: src t
+.PATH.cc: src $(BACKEND_DIR) t
 
 .cc.o: src/concepts.hh Makefile
 	$(CXX) $(CXXFLAGS) -c $<
@@ -35,3 +46,8 @@ database: db/hotel.db
 
 clean:
 	rm -f *.o HotelTests hch db/hotel.db
+
+help:
+	@echo "Available backends: memory, sqlite"
+	@echo "Usage: make BACKEND=memory (default)"
+	@echo "       make BACKEND=sqlite"
