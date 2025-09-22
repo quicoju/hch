@@ -152,7 +152,7 @@ int main (int argc, char *argv[])
 {
   // TODO: For now initialize a Hotel here
   using Reservations = std::list<Reservation>;
-  std::vector<Reservations> r(6);
+  std::vector<Reservations> r{6};
   Rooms rooms{
     {"room-101", &r[0]},
     {"room-102", &r[1]},

@@ -1,7 +1,8 @@
 #include "Hotel.hh"
 
 Hotel::Hotel(void *data_source)
-  : src{src} {
+  : src{data_source}
+{
   // data_source is expected to point to a std::vector<Room> object
 };
 
