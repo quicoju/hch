@@ -17,7 +17,7 @@ struct Hotel {
   Rooms find_available_on(Date, Duration dur=Days{1})
     const noexcept;
 
-  Room &room(const std::string id);
+  Room room(const std::string id);
 
   Rooms &rooms() const;
 
