@@ -20,11 +20,11 @@ bool Hotel::is_available_on(Date date, Duration dur, size_t n_rooms)
 
 Rooms Hotel::find_available_on(Date d, Duration dur)
   const noexcept {
-  Rooms available_rooms;
+  Rooms available_rooms{};
 
   for (const auto &r: rooms()) {
     if (r.is_available_on(d, dur))
-      available_rooms.push_back(std::cref(r));
+      available_rooms.emplace_back(r.id, src);
   }
   return available_rooms;
 }
