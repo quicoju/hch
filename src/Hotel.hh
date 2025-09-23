@@ -19,7 +19,7 @@ struct Hotel {
 
   Room room(const std::string id);
 
-  Rooms &rooms() const;
+  Rooms rooms() const;
 
 private:
   void *src;

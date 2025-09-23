@@ -35,6 +35,6 @@ Room Hotel::room(const std::string id) {
   throw std::invalid_argument{std::string{"Room "} + id + " not found"};
 }
 
-Rooms& Hotel::rooms() const {
+Rooms Hotel::rooms() const {
     return *static_cast<std::vector<Room> *>(src);
 }
