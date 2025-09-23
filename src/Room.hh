@@ -4,7 +4,8 @@
 #include "concepts.hh"
 
 struct Room {
-  Room(const char*, void*);
+  Room(const std::string, void*);
+  Room(const char *, void *);
 
   /**
    * @brief Returns true if the room is available on a given date.
