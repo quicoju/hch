@@ -16,6 +16,7 @@ BACKEND_DIR = src/backend/$(BACKEND)
 # Backend-specific flags
 .if $(BACKEND) == "sqlite"
 LDFLAGS += -lsqlite3
+CXXFLAGS += -DUSE_$(BACKEND)
 .endif
 
 OBJS = Room.o Hotel.o
