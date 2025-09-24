@@ -18,7 +18,7 @@ Room::Room(const char *id, void *data_source)
 bool Room::is_available_on(Date date, Duration dur) const
 {
   const Period p{date, dur};
-  auto agenda = reservations();
+  auto &agenda = *static_cast<std::list<Reservation> *>(src);;
   auto end = agenda.cend();
 
   return end == std::find_if(agenda.cbegin(), end,
@@ -30,13 +30,14 @@ void  Room::reserve(Date date, Duration dur)
   if (!is_available_on(date, dur))
     throw std::logic_error{"Room is unavailable on the given Date/Duration"};
 
-  agenda().push_back({date, dur});
+  auto& agenda = *static_cast<std::list<Reservation> *>(src);
+  agenda.push_back({date, dur});
 }
 
 void Room::cancel_reservation(Date date)
 {
   const Period p{date, Days{1}};
-  auto &agenda_ = agenda();
+  auto &agenda_ = *static_cast<std::list<Reservation> *>(src);
   auto end = agenda_.end();
 
   auto match = std::find_if(agenda_.begin(), end,
@@ -46,12 +47,14 @@ void Room::cancel_reservation(Date date)
     agenda_.erase(match);
 }
 
-const std::list<Reservation>& Room::reservations() const
+const std::list<Reservation> Room::reservations() const
 {
-  return *static_cast<std::list<Reservation> *>(src);
+  std::list<Reservation> l{};
+  auto &_src = *static_cast<std::list<Reservation> *>(src);
+
+  for (const auto r: _src)
+    l.push_back(r);
+
+  return l;
 }
 
-std::list<Reservation>& Room::agenda() const
-{
-  return const_cast<std::list<Reservation>&>(reservations());
-}

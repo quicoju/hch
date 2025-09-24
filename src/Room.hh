@@ -45,7 +45,7 @@ struct Room {
    *
    * The view is read only, it cannot be modified.
    */
-  const std::list<Reservation>& reservations() const;
+  const std::list<Reservation> reservations() const;
 
   /* Properties */
   /* ========== */
@@ -53,5 +53,4 @@ struct Room {
 
 private:
   void *src;
-  std::list<Reservation>& agenda() const;
 };
