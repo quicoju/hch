@@ -147,10 +147,27 @@ private:
   }
 };
 
+#include <sqlite3.h>
 
 int main (int argc, char *argv[])
 {
   // TODO: For now initialize a Hotel here
+  void *src;
+#ifdef USE_sqlite
+  sqlite3* db;
+  sqlite3_open("db/hotel.db", &db);
+  const char* sql = R"(
+DELETE FROM reservations;
+INSERT OR IGNORE INTO rooms(id) VALUES
+  ('room-101'), ('room-102'), ('room-103'),
+  ('room-201'), ('room-202'), ('room-203')
+)";
+  int result = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
+  if (result != SQLITE_OK) {
+    throw std::runtime_error{sqlite3_errmsg(db)};
+  }
+  src = db;
+#else
   using Reservations = std::list<Reservation>;
   std::vector<Reservations> r{6};
   Rooms rooms{
@@ -161,8 +178,10 @@ int main (int argc, char *argv[])
     {"room-202", &r[4]},
     {"room-203", &r[5]},
   };
+  src = &rooms;
+#endif
 
-  Hotel hotel{&rooms};
+  Hotel hotel{src};
   Repl repl{hotel};
   repl.run();
 
