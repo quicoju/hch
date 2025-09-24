@@ -39,8 +39,11 @@ db/hotel.db: db/schema.sql
 # A clean target to remove the built files
 .PHONY: clean
 
-test: HotelTests
+test: HotelTests hch
+	@echo "\n*Unit tests*"
 	./HotelTests
+	@echo "*Integration tests*"
+	bash t/t_hch.bash
 
 database: db/hotel.db
 
