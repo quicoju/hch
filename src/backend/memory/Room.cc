@@ -28,7 +28,7 @@ bool Room::is_available_on(Date date, Duration dur) const
 void  Room::reserve(Date date, Duration dur)
 {
   if (!is_available_on(date, dur))
-    throw std::logic_error{"Room is unavailable on the given Date/Duration"};
+    throw std::logic_error{"Room is already reserved for overlapping dates"};
 
   auto& agenda = *static_cast<std::list<Reservation> *>(src);
   agenda.push_back({date, dur});
