@@ -39,7 +39,7 @@ bool Hotel::is_available_on(Date date, Duration dur, size_t n_rooms)
   if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
     return false;
 
-  std::string date_str = str2(date);
+  std::string date_str = _dstr(date);
   std::string dur_str = std::to_string(dur.days());
 
   sqlite3_bind_int64(stmt, 1, n_rooms);
@@ -93,7 +93,7 @@ Rooms Hotel::find_available_on(Date d, Duration dur)
   if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
     return available_rooms;
 
-  std::string date_str = str2(d);
+  std::string date_str = _dstr(d);
   std::string dur_str = std::to_string(dur.days());
 
   sqlite3_bind_text(stmt, 1, date_str.c_str(), -1, SQLITE_STATIC);

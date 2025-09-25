@@ -32,7 +32,7 @@ SELECT COUNT(*)
     }
 
     // Bind parameters
-    std::string date_str = str2(date);
+    std::string date_str = _dstr(date);
     std::string dur_str = std::to_string(dur.days());
 
     sqlite3_bind_text(stmt, 1, id.c_str(), -1, SQLITE_STATIC); // room_id
@@ -69,7 +69,7 @@ VALUES (?, ?, ?)
   }
 
   sqlite3_bind_text(stmt, 1, id.c_str(), -1, SQLITE_STATIC);
-  sqlite3_bind_text(stmt, 2, str2(date).c_str(), -1, SQLITE_TRANSIENT);
+  sqlite3_bind_text(stmt, 2, _dstr(date).c_str(), -1, SQLITE_TRANSIENT);
   sqlite3_bind_int(stmt, 3, dur.days());
 
   if (sqlite3_step(stmt) != SQLITE_DONE) {
@@ -96,7 +96,7 @@ DELETE FROM reservations
   if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
     throw std::runtime_error("Failed to prepare statement");
 
-  std::string date_str = str2(date);
+  std::string date_str = _dstr(date);
   sqlite3_bind_text(stmt, 1, id.c_str(), -1, SQLITE_STATIC);
   sqlite3_bind_text(stmt, 2, date_str.c_str(), -1, SQLITE_TRANSIENT);
   sqlite3_bind_text(stmt, 3, date_str.c_str(), -1, SQLITE_TRANSIENT);

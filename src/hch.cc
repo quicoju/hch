@@ -93,7 +93,7 @@ private:
 
         auto r = hotel.room(room_id);
         for (const auto& reservation : r.reservations())
-          std::cout << "  - " << str(reservation) << std::endl;
+          std::cout << "  - " << _pstr(reservation) << std::endl;
 
         return;
       }
