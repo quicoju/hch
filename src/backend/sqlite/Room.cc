@@ -18,38 +18,27 @@ bool Room::is_available_on(Date date, Duration dur) const
 SELECT COUNT(*)
   FROM reservations
  WHERE room_id = ?
-   AND (-- New period starts during existing reservation
-         (? >= begin_date  AND ? < date(begin_date, '+' || duration_days || ' days'))
-       OR -- New period ends during existing reservation
-         (date(?, '+' || ? || ' days') > begin_date  AND date(?, '+' || ? || ' days') <= date(begin_date, '+' || duration_days || ' days'))
-       OR -- New period spans over existing reservation
-         (? <= begin_date AND date(?, '+' || ? || ' days') >= date(begin_date, '+' || duration_days || ' days'))
-))";
+   AND NOT(
+     date(?, '+' || ? || ' days') <= begin_date  OR
+      ? >= date(begin_date, '+' || duration_days || ' days')
+   )
+)";
 
     sqlite3_stmt* stmt;
-    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) {
-        throw std::runtime_error{sqlite3_errmsg(db)};
-    }
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+      throw std::runtime_error{sqlite3_errmsg(db)};
 
-    // Bind parameters
-    std::string date_str = _dstr(date);
-    std::string dur_str = std::to_string(dur.days());
+    auto date_str = _dstr(date);
+    auto dur_str = std::to_string(dur.days());
 
-    sqlite3_bind_text(stmt, 1, id.c_str(), -1, SQLITE_STATIC); // room_id
+    sqlite3_bind_text(stmt, 1, id.c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(stmt, 2, date_str.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 3, date_str.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 3, dur_str.c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(stmt, 4, date_str.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 5, dur_str.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 6, date_str.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 7, dur_str.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 8, date_str.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 9, date_str.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 10, dur_str.c_str(), -1, SQLITE_STATIC);
 
     bool available = true;
-    if (sqlite3_step(stmt) == SQLITE_ROW) {
-        available = sqlite3_column_int(stmt, 0) == 0; // 0 conflicts means available
-    }
+    if (sqlite3_step(stmt) == SQLITE_ROW)
+      available = sqlite3_column_int(stmt, 0) == 0;
 
     sqlite3_finalize(stmt);
     return available;
@@ -64,9 +53,8 @@ VALUES (?, ?, ?)
 )";
 
   sqlite3_stmt* stmt;
-  if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) {
+  if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
     throw std::runtime_error("Failed to prepare statement");
-  }
 
   sqlite3_bind_text(stmt, 1, id.c_str(), -1, SQLITE_STATIC);
   sqlite3_bind_text(stmt, 2, _dstr(date).c_str(), -1, SQLITE_TRANSIENT);
@@ -111,7 +99,6 @@ DELETE FROM reservations
 const std::list<Reservation> Room::reservations() const
 {
   auto* db = static_cast<sqlite3*>(src);
-
   const char* sql = R"(
 SELECT begin_date, duration_days
   FROM reservations

@@ -4,7 +4,6 @@
 
 #include <sqlite3.h>
 
-
 Hotel::Hotel(void *data_source)
   : src{data_source} {};
 
@@ -12,20 +11,17 @@ bool Hotel::is_available_on(Date date, Duration dur, size_t n_rooms)
   const noexcept
 {
   auto *db = static_cast<sqlite3*>(src);
-
   const char* sql = R"(
-SELECT COUNT(*) >= ? FROM rooms r
- WHERE r.id NOT IN (
+SELECT COUNT(*) >= ?
+  FROM rooms r
+ WHERE r.id IN (
     SELECT DISTINCT room_id
       FROM reservations
      WHERE room_id = r.id
-       AND ( -- New period starts during existing reservation
-            (? >= begin_date AND ? < date(begin_date, '+' || duration_days || ' days'))
-          OR -- New period ends during existing reservation
-            (date(?, '+' || ? || ' days') > begin_date AND date(?, '+' || ? || ' days') <= date(begin_date, '+' || duration_days || ' days'))
-          OR -- New period spans over existing reservation
-            (? <= begin_date AND date(?, '+' || ? || ' days') >= date(begin_date, '+' || duration_days || ' days'))
-      )
+       AND (
+         date(?, '+' || ? || ' days') <= begin_date  OR
+         ? >= date(begin_date, '+' || duration_days || ' days')
+       )
     )
 )";
 
@@ -41,14 +37,8 @@ SELECT COUNT(*) >= ? FROM rooms r
 
   sqlite3_bind_int64(stmt, 1, n_rooms);
   sqlite3_bind_text(stmt, 2, date_cstr, -1, SQLITE_STATIC);
-  sqlite3_bind_text(stmt, 3, date_cstr, -1, SQLITE_STATIC);
+  sqlite3_bind_text(stmt, 3, dur_cstr, -1, SQLITE_STATIC);
   sqlite3_bind_text(stmt, 4, date_cstr, -1, SQLITE_STATIC);
-  sqlite3_bind_text(stmt, 5, dur_cstr, -1, SQLITE_STATIC);
-  sqlite3_bind_text(stmt, 6, date_cstr, -1, SQLITE_STATIC);
-  sqlite3_bind_text(stmt, 7, dur_cstr, -1, SQLITE_STATIC);
-  sqlite3_bind_text(stmt, 8, date_cstr, -1, SQLITE_STATIC);
-  sqlite3_bind_text(stmt, 9, date_cstr, -1, SQLITE_STATIC);
-  sqlite3_bind_text(stmt, 10, dur_cstr, -1, SQLITE_STATIC);
 
   bool result{false};
 
@@ -62,45 +52,33 @@ SELECT COUNT(*) >= ? FROM rooms r
 Rooms Hotel::find_available_on(Date d, Duration dur)
   const noexcept {
   auto* db = static_cast<sqlite3*>(src);
-  Rooms available_rooms;
 
-  const char* sql = R"(
-SELECT r.id FROM rooms r
- WHERE r.id NOT IN (
+  const char * sql = R"(
+SELECT r.id
+  FROM rooms r
+ WHERE r.id IN (
      SELECT DISTINCT room_id
        FROM reservations
       WHERE room_id = r.id
-        AND ( -- New period starts during existing reservation
-              (? >= begin_date AND ? < date(begin_date, '+' || duration_days || ' days'))
-            OR -- New period ends during existing reservation
-              (date(?, '+' || ? || ' days') > begin_date
-                AND date(?, '+' || ? || ' days') <= date(begin_date, '+' || duration_days || ' days'))
-            OR -- New period spans over existing reservation
-              (? <= begin_date
-                AND date(?, '+' || ? || ' days') >= date(begin_date, '+' || duration_days || ' days'))
+        AND (
+         date(?, '+' || ? || ' days') <= begin_date  OR
+         ? >= date(begin_date, '+' || duration_days || ' days')
+       )
     )
-  )
 )";
+
+  Rooms available_rooms;
 
   sqlite3_stmt* stmt;
   if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
     return available_rooms;
 
   auto date_str = _dstr(d);
-  auto date_cstr = date_str.c_str();
-
   auto dur_str = std::to_string(dur.days());
-  auto dur_cstr = dur_str.c_str();
 
-  sqlite3_bind_text(stmt, 1, date_cstr, -1, SQLITE_STATIC);
-  sqlite3_bind_text(stmt, 2, date_cstr, -1, SQLITE_STATIC);
-  sqlite3_bind_text(stmt, 3, date_cstr, -1, SQLITE_STATIC);
-  sqlite3_bind_text(stmt, 4, dur_cstr, -1, SQLITE_STATIC);
-  sqlite3_bind_text(stmt, 5, date_cstr, -1, SQLITE_STATIC);
-  sqlite3_bind_text(stmt, 6, dur_cstr, -1, SQLITE_STATIC);
-  sqlite3_bind_text(stmt, 7, date_cstr, -1, SQLITE_STATIC);
-  sqlite3_bind_text(stmt, 8, date_cstr, -1, SQLITE_STATIC);
-  sqlite3_bind_text(stmt, 9, dur_cstr, -1, SQLITE_STATIC);
+  sqlite3_bind_text(stmt, 1, date_str.c_str(), -1, SQLITE_STATIC);
+  sqlite3_bind_text(stmt, 2, dur_str.c_str(), -1, SQLITE_STATIC);
+  sqlite3_bind_text(stmt, 3, date_str.c_str(), -1, SQLITE_STATIC);
 
   while (sqlite3_step(stmt) == SQLITE_ROW) {
     std::string room_id{(char*)sqlite3_column_text(stmt, 0)};
@@ -126,6 +104,8 @@ SELECT id FROM rooms
   if (sqlite3_step(stmt) == SQLITE_ROW) {
     auto id = (const char*)sqlite3_column_text(stmt, 0);
     Room r{id, db};
+    // TODO: maybe we should finalize the statement also
+    // when the romm wasn't found
     sqlite3_finalize(stmt);
     return r;
   }
