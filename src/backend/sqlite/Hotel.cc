@@ -14,15 +14,12 @@ bool Hotel::is_available_on(Date date, Duration dur, size_t n_rooms)
   const char* sql = R"(
 SELECT COUNT(*) >= ?
   FROM rooms r
- WHERE r.id IN (
+ WHERE r.id NOT IN (
     SELECT DISTINCT room_id
       FROM reservations
      WHERE room_id = r.id
-       AND (
-         date(?, '+' || ? || ' days') <= begin_date  OR
-         ? >= date(begin_date, '+' || duration_days || ' days')
-       )
-    )
+       AND date(?, '+' || ? || ' days') > begin_date
+       AND ? < date(begin_date, '+' || duration_days || ' days'))
 )";
 
   sqlite3_stmt* stmt;
@@ -56,15 +53,12 @@ Rooms Hotel::find_available_on(Date d, Duration dur)
   const char * sql = R"(
 SELECT r.id
   FROM rooms r
- WHERE r.id IN (
+ WHERE r.id NOT IN (
      SELECT DISTINCT room_id
        FROM reservations
       WHERE room_id = r.id
-        AND (
-         date(?, '+' || ? || ' days') <= begin_date  OR
-         ? >= date(begin_date, '+' || duration_days || ' days')
-       )
-    )
+       AND date(?, '+' || ? || ' days') > begin_date
+       AND ? < date(begin_date, '+' || duration_days || ' days'))
 )";
 
   Rooms available_rooms;

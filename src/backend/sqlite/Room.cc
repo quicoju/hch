@@ -18,10 +18,8 @@ bool Room::is_available_on(Date date, Duration dur) const
 SELECT COUNT(*)
   FROM reservations
  WHERE room_id = ?
-   AND NOT(
-     date(?, '+' || ? || ' days') <= begin_date  OR
-      ? >= date(begin_date, '+' || duration_days || ' days')
-   )
+   AND date(?, '+' || ? || ' days') > begin_date
+   AND ? < date(begin_date, '+' || duration_days || ' days')
 )";
 
     sqlite3_stmt* stmt;
@@ -36,7 +34,7 @@ SELECT COUNT(*)
     sqlite3_bind_text(stmt, 3, dur_str.c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(stmt, 4, date_str.c_str(), -1, SQLITE_STATIC);
 
-    bool available = true;
+    bool available = false;
     if (sqlite3_step(stmt) == SQLITE_ROW)
       available = sqlite3_column_int(stmt, 0) == 0;
 
