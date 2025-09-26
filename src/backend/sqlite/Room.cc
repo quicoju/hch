@@ -2,7 +2,8 @@
 
 #include <exception>
 
-#include <sqlite3.h>
+#include "SQLite.hh"
+
 Room::Room(const char* id, void *data_source)
  : id{id}
  , src{data_source} {}
@@ -13,113 +14,63 @@ Room::Room(const std::string id, void *data_source)
 
 bool Room::is_available_on(Date date, Duration dur) const
 {
-  auto *db = static_cast<sqlite3*>(src);
-  const char* sql = R"(
+  auto* db = static_cast<SQLite*>(src);
+  auto stmt = db->prepare(R"(
 SELECT COUNT(*)
   FROM reservations
  WHERE room_id = ?
    AND date(?, '+' || ? || ' days') > begin_date
    AND ? < date(begin_date, '+' || duration_days || ' days')
-)";
+)");
 
-    sqlite3_stmt* stmt;
-    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
-      throw std::runtime_error{sqlite3_errmsg(db)};
+  auto date_ = _dstr(date);
+  stmt.bind(id, date_, dur.days(), date_);
 
-    auto date_str = _dstr(date);
-    auto dur_str = std::to_string(dur.days());
-
-    sqlite3_bind_text(stmt, 1, id.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, date_str.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 3, dur_str.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 4, date_str.c_str(), -1, SQLITE_STATIC);
-
-    bool available = false;
-    if (sqlite3_step(stmt) == SQLITE_ROW)
-      available = sqlite3_column_int(stmt, 0) == 0;
-
-    sqlite3_finalize(stmt);
-    return available;
+  return stmt.next()
+    ? stmt.get<int>() == 0
+    : false;
 }
 
 void  Room::reserve(Date date, Duration dur)
 {
-  auto* db = static_cast<sqlite3*>(src);
-  const char* sql = R"(
+  auto* db = static_cast<SQLite*>(src);
+  auto date_ = _dstr(date);
+  db->prepare(R"(
 INSERT INTO reservations (room_id, begin_date, duration_days)
 VALUES (?, ?, ?)
-)";
-
-  sqlite3_stmt* stmt;
-  if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
-    throw std::runtime_error("Failed to prepare statement");
-
-  sqlite3_bind_text(stmt, 1, id.c_str(), -1, SQLITE_STATIC);
-  sqlite3_bind_text(stmt, 2, _dstr(date).c_str(), -1, SQLITE_TRANSIENT);
-  sqlite3_bind_int(stmt, 3, dur.days());
-
-  if (sqlite3_step(stmt) != SQLITE_DONE) {
-    sqlite3_finalize(stmt);
-    throw std::logic_error{ std::string{sqlite3_errmsg(db)} };
-  }
-  sqlite3_finalize(stmt);
+)").execute(id, date_, dur.days());
 }
 
 void Room::cancel_reservation(Date date)
 {
-  auto* db = static_cast<sqlite3*>(src);
-
-  // Find reservations that contain this date
-  const char* sql = R"(
+  auto* db = static_cast<SQLite*>(src);
+  auto date_ = _dstr(date);
+  db->prepare(R"(
 DELETE FROM reservations
  WHERE room_id = ?
    AND begin_date <= ?
    AND date(begin_date, '+' || duration_days || ' days') > ?
-)";
-
-  sqlite3_stmt* stmt;
-
-  if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
-    throw std::runtime_error("Failed to prepare statement");
-
-  std::string date_str = _dstr(date);
-  sqlite3_bind_text(stmt, 1, id.c_str(), -1, SQLITE_STATIC);
-  sqlite3_bind_text(stmt, 2, date_str.c_str(), -1, SQLITE_TRANSIENT);
-  sqlite3_bind_text(stmt, 3, date_str.c_str(), -1, SQLITE_TRANSIENT);
-
-  int result = sqlite3_step(stmt);
-  sqlite3_finalize(stmt);
-
-  if (result != SQLITE_DONE)
-    throw std::runtime_error("Failed to cancel reservation");
+)").execute(id, date_, date_);
 }
 
 const std::list<Reservation> Room::reservations() const
 {
-  auto* db = static_cast<sqlite3*>(src);
-  const char* sql = R"(
+  auto* db = static_cast<SQLite*>(src);
+  auto stmt = db->prepare(R"(
 SELECT begin_date, duration_days
   FROM reservations
   WHERE room_id = ?
   ORDER BY begin_date
-)";
-
-  sqlite3_stmt* stmt;
-  if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
-    throw std::runtime_error("Failed to prepare statement");
+)");
 
   std::list<Reservation> l{};
+  stmt.bind(id);
 
-  sqlite3_bind_text(stmt, 1, id.c_str(), -1, SQLITE_STATIC);
-
-  while (sqlite3_step(stmt) == SQLITE_ROW) {
-    const  char *begin_str = (const char*)sqlite3_column_text(stmt, 0);
-    int duration_days = sqlite3_column_int(stmt, 1);
-
-    Date begin = from_string(begin_str);
-    l.emplace_back(begin, Days{duration_days});
+  while (stmt.next()) {
+    auto date = from_string(stmt.get<std::string>());
+    auto dur = stmt.get<int>(1);
+    l.emplace_back(date, Days{dur});
   }
 
-  sqlite3_finalize(stmt);
   return l;
 }
