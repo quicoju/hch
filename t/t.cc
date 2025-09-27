@@ -2,19 +2,16 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+#ifdef USE_sqlite
+#include "backend/t_sqlite.hh"
+#else
+#include "backend/t_memory.hh"
+#endif
+
 std::list agenda{
   Reservation{ {2024, 12, 19}, Days{3} },
   Reservation{ {2024, 12, 25}, Days{5} },
 };
-
-#ifdef USE_sqlite
-#include "../src/backend/sqlite/SQLite.hh"
-SQLite build_agenda();
-SQLite build_src();
-SQLite build_one_room_src();
-#else
-std::list<Reservation> build_agenda();
-#endif
 
 /* Room Tests
  * ==========
@@ -76,11 +73,6 @@ TEST_CASE("Room::reservations") {
 using Reservations = std::list<Reservation>;
 
 TEST_CASE("Hotel::is_available_on") {
-  void *src;
-#ifdef USE_sqlite
-  auto db = build_src();
-  src = &db;
-#else
   Reservations r_101{ {{2024, 12, 19}, Days{3} }};
   Reservations r_102{ {{2024, 12, 20}, Days{1} }};
   Reservations r_103{ {{2024, 12, 31}, Days{4} }};
@@ -89,9 +81,8 @@ TEST_CASE("Hotel::is_available_on") {
     {"102", &r_102},
     {"103", &r_103},
   };
-  src = &rooms;
-#endif
-  Hotel hotel{src};
+  auto src = build_src(rooms);
+  Hotel hotel{&src};
   SECTION("Hotel::is_available_on") {
     REQUIRE(hotel.rooms().size() == 3);
     Date date{2025, 01, 02};
@@ -102,11 +93,6 @@ TEST_CASE("Hotel::is_available_on") {
 }
 
 TEST_CASE("Hotel::find_available_on") {
-  void *src;
-#ifdef USE_sqlite
-  auto db = build_src();
-  src = &db;
-#else
   Reservations r_101{ {{2024, 12, 19}, Days{3} }};
   Reservations r_102{ {{2024, 12, 20}, Days{1} }};
   Reservations r_103{ {{2024, 12, 31}, Days{4} }};
@@ -115,9 +101,8 @@ TEST_CASE("Hotel::find_available_on") {
     {"102", &r_102},
     {"103", &r_103},
   };
-  src = &rooms;
-#endif
-  Hotel hotel{src};
+  auto src = build_src(rooms);
+  Hotel hotel{&src};
   SECTION("available") {
     Date date{2024, 12, 19};
     auto available = hotel.find_available_on(date, Days{3});
@@ -132,16 +117,8 @@ TEST_CASE("Hotel::find_available_on") {
 }
 
 TEST_CASE("Hotel::room") {
-  void *src;
-#ifdef USE_sqlite
-  auto db = build_one_room_src();
-  src = &db;
-#else
-  Reservations r{};
-  Rooms rooms{{"A-102", &r}};
-  src = &rooms;
-#endif
-  Hotel hotel{src};
+  auto src = build_one_room_src();
+  Hotel hotel{&src};
   SECTION("existing") {
     REQUIRE(hotel.room("A-102").id == "A-102");
   }
@@ -150,47 +127,3 @@ TEST_CASE("Hotel::room") {
   }
 }
 
-#ifdef USE_sqlite
-SQLite build_agenda() {
-  SQLite db{"db/hotel.db"};
-  db.execute(R"(
-DELETE FROM reservations;
-INSERT OR IGNORE INTO rooms(id) VALUES ('101');
-INSERT OR IGNORE INTO reservations(room_id, begin_date, duration_days)
-VALUES
-  ('101', '2024-12-19', 3),
-  ('101', '2024-12-25', 5);
-)");
-  return db;
-}
-
-SQLite build_src() {
-  SQLite db{SQLite{"db/hotel.db"}};
-  db.execute(R"(
-DELETE FROM reservations;
-DELETE FROM rooms;
-INSERT OR IGNORE INTO rooms(id) VALUES
- ('101'), ('102'), ('103');
-INSERT OR IGNORE INTO reservations(room_id, begin_date, duration_days)
-VALUES
-  ('101', '2024-12-19', 3),
-  ('102', '2024-12-20', 1),
-  ('103', '2024-12-31', 4);
-)");
-  return db;
-}
-
-SQLite build_one_room_src() {
-  SQLite db{"db/hotel.db"};
-  db.execute(R"(
-DELETE FROM reservations;
-DELETE FROM rooms;
-INSERT INTO rooms(id) VALUES('A-102'))");
-  return db;
-}
-
-#else
-std::list<Reservation> build_agenda() {
-  return agenda;
-}
-#endif
