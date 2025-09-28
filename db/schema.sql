@@ -1,12 +1,13 @@
 -- Tables
 -- ======
 CREATE TABLE IF NOT EXISTS rooms (
-    id TEXT PRIMARY KEY
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS reservations (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    room_id TEXT NOT NULL,
+    room_id INTEGER NOT NULL,
     begin_date DATE NOT NULL,
     duration_days INTEGER NOT NULL CHECK (duration_days > 0),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -38,7 +39,7 @@ BEGIN
 END;
 
 -- Insert some default rooms
-INSERT OR IGNORE INTO rooms (id) VALUES
+INSERT OR IGNORE INTO rooms (name) VALUES
   ('room-101'),
   ('room-102'),
   ('room-103'),
