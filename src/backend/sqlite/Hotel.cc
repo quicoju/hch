@@ -37,7 +37,7 @@ Rooms Hotel::find_available_on(Date d, Duration dur)
 
   try {
     auto stmt = db->prepare(R"(
-SELECT r.id
+SELECT r.name
   FROM rooms r
  WHERE r.id NOT IN (
      SELECT DISTINCT room_id
@@ -62,24 +62,24 @@ SELECT r.id
   return available_rooms;
 };
 
-Room Hotel::room(const std::string id) {
+Room Hotel::room(const std::string name) {
   auto *db = static_cast<SQLite*>(src);
   auto stmt = db->prepare(R"(
-SELECT id FROM rooms
- WHERE id = ?
+SELECT name FROM rooms
+ WHERE name = ?
 )");
-  stmt.bind(id);
+  stmt.bind(name);
 
   if (stmt.next())
     return Room{stmt.get<std::string>(), db};
 
-  throw std::invalid_argument{"Room" + id + " not found"};
+  throw std::invalid_argument{"Room" + name + " not found"};
 }
 
 Rooms Hotel::rooms() const
 {
   auto *db = static_cast<SQLite*>(src);
-  auto stmt = db->prepare("SELECT id FROM rooms");
+  auto stmt = db->prepare("SELECT name FROM rooms");
 
   Rooms rooms{};
   while (stmt.next())

@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
 
 TEST_CMD="./hch"
+db="db/integration_test.db"
+
+cleanup() {
+    if [[ x$BACKEND == "xsqlite" ]]; then
+        rm $db 2>/dev/null
+        sqlite3 $db ".read db/schema.sql"
+    fi
+}
 
 prepare_test() {
     if [[ x$BACKEND == "xsqlite" ]]; then
-        local db="db/integration_test.db"
-        [[ ! -f $db ]] &&  sqlite3 $db ".read db/schema.sql"
         sqlite3 $db "DELETE FROM reservations;"
         TEST_CMD="./hch --db=$db"
     fi
@@ -33,6 +39,7 @@ run_test() {
 }
 
 echo "The backend is *$BACKEND*"
+cleanup
 
 run_test "Initial prompt" \
 "quit" \

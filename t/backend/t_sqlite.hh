@@ -12,11 +12,11 @@ SQLite build_agenda() {
   SQLite db{test_db};
   db.execute(R"(
 DELETE FROM reservations;
-INSERT OR IGNORE INTO rooms(id) VALUES ('101');
+INSERT OR IGNORE INTO rooms(name) VALUES ('101');
 INSERT OR IGNORE INTO reservations(room_id, begin_date, duration_days)
 VALUES
-  ('101', '2024-12-19', 3),
-  ('101', '2024-12-25', 5);
+  ((SELECT id FROM rooms WHERE name = '101'), '2024-12-19', 3),
+  ((SELECT id FROM rooms WHERE name = '101'), '2024-12-25', 5);
 )");
   return db;
 }
@@ -28,13 +28,13 @@ SQLite build_src(Rooms r) {
   db.execute(R"(
 DELETE FROM reservations;
 DELETE FROM rooms;
-INSERT OR IGNORE INTO rooms(id) VALUES
+INSERT OR IGNORE INTO rooms(name) VALUES
  ('101'), ('102'), ('103');
 INSERT OR IGNORE INTO reservations(room_id, begin_date, duration_days)
 VALUES
-  ('101', '2024-12-19', 3),
-  ('102', '2024-12-20', 1),
-  ('103', '2024-12-31', 4);
+  ((SELECT id FROM rooms WHERE name = '101'), '2024-12-19', 3),
+  ((SELECT id FROM rooms WHERE name = '102'), '2024-12-20', 1),
+  ((SELECT id FROM rooms WHERE name = '103'), '2024-12-31', 4);
 )");
   return db;
 }
@@ -44,7 +44,7 @@ SQLite build_one_room_src() {
   db.execute(R"(
 DELETE FROM reservations;
 DELETE FROM rooms;
-INSERT INTO rooms(id) VALUES('A-102'))");
+INSERT INTO rooms(name) VALUES('A-102'))");
   return db;
 }
 

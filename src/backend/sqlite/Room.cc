@@ -4,12 +4,12 @@
 
 #include "SQLite.hh"
 
-Room::Room(const char* id, void *data_source)
- : id{id}
+Room::Room(const char* name, void *data_source)
+ : id{name}
  , src{data_source} {}
 
-Room::Room(const std::string id, void *data_source)
-  : id{id}
+Room::Room(const std::string name, void *data_source)
+  : id{name}
   , src{data_source} {}
 
 bool Room::is_available_on(Date date, Duration dur) const
@@ -18,7 +18,8 @@ bool Room::is_available_on(Date date, Duration dur) const
   auto stmt = db->prepare(R"(
 SELECT COUNT(*)
   FROM reservations
- WHERE room_id = ?
+  JOIN rooms r ON room_id = r.id
+ WHERE name = ?
    AND date(?, '+' || ? || ' days') > begin_date
    AND ? < date(begin_date, '+' || duration_days || ' days')
 )");
@@ -37,7 +38,7 @@ void  Room::reserve(Date date, Duration dur)
   auto date_ = _dstr(date);
   db->prepare(R"(
 INSERT INTO reservations (room_id, begin_date, duration_days)
-VALUES (?, ?, ?)
+VALUES ((SELECT id FROM rooms WHERE name = ?), ?, ?)
 )").execute(id, date_, dur.days());
 }
 
@@ -47,7 +48,7 @@ void Room::cancel_reservation(Date date)
   auto date_ = _dstr(date);
   db->prepare(R"(
 DELETE FROM reservations
- WHERE room_id = ?
+ WHERE room_id = (SELECT id FROM rooms WHERE name = ?)
    AND begin_date <= ?
    AND date(begin_date, '+' || duration_days || ' days') > ?
 )").execute(id, date_, date_);
@@ -59,7 +60,8 @@ const std::list<Reservation> Room::reservations() const
   auto stmt = db->prepare(R"(
 SELECT begin_date, duration_days
   FROM reservations
-  WHERE room_id = ?
+  JOIN rooms r ON room_id = r.id
+  WHERE name = ?
   ORDER BY begin_date
 )");
 
