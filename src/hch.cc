@@ -10,6 +10,22 @@
 
 #include "Hotel.hh"
 
+// Program default configuration
+struct Config {
+  std::string db_path = "db/hotel.db";
+};
+
+Config parse_args(int argc, char *argv[]) {
+  Config config;
+
+  for (auto i{1}; i < argc; i++) {
+    std::string arg{argv[i]};
+    if (arg.find("--db=") == 0)
+      config.db_path = arg.substr(5);
+  }
+  return config;
+}
+
 // Parse date string like "2025-11-03" or "2025-11-03+3d"
 std::pair<Date, Duration> parse_date(const std::string &s)
 {
@@ -151,17 +167,12 @@ private:
 
 int main (int argc, char *argv[])
 {
+  auto config = parse_args(argc, argv);
+
   // TODO: For now initialize a Hotel here
   void *src;
 #ifdef USE_sqlite
-  SQLite db{"db/hotel.db"};
-  db.execute(R"(
-DELETE FROM reservations;
-INSERT OR IGNORE INTO rooms(id) VALUES
-  ('room-101'), ('room-102'), ('room-103'),
-  ('room-201'), ('room-202'), ('room-203');
-)");
-
+  SQLite db{config.db_path};
   src = &db;
 #else
   using Reservations = std::list<Reservation>;
