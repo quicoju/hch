@@ -163,18 +163,23 @@ private:
   }
 };
 
+
+#ifdef USE_sqlite
 #include "backend/sqlite/SQLite.hh"
+SQLite get_source(Config c, Rooms r) {
+  return SQLite{c.db_path};
+}
+#else
+Rooms get_source(Config c, Rooms r) {
+  return r;
+}
+#endif
 
 int main (int argc, char *argv[])
 {
   auto config = parse_args(argc, argv);
 
   // TODO: For now initialize a Hotel here
-  void *src;
-#ifdef USE_sqlite
-  SQLite db{config.db_path};
-  src = &db;
-#else
   using Reservations = std::list<Reservation>;
   std::vector<Reservations> r{6};
   Rooms rooms{
@@ -185,10 +190,9 @@ int main (int argc, char *argv[])
     {"room-202", &r[4]},
     {"room-203", &r[5]},
   };
-  src = &rooms;
-#endif
+  auto src = get_source(config, rooms);
 
-  Hotel hotel{src};
+  Hotel hotel{&src};
   Repl repl{hotel};
   repl.run();
 
