@@ -1,12 +1,24 @@
 #!/usr/bin/env bash
 
+TEST_CMD="./hch"
+
+prepare_test() {
+    if [[ x$BACKEND == "xsqlite" ]]; then
+        local db="db/integration_test.db"
+        [[ ! -f $db ]] &&  sqlite3 $db ".read db/schema.sql"
+        sqlite3 $db "DELETE FROM reservations;"
+        TEST_CMD="./hch --db=$db"
+    fi
+}
+
 run_test() {
     local test_name="$1"
     local input="$2"
     local expected="$3"
 
     echo -n "Test $test_name ..."
-    local got=$(echo -e "$input" | ./hch 2>&1)
+    prepare_test
+    local got=$(echo -e "$input" | $TEST_CMD 2>&1)
 
     if echo "$got" | tr '\n' '|' | grep -q -- "$expected"; then
         echo "ok"
@@ -19,6 +31,8 @@ run_test() {
         exit 1
     fi
 }
+
+echo "The backend is *$BACKEND*"
 
 run_test "Initial prompt" \
 "quit" \

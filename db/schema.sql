@@ -39,9 +39,10 @@ END;
 
 -- Insert some default rooms
 INSERT OR IGNORE INTO rooms (id) VALUES
-  ('A-101'),
-  ('A-102'),
-  ('A-103'),
-  ('A-201'),
-  ('A-202'),
-  ('A-203');
+  ('room-101'),
+  ('room-102'),
+  ('room-103'),
+  ('room-201'),
+  ('room-202'),
+  ('room-203');
+
