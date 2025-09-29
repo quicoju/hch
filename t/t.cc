@@ -18,7 +18,7 @@ std::list agenda{
  */
 TEST_CASE("Room::is_available_on") {
   auto src = build_agenda();
-  Room room{ "101", &src };
+  Room room{ "101", 1, &src };
   SECTION("available") {
     Date date{2024, 12, 23};
     REQUIRE(room.is_available_on({2024, 12, 22}));
@@ -34,7 +34,7 @@ TEST_CASE("Room::is_available_on") {
 
 TEST_CASE("Room::reserve") {
   auto src = build_agenda();
-  Room room{ "101", &src };
+  Room room{ "101", 1, &src };
   SECTION("success") {
     Date date{2024, 11, 10};
     room.reserve(date);
@@ -50,7 +50,7 @@ TEST_CASE("Room::reserve") {
 
 TEST_CASE("Room::cancel_reservation") {
   auto src = build_agenda();
-  Room room{ "101", &src };
+  Room room{ "101", 1, &src };
   SECTION("success") {
     room.cancel_reservation({2024, 12, 20});
     REQUIRE(room.is_available_on({2024, 12, 21}));
@@ -63,7 +63,7 @@ TEST_CASE("Room::cancel_reservation") {
 
 TEST_CASE("Room::reservations") {
   auto src = build_agenda();
-  Room room{ "101", &src };
+  Room room{ "101", 1, &src };
   REQUIRE(room.reservations() == agenda);
 }
 
@@ -77,9 +77,9 @@ TEST_CASE("Hotel::is_available_on") {
   Reservations r_102{ {{2024, 12, 20}, Days{1} }};
   Reservations r_103{ {{2024, 12, 31}, Days{4} }};
   Rooms rooms{
-    {"101", &r_101},
-    {"102", &r_102},
-    {"103", &r_103},
+    {"101", 1, &r_101},
+    {"102", 1, &r_102},
+    {"103", 1, &r_103},
   };
   auto src = build_src(rooms);
   Hotel hotel{&src};
@@ -97,9 +97,9 @@ TEST_CASE("Hotel::find_available_on") {
   Reservations r_102{ {{2024, 12, 20}, Days{1} }};
   Reservations r_103{ {{2024, 12, 31}, Days{4} }};
   Rooms rooms{
-    {"101", &r_101},
-    {"102", &r_102},
-    {"103", &r_103},
+    {"101", 1, &r_101},
+    {"102", 1, &r_102},
+    {"103", 1, &r_103},
   };
   auto src = build_src(rooms);
   Hotel hotel{&src};

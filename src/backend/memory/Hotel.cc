@@ -24,7 +24,7 @@ Rooms Hotel::find_available_on(Date d, Duration dur)
 
   for (const auto &r: rooms()) {
     if (r.is_available_on(d, dur))
-      available_rooms.emplace_back(r.id, src);
+      available_rooms.emplace_back(r.id, r.capacity, src);
   }
   return available_rooms;
 }

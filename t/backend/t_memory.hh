@@ -9,7 +9,7 @@ std::list<Reservation> build_agenda() {
 }
 
 Rooms build_one_room_src() {
-  return Rooms{{"A-102", {}}};
+  return Rooms{{"A-102", 1, {}}};
 }
 
 Rooms build_src(Rooms r) {
