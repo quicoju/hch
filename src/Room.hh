@@ -4,8 +4,8 @@
 #include "concepts.hh"
 
 struct Room {
-  Room(const std::string, void*);
-  Room(const char *, void *);
+  Room(const std::string id, size_t capacity, void* src);
+  Room(const char * id, size_t capacity, void *src);
 
   /**
    * @brief Returns true if the room is available on a given date.
@@ -50,6 +50,7 @@ struct Room {
   /* Properties */
   /* ========== */
   const std::string id;
+  const size_t capacity;
 
 private:
   void *src;
