@@ -4,13 +4,15 @@
 
 #include "SQLite.hh"
 
-Room::Room(const char* name, void *data_source)
- : id{name}
+Room::Room(const std::string id, size_t capacity, void *data_source)
+ : id{id}
+ , capacity{capacity}
  , src{data_source} {}
 
-Room::Room(const std::string name, void *data_source)
-  : id{name}
-  , src{data_source} {}
+Room::Room(const char *id, size_t capacity, void *data_source)
+ : id{id}
+ , capacity{capacity}
+ , src{data_source} {}
 
 bool Room::is_available_on(Date date, Duration dur) const
 {

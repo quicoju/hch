@@ -2,7 +2,8 @@
 -- ======
 CREATE TABLE IF NOT EXISTS rooms (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL UNIQUE
+    name TEXT NOT NULL UNIQUE,
+    capacity INTEGER NOT NULL CHECK (capacity > 0)
 );
 
 CREATE TABLE IF NOT EXISTS reservations (
@@ -39,11 +40,11 @@ BEGIN
 END;
 
 -- Insert some default rooms
-INSERT OR IGNORE INTO rooms (name) VALUES
-  ('room-101'),
-  ('room-102'),
-  ('room-103'),
-  ('room-201'),
-  ('room-202'),
-  ('room-203');
+INSERT OR IGNORE INTO rooms (name, capacity) VALUES
+  ('room-101', 1),
+  ('room-102', 1),
+  ('room-103', 1),
+  ('room-201', 1),
+  ('room-202', 1),
+  ('room-203', 1);
 

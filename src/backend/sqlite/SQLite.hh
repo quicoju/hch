@@ -148,7 +148,7 @@ struct SQLite {
 
     template<typename T>
     T get(int column = 0) const {
-      if constexpr (std::is_same_v<T, int>) {
+      if constexpr (std::is_same_v<T, int> || std::is_same_v<T, size_t>) {
         return sqlite3_column_int(stmt_, column);
       }
       else if constexpr (std::is_same_v<T, std::string>) {

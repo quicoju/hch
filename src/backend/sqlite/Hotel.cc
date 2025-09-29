@@ -37,7 +37,7 @@ Rooms Hotel::find_available_on(Date d, Duration dur)
 
   try {
     auto stmt = db->prepare(R"(
-SELECT r.name
+SELECT r.name, capacity
   FROM rooms r
  WHERE r.id NOT IN (
      SELECT DISTINCT room_id
@@ -52,7 +52,8 @@ SELECT r.name
 
     while (stmt.next()) {
       auto room_id = stmt.get<std::string>();
-      available_rooms.emplace_back(room_id, db);
+      auto capacity = stmt.get<size_t>(1);
+      available_rooms.emplace_back(room_id, capacity, db);
     }
   }
   catch (const std::runtime_error& e) {
@@ -65,13 +66,16 @@ SELECT r.name
 Room Hotel::room(const std::string name) {
   auto *db = static_cast<SQLite*>(src);
   auto stmt = db->prepare(R"(
-SELECT name FROM rooms
+SELECT name, capacity FROM rooms
  WHERE name = ?
 )");
   stmt.bind(name);
 
-  if (stmt.next())
-    return Room{stmt.get<std::string>(), db};
+  if (stmt.next()) {
+    auto name = stmt.get<std::string>();
+    auto capacity = stmt.get<size_t>(1);
+    return Room{name, capacity, db};
+  }
 
   throw std::invalid_argument{"Room" + name + " not found"};
 }
@@ -79,11 +83,17 @@ SELECT name FROM rooms
 Rooms Hotel::rooms() const
 {
   auto *db = static_cast<SQLite*>(src);
-  auto stmt = db->prepare("SELECT name FROM rooms");
+  auto stmt = db->prepare(R"(
+SELECT name, capacity
+  FROM rooms
+)");
 
   Rooms rooms{};
-  while (stmt.next())
-    rooms.emplace_back(stmt.get<std::string>(), db);
+  while (stmt.next()) {
+    auto room_id = stmt.get<std::string>();
+    auto capacity = stmt.get<size_t>(1);
+    rooms.emplace_back(room_id, capacity, db);
+  }
 
   return rooms;
 }
