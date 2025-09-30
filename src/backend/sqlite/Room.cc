@@ -1,7 +1,6 @@
-#include "Room.hh"
-
 #include <exception>
 
+#include "Room.hh"
 #include "SQLite.hh"
 
 Room::Room(const std::string id, size_t capacity, void *data_source)

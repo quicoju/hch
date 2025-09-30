@@ -167,12 +167,12 @@ private:
 #ifdef USE_sqlite
 #include "backend/sqlite/SQLite.hh"
 SQLite get_source(Config c) {
-  return SQLite{c.db_path};
+  return {c.db_path};
 }
 #else
 #include "backend/memory/HotelData.hh"
 HotelData get_source(Config c) {
-  return HotelData {
+  return {
     {"room-101", 1, },
     {"room-102", 1, },
     {"room-103", 1, },

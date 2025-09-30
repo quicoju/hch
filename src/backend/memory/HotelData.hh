@@ -1,6 +1,5 @@
 #pragma once
 
-#include <list>
 #include <vector>
 
 #include "Hotel.hh"
@@ -8,7 +7,7 @@
 struct RoomData {
   std::string id;
   size_t capacity;
-  std::list<Reservation> reservations;
+  Reservations reservations;
 };
 
 using HotelData = std::vector<RoomData>;

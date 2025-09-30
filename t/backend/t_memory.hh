@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../src/backend/memory/HotelData.hh"
+#include "../src/backend/memory/HotelData.hh"
 
 RoomData build_agenda() {
   return {"101", 1, {

@@ -1,10 +1,7 @@
 #pragma once
 
-
 #include "concepts.hh"
 #include "Room.hh"
-
-using Rooms = std::vector<Room>;
 
 struct Hotel {
   Hotel(void *src);
@@ -47,5 +44,4 @@ struct Hotel {
 private:
   void *src;
 };
-
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <list>
 #include <boost/date_time/gregorian/gregorian.hpp>
 
 using Date = boost::gregorian::date;
@@ -18,3 +19,7 @@ static std::string (&_dstr)(const Date&)
 
 static Date (&from_string)(const std::string&)
   = boost::gregorian::from_string;
+
+struct Room;
+using Rooms = std::vector<Room>;
+using Reservations = std::list<Reservation>;

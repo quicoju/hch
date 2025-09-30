@@ -1,7 +1,6 @@
-#include "Hotel.hh"
-
 #include <exception>
 
+#include "Hotel.hh"
 #include "SQLite.hh"
 
 Hotel::Hotel(void *data_source) : src{data_source} {}

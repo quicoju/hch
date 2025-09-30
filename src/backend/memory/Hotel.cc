@@ -2,10 +2,8 @@
 #include "HotelData.hh"
 
 Hotel::Hotel(void *data_source)
-  : src{data_source}
-{
-  // data_source is expected to point to a std::vector<Room> object
-};
+  : src{data_source} // src is expected to point to a HotelData object
+{};
 
 bool Hotel::is_available_on(Date date, Duration dur, size_t n_rooms)
   const noexcept {

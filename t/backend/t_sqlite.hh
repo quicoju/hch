@@ -4,10 +4,6 @@
 
 static auto test_db = "db/hotel.db";
 
-SQLite build_agenda();
-SQLite build_src();
-SQLite build_one_room_src();
-
 SQLite build_agenda() {
   SQLite db{test_db};
   db.execute(R"(
@@ -21,9 +17,7 @@ VALUES
   return db;
 }
 
-SQLite build_src(Rooms r) {
-  // TODO: use the Rooms parameter to insert
-  // the data into the tables
+SQLite build_src() {
   SQLite db{SQLite{test_db}};
   db.execute(R"(
 DELETE FROM reservations;
