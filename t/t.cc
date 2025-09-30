@@ -11,6 +11,18 @@
 /* Room Tests
  * ==========
  */
+TEST_CASE("Room Initialization") {
+  auto src = build_agenda();
+  Room room{ "101", 5, &src };
+  REQUIRE(room.id == "101");
+  REQUIRE(room.capacity == 5);
+  REQUIRE(room.amenities == Amenities{Wifi});
+  REQUIRE(room.reservations() == Reservations{
+      {{2024, 12, 19}, Days{3}},
+      {{2024, 12, 25}, Days{5}},
+    });
+}
+
 TEST_CASE("Room::is_available_on") {
   auto src = build_agenda();
   Room room{ "101", 1, &src };
@@ -54,12 +66,6 @@ TEST_CASE("Room::cancel_reservation") {
     room.cancel_reservation({2024, 12, 12});
     REQUIRE(!room.is_available_on({2024, 12, 25}));
   }
-}
-
-TEST_CASE("Room::reservations") {
-  auto src = build_agenda();
-  Room room{ "101", 1, &src };
-  REQUIRE(room.reservations() == src.reservations);
 }
 
 /* Hotel Tests

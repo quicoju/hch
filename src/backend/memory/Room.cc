@@ -6,14 +6,18 @@
 Room::Room(const std::string id, size_t capacity, void *data_source)
  : id{id}
  , capacity{capacity}
- , src{data_source} {
+ , amenities{static_cast<RoomData *>(data_source)->amenities}
+ , src{data_source}
+{
   // the data_source is a collection of Reservations
 }
 
 Room::Room(const char *id, size_t capacity, void *data_source)
  : id{id}
  , capacity{capacity}
- , src{data_source} {
+ , amenities{static_cast<RoomData *>(data_source)->amenities}
+ , src{data_source}
+{
   // the data_source is a collection of Reservations
 }
 

@@ -171,14 +171,15 @@ SQLite get_source(Config c) {
 }
 #else
 #include "backend/memory/HotelData.hh"
+using enum Amenity;
 HotelData get_source(Config c) {
   return {
-    {"room-101", 1, },
-    {"room-102", 1, },
-    {"room-103", 1, },
-    {"room-201", 1, },
-    {"room-202", 1, },
-    {"room-203", 1, },
+    {"room-101", 1, {Wifi}},
+    {"room-102", 1, {Balcony, Wifi}, },
+    {"room-103", 1, {MiniBar, Wifi}, },
+    {"room-201", 1, {AirConditioning, Balcony}, },
+    {"room-202", 1, {Wifi}, },
+    {"room-203", 1, {MiniBar}, },
    };
 }
 #endif
