@@ -51,6 +51,7 @@ struct Room {
   /* ========== */
   const std::string id;
   const size_t capacity;
+  Amenities amenities;
 
 private:
   void *src;

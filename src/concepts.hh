@@ -23,3 +23,11 @@ static Date (&from_string)(const std::string&)
 struct Room;
 using Rooms = std::vector<Room>;
 using Reservations = std::list<Reservation>;
+
+enum class Amenity {
+  AirConditioning,
+  Balcony,
+  Wifi,
+  MiniBar,
+};
+using Amenities = std::vector<Amenity>;
