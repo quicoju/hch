@@ -24,10 +24,10 @@ struct Room;
 using Rooms = std::vector<Room>;
 using Reservations = std::list<Reservation>;
 
-enum class Amenity {
-  AirConditioning,
-  Balcony,
-  Wifi,
-  MiniBar,
+namespace Amenity {
+  static inline std::string AirConditioning = "AirConditioning";
+  static inline std::string Balcony = "Balcony";
+  static inline std::string Wifi = "Wifi";
+  static inline std::string MiniBar = "MiniBar";
 };
-using Amenities = std::vector<Amenity>;
+using Amenities = std::vector<std::string>;

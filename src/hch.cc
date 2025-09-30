@@ -171,7 +171,7 @@ SQLite get_source(Config c) {
 }
 #else
 #include "backend/memory/HotelData.hh"
-using enum Amenity;
+using namespace Amenity;
 HotelData get_source(Config c) {
   return {
     {"room-101", 1, {Wifi}},

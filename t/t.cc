@@ -11,6 +11,8 @@
 /* Room Tests
  * ==========
  */
+using namespace Amenity;
+
 TEST_CASE("Room Initialization") {
   auto src = build_agenda();
   Room room{ "101", 5, &src };
@@ -71,8 +73,6 @@ TEST_CASE("Room::cancel_reservation") {
 /* Hotel Tests
  * ===========
  */
-using Reservations = std::list<Reservation>;
-
 TEST_CASE("Hotel::is_available_on") {
   auto src = build_src();
   Hotel hotel{&src};

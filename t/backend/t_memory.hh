@@ -2,7 +2,7 @@
 
 #include "../src/backend/memory/HotelData.hh"
 
-using enum Amenity;
+using namespace Amenity;
 
 RoomData build_agenda() {
   return {"101", 1, {Wifi}, {
