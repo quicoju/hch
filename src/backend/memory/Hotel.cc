@@ -1,4 +1,5 @@
 #include "Hotel.hh"
+#include "HotelData.hh"
 
 Hotel::Hotel(void *data_source)
   : src{data_source}
@@ -24,7 +25,7 @@ Rooms Hotel::find_available_on(Date d, Duration dur)
 
   for (const auto &r: rooms()) {
     if (r.is_available_on(d, dur))
-      available_rooms.emplace_back(r.id, r.capacity, src);
+      available_rooms.emplace_back(r);
   }
   return available_rooms;
 }
@@ -36,5 +37,13 @@ Room Hotel::room(const std::string id) {
 }
 
 Rooms Hotel::rooms() const {
-    return *static_cast<std::vector<Room> *>(src);
+  auto hotel_data =  static_cast<HotelData *>(src);
+  Rooms rooms{};
+
+  for (auto& d: *hotel_data) {
+    Room r{d.id, d.capacity, &d};
+    rooms.emplace_back(r);
+  }
+
+  return rooms;
 }

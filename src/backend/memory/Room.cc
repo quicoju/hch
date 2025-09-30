@@ -1,4 +1,5 @@
 #include "Room.hh"
+#include "HotelData.hh"
 
 #include <exception>
 
@@ -19,7 +20,7 @@ Room::Room(const char *id, size_t capacity, void *data_source)
 bool Room::is_available_on(Date date, Duration dur) const
 {
   const Period p{date, dur};
-  auto &agenda = *static_cast<std::list<Reservation> *>(src);;
+  auto& agenda = static_cast<RoomData *>(src)->reservations;
   auto end = agenda.cend();
 
   return end == std::find_if(agenda.cbegin(), end,
@@ -31,14 +32,14 @@ void  Room::reserve(Date date, Duration dur)
   if (!is_available_on(date, dur))
     throw std::runtime_error{"Room is already reserved for overlapping dates"};
 
-  auto& agenda = *static_cast<std::list<Reservation> *>(src);
+  auto& agenda = static_cast<RoomData *>(src)->reservations;
   agenda.push_back({date, dur});
 }
 
 void Room::cancel_reservation(Date date)
 {
   const Period p{date, Days{1}};
-  auto &agenda_ = *static_cast<std::list<Reservation> *>(src);
+  auto& agenda_ = static_cast<RoomData *>(src)->reservations;
   auto end = agenda_.end();
 
   auto match = std::find_if(agenda_.begin(), end,
@@ -50,12 +51,12 @@ void Room::cancel_reservation(Date date)
 
 const std::list<Reservation> Room::reservations() const
 {
-  std::list<Reservation> l{};
-  auto &_src = *static_cast<std::list<Reservation> *>(src);
+  auto room_data = *static_cast<RoomData *>(src);
+  std::list<Reservation> reservations{};
 
-  for (const auto r: _src)
-    l.push_back(r);
+  for (const auto r: room_data.reservations)
+    reservations.emplace_back(r);
 
-  return l;
+  return reservations;
 }
 

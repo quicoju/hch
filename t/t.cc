@@ -73,15 +73,7 @@ TEST_CASE("Room::reservations") {
 using Reservations = std::list<Reservation>;
 
 TEST_CASE("Hotel::is_available_on") {
-  Reservations r_101{ {{2024, 12, 19}, Days{3} }};
-  Reservations r_102{ {{2024, 12, 20}, Days{1} }};
-  Reservations r_103{ {{2024, 12, 31}, Days{4} }};
-  Rooms rooms{
-    {"101", 1, &r_101},
-    {"102", 1, &r_102},
-    {"103", 1, &r_103},
-  };
-  auto src = build_src(rooms);
+  auto src = build_src();
   Hotel hotel{&src};
   SECTION("Hotel::is_available_on") {
     REQUIRE(hotel.rooms().size() == 3);
@@ -93,15 +85,7 @@ TEST_CASE("Hotel::is_available_on") {
 }
 
 TEST_CASE("Hotel::find_available_on") {
-  Reservations r_101{ {{2024, 12, 19}, Days{3} }};
-  Reservations r_102{ {{2024, 12, 20}, Days{1} }};
-  Reservations r_103{ {{2024, 12, 31}, Days{4} }};
-  Rooms rooms{
-    {"101", 1, &r_101},
-    {"102", 1, &r_102},
-    {"103", 1, &r_103},
-  };
-  auto src = build_src(rooms);
+  auto src = build_src();
   Hotel hotel{&src};
   SECTION("available") {
     Date date{2024, 12, 19};

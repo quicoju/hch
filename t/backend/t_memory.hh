@@ -1,17 +1,24 @@
 #pragma once
 
-std::list<Reservation> build_agenda() {
-  std::list agenda{
-    Reservation{ {2024, 12, 19}, Days{3} },
-    Reservation{ {2024, 12, 25}, Days{5} },
+#include "../../src/backend/memory/HotelData.hh"
+
+RoomData build_agenda() {
+  return {"101", 1, {
+      { {2024, 12, 19}, Days{3} },
+      { {2024, 12, 25}, Days{5} },
+    }};
+}
+
+HotelData build_one_room_src() {
+  return {
+    {"A-102", 1, {}},
   };
-  return agenda;
 }
 
-Rooms build_one_room_src() {
-  return Rooms{{"A-102", 1, {}}};
-}
-
-Rooms build_src(Rooms r) {
-  return r;
+HotelData build_src() {
+  return {
+    {"101", 1, {{{2024, 12, 19}, Days{3} }}},
+    {"102", 1, {{{2024, 12, 20}, Days{1} }}},
+    {"103", 1, {{{2024, 12, 31}, Days{4} }}},
+  };
 }
