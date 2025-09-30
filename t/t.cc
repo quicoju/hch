@@ -8,11 +8,6 @@
 #include "backend/t_memory.hh"
 #endif
 
-std::list agenda{
-  Reservation{ {2024, 12, 19}, Days{3} },
-  Reservation{ {2024, 12, 25}, Days{5} },
-};
-
 /* Room Tests
  * ==========
  */
@@ -64,7 +59,7 @@ TEST_CASE("Room::cancel_reservation") {
 TEST_CASE("Room::reservations") {
   auto src = build_agenda();
   Room room{ "101", 1, &src };
-  REQUIRE(room.reservations() == agenda);
+  REQUIRE(room.reservations() == src.reservations);
 }
 
 /* Hotel Tests
