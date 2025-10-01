@@ -18,7 +18,7 @@ TEST_CASE("Room Initialization") {
   Room room{ "101", 5, &src };
   REQUIRE(room.id == "101");
   REQUIRE(room.capacity == 5);
-  REQUIRE(room.amenities == Amenities{Wifi});
+  REQUIRE(room.amenities() == Amenities{Wifi});
   REQUIRE(room.reservations() == Reservations{
       {{2024, 12, 19}, Days{3}},
       {{2024, 12, 25}, Days{5}},

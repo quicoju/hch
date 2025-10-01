@@ -47,12 +47,19 @@ struct Room {
    */
   const std::list<Reservation> reservations() const;
 
+ /**
+   * @brief Provide a view of the room amenities
+   *
+   * The view is read only, it cannot be modified.
+   */
+  const Amenities amenities();
+
   /* Properties */
   /* ========== */
   const std::string id;
   const size_t capacity;
-  Amenities amenities;
 
 private:
   void *src;
+  Amenities amenities_;
 };
