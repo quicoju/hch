@@ -6,12 +6,17 @@
 Room::Room(const std::string id, size_t capacity, void *data_source)
  : id{id}
  , capacity{capacity}
- , src{data_source} {}
+ , src{data_source}
+ , amenities_{}
+{}
 
 Room::Room(const char *id, size_t capacity, void *data_source)
  : id{id}
  , capacity{capacity}
- , src{data_source} {}
+ , src{data_source}
+ , amenities_{}
+{}
+
 
 bool Room::is_available_on(Date date, Duration dur) const
 {
@@ -76,4 +81,27 @@ SELECT begin_date, duration_days
   }
 
   return l;
+}
+
+const Amenities Room::amenities()
+{
+  if (amenities_.size()) {
+    std::cout << "Using the cache\n";
+    return amenities_;
+  }
+
+  auto* db = static_cast<SQLite*>(src);
+  auto stmt = db->prepare(R"(
+SELECT amenity_name
+  FROM rooms
+  JOIN rooms_amenities ON id = room_id
+WHERE name = ?
+)");
+  stmt.bind(id);
+
+  while(stmt.next()) {
+    amenities_.emplace_back(stmt.get<std::string>());
+  }
+
+  return amenities_;
 }

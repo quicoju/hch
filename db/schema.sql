@@ -15,6 +15,17 @@ CREATE TABLE IF NOT EXISTS reservations (
     FOREIGN KEY(room_id) REFERENCES rooms(id) ON DELETE CASCADE
 );
 
+CREATE TABLE amenities (
+  name TEXT PRIMARY KEY
+);
+
+CREATE TABLE rooms_amenities (
+  room_id TEXT,
+  amenity_name TEXT,
+  FOREIGN KEY (room_id) REFERENCES rooms(id),
+  FOREIGN KEY (amenity_name) REFERENCES amenities(name)
+);
+
 -- Indexes
 -- =======
 -- This unique index provides basic protection for same day
@@ -40,11 +51,27 @@ BEGIN
 END;
 
 -- Insert some default rooms
-INSERT OR IGNORE INTO rooms (name, capacity) VALUES
-  ('room-101', 1),
-  ('room-102', 1),
-  ('room-103', 1),
-  ('room-201', 1),
-  ('room-202', 1),
-  ('room-203', 1);
+INSERT OR IGNORE INTO amenities(name)
+VALUES
+  ('AirConditioning'),
+  ('Balcony'),
+  ('MiniBar'),
+  ('Wifi');
 
+INSERT OR IGNORE INTO rooms (id, name, capacity)
+VALUES
+  (1, '101', 1),
+  (2, '102', 1),
+  (3, '103', 1),
+  (4, '201', 1),
+  (5, '202', 1),
+  (6, '203', 1);
+
+INSERT OR IGNORE into rooms_amenities (room_id, amenity_name)
+VALUES
+  (1, 'Wifi'),
+  (2, 'Wifi'),
+  (3, 'Wifi'),
+  (4, 'Wifi'),
+  (5, 'Wifi'),
+  (6, 'Wifi');
