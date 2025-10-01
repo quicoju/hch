@@ -174,12 +174,12 @@ SQLite get_source(Config c) {
 using namespace Amenity;
 HotelData get_source(Config c) {
   return {
-    {"room-101", 1, {Wifi}},
-    {"room-102", 1, {Balcony, Wifi}, },
-    {"room-103", 1, {MiniBar, Wifi}, },
-    {"room-201", 1, {AirConditioning, Balcony}, },
-    {"room-202", 1, {Wifi}, },
-    {"room-203", 1, {MiniBar}, },
+    {"101", 1, {Wifi}},
+    {"102", 1, {Balcony, Wifi}, },
+    {"103", 1, {MiniBar, Wifi}, },
+    {"201", 1, {AirConditioning, Balcony}, },
+    {"202", 1, {Wifi}, },
+    {"203", 1, {MiniBar}, },
    };
 }
 #endif
