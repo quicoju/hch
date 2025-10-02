@@ -62,6 +62,7 @@ private:
 
   Hotel& hotel;
   string current_room;
+  string command;
 
   string get_prompt() const {
     return current_room.empty()
@@ -80,10 +81,22 @@ private:
     return tokens;
   }
 
+  Room ensure_room(const Tokens& tokens) {
+    string room_id{current_room};
+
+    if (room_id.empty() && tokens.size() >= 2)
+      room_id = tokens[1];
+
+    if (room_id.empty()) throw std::invalid_argument{
+        string{"Command usage: "} + command + " ROOM"};
+
+    return hotel.room(room_id);
+  }
+
   void execute_command(const Tokens &tokens) {
     if (tokens.empty()) return;
 
-    const string &command = tokens[0];
+    command = string{tokens[0]};
 
     try {
       if (command == "set-room") {
@@ -99,15 +112,7 @@ private:
       }
 
       if (command == "list-reservations") {
-        string room_id{current_room};
-
-        if (room_id.empty() && tokens.size() >= 2)
-          room_id = tokens[1];
-
-        if (room_id.empty()) throw std::invalid_argument{
-            "Command usage: list-reservations ROOM"};
-
-        auto r = hotel.room(room_id);
+        auto r = ensure_room(tokens);
         for (const auto& reservation : r.reservations())
           std::cout << "  - " << _pstr(reservation) << std::endl;
 
@@ -115,15 +120,7 @@ private:
       }
 
       if (command == "list-amenities") {
-        string room_id{current_room};
-
-        if (room_id.empty() && tokens.size() >= 2)
-          room_id = tokens[1];
-
-        if (room_id.empty()) throw std::invalid_argument{
-            "Command usage: list-amenities ROOM"};
-
-        auto r = hotel.room(room_id);
+        auto r = ensure_room(tokens);
         for (const auto& a : r.amenities())
           std::cout << "  - " << a << std::endl;
 
