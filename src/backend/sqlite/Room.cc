@@ -88,6 +88,7 @@ SELECT amenity_name
   FROM rooms
   JOIN rooms_amenities ON id = room_id
 WHERE name = ?
+ORDER by amenity_name
 )");
   stmt.bind(id);
 
