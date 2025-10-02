@@ -30,6 +30,8 @@ OBJS = Room.o Hotel.o
 hch: $(OBJS) hch.o
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $>
 
+t.o: t/backend/*hh
+
 # The rule to build the test executable
 HotelTests: $(OBJS) t.o
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -lCatch2 -lCatch2Main -o $@ $>
