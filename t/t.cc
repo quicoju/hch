@@ -1,6 +1,7 @@
 #include "../src/Hotel.hh"
 
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
 
 #ifdef USE_sqlite
 #include "backend/t_sqlite.hh"
@@ -112,3 +113,83 @@ TEST_CASE("Hotel::room") {
   }
 }
 
+/* RateCalculator Tests
+ * ====================
+ */
+#include "RateCalculator.hh"
+#define APPROX(N) (Catch::Matchers::WithinAbs((N), 0.001))
+
+RateRules rules{
+  {RateType::Base,     ""       , 58.99}, // default nightly rate
+  {RateType::Base,     "101"    ,100.99}, // premium room rate
+  {RateType::Capacity, ""       , 0.20},  // percent surcharge per extra bed
+  {RateType::Amenity,  "Wifi"   ,  5.00}, // per night
+  {RateType::Amenity,  "Balcony", 15.00}, // per night
+};
+
+TEST_CASE("RateCalculator::rate_for - Basic room pricing") {
+  RateCalculator calc(rules);
+  auto src = room_without_wifi();
+
+  SECTION("Standard room with default rate") {
+    Room room{"102", 1, &src}; // capacity 1, basic room
+    auto rate = calc.rate_for(room, {2024, 12, 23}, Days{1});
+    REQUIRE_THAT(rate, APPROX(58.99)); // base rate only
+  }
+
+  SECTION("Premium room with specific rate") {
+    Room room{"101", 1, &src}; // room 101 has premium rate
+    auto rate = calc.rate_for(room, {2024, 12, 23}, Days{1});
+    REQUIRE_THAT(rate, APPROX(100.99)); // premium base rate
+  }
+
+  SECTION("Multiple nights") {
+    Room room{"102", 1, &src};
+    auto rate = calc.rate_for(room, {2024, 12, 23}, Days{3});
+    auto expected = 58.99 * 3;
+    REQUIRE_THAT(rate, APPROX(expected));
+  }
+}
+
+TEST_CASE("RateCalculator::rate_for - Capacity pricing") {
+  RateCalculator calc(rules);
+  auto src = room_without_wifi();
+
+  SECTION("Higher capacity room") {
+    Room room{"102", 3, &src}; // capacity 3
+    auto base_rate = 58.99;
+    auto capacity_surcharge = base_rate * 0.20 * 2;
+    auto expected = base_rate + capacity_surcharge;
+    auto rate = calc.rate_for(room, {2024, 12, 23}, Days{1});
+    REQUIRE_THAT(rate, APPROX(expected));
+  }
+}
+
+TEST_CASE("RateCalculator::rate_for - Amenity pricing") {
+  RateCalculator calc{rules};
+  auto src = build_agenda();
+
+  SECTION("Room with Wifi amenity") {
+    Room room{"101", 1, &src};
+    auto rate = calc.rate_for(room, {2024, 12, 23}, Days{1});
+    auto expected = 100.99 + 5.00; // premium rate + wifi
+    REQUIRE_THAT(rate, APPROX(expected));
+  }
+}
+
+TEST_CASE("RateCalculator::rate_for - Complex pricing") {
+  RateCalculator calc{rules};
+  auto src = room_with_amenities();
+
+  SECTION("High capacity room with multiple amenities") {
+    Room room{"103", 3, &src};
+    auto base_rate = 58.99;
+    auto expected = base_rate;
+    expected += base_rate * 0.20 * 2; // additional capacity
+    expected += 5.00 + 15.00;         // wifi + balcony
+    expected *= 4;                    // 4 nights
+
+    auto rate = calc.rate_for(room, {2024, 12, 23}, Days{4});
+    REQUIRE_THAT(rate, APPROX(expected));
+  }
+}

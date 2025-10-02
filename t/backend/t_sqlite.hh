@@ -33,7 +33,7 @@ DELETE FROM rooms;
 INSERT INTO rooms(id, name, capacity) VALUES
  (1, '101', 1),
  (2, '102', 1),
- (3, '103', 1);
+ (3, '103', 3);
 INSERT OR IGNORE INTO reservations(room_id, begin_date, duration_days)
 VALUES
   ((SELECT id FROM rooms WHERE name = '101'), '2024-12-19', 3),
@@ -52,3 +52,14 @@ INSERT INTO rooms(id, name, capacity) VALUES(1, 'A-102', 1))");
   return db;
 }
 
+SQLite room_without_wifi() {
+  SQLite db{test_db};
+  db.execute(R"(
+DELETE FROM rooms;
+INSERT INTO rooms(id, name, capacity) VALUES(1, '301', 1))");
+  return db;
+}
+
+SQLite room_with_amenities() {
+  return build_src();
+}
