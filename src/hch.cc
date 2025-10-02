@@ -114,6 +114,22 @@ private:
         return;
       }
 
+      if (command == "list-amenities") {
+        string room_id{current_room};
+
+        if (room_id.empty() && tokens.size() >= 2)
+          room_id = tokens[1];
+
+        if (room_id.empty()) throw std::invalid_argument{
+            "Command usage: list-amenities ROOM"};
+
+        auto r = hotel.room(room_id);
+        for (const auto& a : r.amenities())
+          std::cout << "  - " << a << std::endl;
+
+        return;
+      }
+
       if (command == "reserve") {
         if (tokens.size() < 2) throw std::invalid_argument {
           "Command usage: reserve DATE[+DAYS] [ROOM]"};

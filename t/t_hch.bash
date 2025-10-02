@@ -69,6 +69,13 @@ run_test "List reservations shows period" \
  quit" \
 "- \[2024-Dec-01/2024-Dec-03\]"
 
+run_test "List amenities" \
+"set-room 102
+ list-amenities
+ quit" \
+" - Balcony\|\
+  - Wifi"
+
 run_test "Cancel reservation" \
 "set-room 101
  reserve 2024-12-01+3d
