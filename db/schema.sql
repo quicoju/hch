@@ -70,8 +70,8 @@ VALUES
 INSERT OR IGNORE into rooms_amenities (room_id, amenity_name)
 VALUES
   (1, 'Wifi'),
-  (2, 'Wifi'),
-  (3, 'Wifi'),
-  (4, 'Wifi'),
+  (2, 'Wifi'),    (2,'Balcony'),
+  (3, 'Wifi'),    (3, 'MiniBar'),
+  (4, 'Balcony'), (4, 'AirConditioning'),
   (5, 'Wifi'),
-  (6, 'Wifi');
+  (6, 'MiniBar');
