@@ -3,23 +3,11 @@
 
 #include <exception>
 
-Room::Room(const std::string id, size_t capacity, void *data_source)
+Room::Room(const std::string& id, size_t capacity, void *data_source)
  : id{id}
  , capacity{capacity}
  , src{data_source}
- , amenities_{}
-{
-  // the data_source is a collection of Reservations
-}
-
-Room::Room(const char *id, size_t capacity, void *data_source)
- : id{id}
- , capacity{capacity}
- , src{data_source}
- , amenities_{}
-{
-  // the data_source is a collection of Reservations
-}
+ , amenities_{} {}
 
 bool Room::is_available_on(Date date, Duration dur) const
 {
