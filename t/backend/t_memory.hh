@@ -32,3 +32,16 @@ HotelData build_src() {
     {"103", 3, {Balcony, Wifi}, {{{2024, 12, 31}, Days{4} }}},
   };
 }
+
+// Rate tests
+#include "../src/RateCalculator.hh"
+
+Rate::Table build_rate_table() {
+  return Rate::Table {
+    {Rate::Type::Base,     ""       , 58.99}, // default nightly rate
+    {Rate::Type::Base,     "101"    ,100.99}, // premium room rate
+    {Rate::Type::Capacity, ""       , 0.20},  // percent surcharge per extra bed
+    {Rate::Type::Amenity,  "Wifi"   ,  5.00}, // per night
+    {Rate::Type::Amenity,  "Balcony", 15.00}, // per night
+  };
+}

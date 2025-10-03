@@ -1,5 +1,11 @@
 #pragma once
 
+#include <string>
+#include <map>
+#include <vector>
+
+#include "Hotel.hh"
+
 /**
  * @brief Implementation of Rate logic.
  *
@@ -54,26 +60,7 @@ namespace Rate {
 
   struct Calculator {
 
-    Calculator(const Table& tab)
-    {
-      // Represent the rates in maps so it's easier to find the
-      // overrides, without having to traverse the table many times
-      for (const auto& rate : tab) {
-        switch (rate.type) {
-        case Type::Base:
-          if (rate.key.empty()) default_base_rate_ = rate.value;
-          else base_rates_[rate.key] = rate.value;
-          break;
-        case Type::Capacity:
-          if (rate.key.empty()) default_capacity_rate_ = rate.value;
-          else capacity_rates_[rate.key] = rate.value;
-          break;
-        case Type::Amenity:
-          amenity_rates_[rate.key] = rate.value;
-          break;
-        }
-      }
-    }
+    Calculator(const Table&);
 
     double rate_for(Room& room, const Date& _, const Duration& duration)
       const {
@@ -104,5 +91,4 @@ namespace Rate {
     double default_capacity_rate_ = 0.0;
   };
 }
-
 
