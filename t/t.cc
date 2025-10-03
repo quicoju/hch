@@ -119,16 +119,16 @@ TEST_CASE("Hotel::room") {
 #include "RateCalculator.hh"
 #define APPROX(N) (Catch::Matchers::WithinAbs((N), 0.001))
 
-RateRules rules{
-  {RateType::Base,     ""       , 58.99}, // default nightly rate
-  {RateType::Base,     "101"    ,100.99}, // premium room rate
-  {RateType::Capacity, ""       , 0.20},  // percent surcharge per extra bed
-  {RateType::Amenity,  "Wifi"   ,  5.00}, // per night
-  {RateType::Amenity,  "Balcony", 15.00}, // per night
+Rate::Table table {
+  {Rate::Type::Base,     ""       , 58.99}, // default nightly rate
+  {Rate::Type::Base,     "101"    ,100.99}, // premium room rate
+  {Rate::Type::Capacity, ""       , 0.20},  // percent surcharge per extra bed
+  {Rate::Type::Amenity,  "Wifi"   ,  5.00}, // per night
+  {Rate::Type::Amenity,  "Balcony", 15.00}, // per night
 };
 
-TEST_CASE("RateCalculator::rate_for - Basic room pricing") {
-  RateCalculator calc(rules);
+TEST_CASE("Rate::Calculator::rate_for - Basic room pricing") {
+  Rate::Calculator calc(table);
   auto src = room_without_wifi();
 
   SECTION("Standard room with default rate") {
@@ -151,8 +151,8 @@ TEST_CASE("RateCalculator::rate_for - Basic room pricing") {
   }
 }
 
-TEST_CASE("RateCalculator::rate_for - Capacity pricing") {
-  RateCalculator calc(rules);
+TEST_CASE("Rate::Calculator::rate_for - Capacity pricing") {
+  Rate::Calculator calc(table);
   auto src = room_without_wifi();
 
   SECTION("Higher capacity room") {
@@ -165,8 +165,8 @@ TEST_CASE("RateCalculator::rate_for - Capacity pricing") {
   }
 }
 
-TEST_CASE("RateCalculator::rate_for - Amenity pricing") {
-  RateCalculator calc{rules};
+TEST_CASE("Rate::Calculator::rate_for - Amenity pricing") {
+  Rate::Calculator calc{table};
   auto src = build_agenda();
 
   SECTION("Room with Wifi amenity") {
@@ -177,8 +177,8 @@ TEST_CASE("RateCalculator::rate_for - Amenity pricing") {
   }
 }
 
-TEST_CASE("RateCalculator::rate_for - Complex pricing") {
-  RateCalculator calc{rules};
+TEST_CASE("Rate::Calculator::rate_for - Complex pricing") {
+  Rate::Calculator calc{table};
   auto src = room_with_amenities();
 
   SECTION("High capacity room with multiple amenities") {
