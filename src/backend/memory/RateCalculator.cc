@@ -1,10 +1,10 @@
 #include "RateCalculator.hh"
 
 namespace Rate {
-  Calculator::Calculator(const Table& table)
+  Calculator::Calculator(void* src)
   {
-    // Represent the rates in maps so it's easier to find the
-    // overrides, without having to traverse the table many times
+    auto& table = *static_cast<Rate::Table*>(src);
+
     for (const auto& rate : table) {
       switch (rate.type) {
       case Type::Base:

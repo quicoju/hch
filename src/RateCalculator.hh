@@ -25,22 +25,27 @@
  * The meaning of the "key" and the "value" changes depending on the  Rate::Type;
  * there are 3 different types:
  *
- *  1. Base:
-       it's the base rate for a single room per night, the key is a room
-       identifier and the value is the base rate for that room in currencty. If
-       the key is an empty string, then this is the default rate.
-
-    2. Capacity
-       This is the additional surcharge per additional unit of capacity of the
-       room. The "key"" is a room identifier and the "value" is a decimal number
-       between 0.00 and 1.00, which represents the percentage of the base rate
-       to be added per unit of capacity, i.e. If a room has a capacity greater than
-       1, then an additional charge of "base_rate * capacity_rate * (cap-1)" per
-       night will be added to the total.
-
-    3. Amenity
-       The "key" is the name of the amenity, i.e. "Wifi", "Balcony", etc. And the
-       value is the price of such amenity per night expressed in currency.
+ *   1. Base:
+ *      it's the base rate for a single room per night, the key is a room
+ *      identifier and the value is the base rate for that room in currencty. If
+ *      the key is an empty string, then this is the default rate.
+ *
+ *   2. Capacity
+ *      This is the additional surcharge per additional unit of capacity of the
+ *      room. The "key"" is a room identifier and the "value" is a decimal number
+ *      between 0.00 and 1.00, which represents the percentage of the base rate
+ *      to be added per unit of capacity, i.e. If a room has a capacity greater than
+ *      1, then an additional charge of "base_rate * capacity_rate * (cap-1)" per
+ *      night will be added to the total.
+ *
+ *   3. Amenity
+ *      The "key" is the name of the amenity, i.e. "Wifi", "Balcony", etc. And the
+ *      value is the price of such amenity per night expressed in currency.
+ *
+ * Once the "Rate::Calculator" object is constructed, now it should be possible to
+ * ask it to calculate the rate for a given room on a given period i.e.
+ *
+ *     calc.rate_for(room, {2024, 12, 23}, Days{1});
  */
 
 namespace Rate {
@@ -59,8 +64,7 @@ namespace Rate {
   using Table = std::vector<Entry>;
 
   struct Calculator {
-
-    Calculator(const Table&);
+    Calculator(void*);
 
     double rate_for(Room& room, const Date& _, const Duration& duration)
       const {
@@ -84,6 +88,8 @@ namespace Rate {
     }
 
   private:
+    // Represent the rate table as maps so it's easier to find the
+    // overrides, without having to traverse the table many times
     std::map<std::string, double> base_rates_;     // room specific base rates
     std::map<std::string, double> capacity_rates_; // room specific capacity rates
     std::map<std::string, double> amenity_rates_;  // amenity specific price

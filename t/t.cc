@@ -121,7 +121,7 @@ TEST_CASE("Hotel::room") {
 auto table = build_rate_table();
 
 TEST_CASE("Rate::Calculator::rate_for - Basic room pricing") {
-  Rate::Calculator calc(table);
+  Rate::Calculator calc(&table);
   auto src = room_without_wifi();
 
   SECTION("Standard room with default rate") {
@@ -145,7 +145,7 @@ TEST_CASE("Rate::Calculator::rate_for - Basic room pricing") {
 }
 
 TEST_CASE("Rate::Calculator::rate_for - Capacity pricing") {
-  Rate::Calculator calc(table);
+  Rate::Calculator calc(&table);
   auto src = room_without_wifi();
 
   SECTION("Higher capacity room") {
@@ -159,7 +159,7 @@ TEST_CASE("Rate::Calculator::rate_for - Capacity pricing") {
 }
 
 TEST_CASE("Rate::Calculator::rate_for - Amenity pricing") {
-  Rate::Calculator calc{table};
+  Rate::Calculator calc{&table};
   auto src = build_agenda();
 
   SECTION("Room with Wifi amenity") {
@@ -171,7 +171,7 @@ TEST_CASE("Rate::Calculator::rate_for - Amenity pricing") {
 }
 
 TEST_CASE("Rate::Calculator::rate_for - Complex pricing") {
-  Rate::Calculator calc{table};
+  Rate::Calculator calc{&table};
   auto src = room_with_amenities();
 
   SECTION("High capacity room with multiple amenities") {
