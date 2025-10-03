@@ -151,6 +151,9 @@ struct SQLite {
       if constexpr (std::is_same_v<T, int> || std::is_same_v<T, size_t>) {
         return sqlite3_column_int(stmt_, column);
       }
+      else if constexpr (std::is_same_v<T, double>) {
+        return sqlite3_column_double(stmt_, column);
+      }
       else if constexpr (std::is_same_v<T, std::string>) {
         const char* text = (const char*)sqlite3_column_text(stmt_, column);
         return std::string{text};

@@ -1,5 +1,5 @@
--- Tables
--- ======
+-- Room
+-- ====
 CREATE TABLE IF NOT EXISTS rooms (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL UNIQUE,
@@ -26,6 +26,21 @@ CREATE TABLE rooms_amenities (
   FOREIGN KEY (amenity_name) REFERENCES amenities(name)
 );
 
+-- Rates
+-- =====
+CREATE TABLE IF NOT EXISTS rate_types (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE -- 'Base', 'Capacity', 'Amenity'
+);
+
+CREATE TABLE IF NOT EXISTS rates (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    type_id INTEGER NOT NULL,
+    key_name TEXT NOT NULL DEFAULT '', -- room_id, amenity name, or empty for global
+    value REAL NOT NULL,
+    FOREIGN KEY(type_id) REFERENCES rate_types(id)
+);
+
 -- Indexes
 -- =======
 -- This unique index provides basic protection for same day
@@ -33,6 +48,10 @@ CREATE TABLE rooms_amenities (
 -- the "prervent_overlapping_reservations" trigger
 CREATE UNIQUE INDEX IF NOT EXISTS idx_reservtions_room_date
     ON reservations(room_id, begin_date);
+
+-- Index for efficient lookups
+CREATE INDEX IF NOT EXISTS idx_rates_type_key
+    ON rates(type_id, key_name);
 
 -- Triggers
 -- ========
@@ -75,3 +94,20 @@ VALUES
   (4, 'Balcony'), (4,'AirConditioning'),
   (5, 'Wifi'),
   (6, 'MiniBar');
+
+
+-- Rates
+-- =====
+INSERT OR IGNORE INTO rate_types (id, name)
+VALUES
+    (1, 'Base'),
+    (2, 'Capacity'),
+    (3, 'Amenity');
+
+INSERT OR IGNORE INTO rates (type_id, key_name, value)
+VALUES
+    (1, '',        58.99), -- default base rate
+    (1, '101',    100.99), -- premium room rate
+    (2, '',         0.20), -- default capacity surcharge
+    (3, 'Wifi',     5.00), -- wifi amenity
+    (3, 'Balcony', 15.00); -- balcony amenity

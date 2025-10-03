@@ -63,3 +63,26 @@ INSERT INTO rooms(id, name, capacity) VALUES(1, '301', 1))");
 SQLite room_with_amenities() {
   return build_src();
 }
+
+// Rate tests
+#include "../src/RateCalculator.hh"
+
+SQLite build_rate_table() {
+  SQLite db{test_db};
+  db.execute(R"(
+INSERT OR IGNORE INTO rate_types (id, name)
+VALUES
+    (1, 'Base'),
+    (2, 'Capacity'),
+    (3, 'Amenity');
+
+INSERT OR IGNORE INTO rates (type_id, key_name, value)
+VALUES
+    (1, '',        58.99), -- default base rate
+    (1, '101',    100.99), -- premium room rate
+    (2, '',         0.20), -- default capacity surcharge
+    (3, 'Wifi',     5.00), -- wifi amenity
+    (3, 'Balcony', 15.00); -- balcony amenity)");
+
+  return db;
+}
