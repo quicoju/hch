@@ -1,6 +1,4 @@
-#include <iostream>
 #include <regex>
-#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -19,7 +17,6 @@ using Backend = SQLite;
 using Backend = HotelData;
 #endif
 
-template<typename T=Backend>
 struct Hch : Repl {
   Hch(int argc, char* argv[])
     : conf{ argc, argv }
@@ -154,7 +151,7 @@ private:
 
 int main (int argc, char *argv[])
 {
-  Hch<Backend>{argc, argv}.run();
+  Hch{argc, argv}.run();
 
   std::cout << "bye!\n";
   return 0;
