@@ -1,5 +1,8 @@
 #pragma once
 
+#include <sstream>
+#include <string>
+
 struct Repl {
   using string = std::string;
   using Tokens = std::vector<string>;
