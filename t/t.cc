@@ -1,4 +1,4 @@
-#include "../src/Hotel.hh"
+#include "Hotel.hh"
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
@@ -6,9 +6,9 @@
 #define APPROX(N) (Catch::Matchers::WithinAbs((N), 0.001))
 
 #ifdef USE_sqlite
-#include "backend/t_sqlite.hh"
+#include "t_sqlite.hh"
 #else
-#include "backend/t_memory.hh"
+#include "t_memory.hh"
 #endif
 
 /* Room Tests

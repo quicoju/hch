@@ -1,15 +1,17 @@
 CXX = c++
 
 CXXFLAGS = -Wall -g -std=c++2a \
-	-I/usr/local/include -I./src
+	-I/usr/local/include \
+	-I./src \
+	-I./t/backend
 
 LDFLAGS = -L/usr/local/lib \
 	-lboost_date_time \
 	-lreadline
 
 # Possible backends are:
-#   - memory
-#   - sqlite
+# - memory
+# - sqlite
 BACKEND ?= memory
 BACKEND_DIR = src/backend/$(BACKEND)
 CXXFLAGS += -I$(BACKEND_DIR)
