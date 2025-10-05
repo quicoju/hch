@@ -20,17 +20,17 @@ RoomData room_with_amenities() {
 }
 
 HotelData build_one_room_src() {
-  return {
+  return {{
     {"A-102", 1, {Wifi}, },
-  };
+    }};
 }
 
 HotelData build_src() {
-  return {
+  return {{
     {"101", 1, {Wifi}, {{{2024, 12, 19}, Days{3} }}},
     {"102", 1, {Wifi}, {{{2024, 12, 20}, Days{1} }}},
     {"103", 3, {Balcony, Wifi}, {{{2024, 12, 31}, Days{4} }}},
-  };
+    }};
 }
 
 // Rate tests

@@ -11,4 +11,12 @@ struct RoomData {
   Reservations reservations;
 };
 
-using HotelData = std::vector<RoomData>;
+using RoomsData = std::vector<RoomData>;
+
+struct HotelData {
+  HotelData() : rooms{} {}
+  HotelData(RoomsData r) : rooms{r} {}
+
+  // Properties
+  RoomsData rooms;
+};

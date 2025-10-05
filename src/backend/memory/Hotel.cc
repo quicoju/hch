@@ -38,7 +38,7 @@ Rooms Hotel::rooms() const {
   auto hotel_data =  static_cast<HotelData *>(src);
   Rooms rooms{};
 
-  for (auto& d: *hotel_data) {
+  for (auto& d: hotel_data->rooms) {
     Room r{d.id, d.capacity, &d};
     rooms.emplace_back(r);
   }
