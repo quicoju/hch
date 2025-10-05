@@ -12,6 +12,7 @@ LDFLAGS = -L/usr/local/lib \
 #   - sqlite
 BACKEND ?= memory
 BACKEND_DIR = src/backend/$(BACKEND)
+CXXFLAGS += -I$(BACKEND_DIR)
 
 # Backend-specific flags
 .if $(BACKEND) == "sqlite"

@@ -5,10 +5,10 @@
 #include "Repl.hh"
 
 #ifdef USE_sqlite
-#include "backend/sqlite/SQLite.hh"
+#include "SQLite.hh"
 using Backend = SQLite;
 #else
-#include "backend/memory/HotelData.hh"
+#include "HotelData.hh"
 using Backend = HotelData;
 #endif
 
