@@ -1,10 +1,5 @@
 #include <regex>
 #include <stdexcept>
-#include <string>
-#include <vector>
-
-#include <readline/readline.h>
-#include <readline/history.h>
 
 #include "Hotel.hh"
 #include "Repl.hh"
@@ -100,7 +95,7 @@ private:
   struct Config {
     Config(int argc, char *argv[]) {
       for (auto i{1}; i < argc; i++) {
-        std::string arg{argv[i]};
+        string arg{argv[i]};
         if (arg.find("--db=") == 0)
           db_path = arg.substr(5);
       }
@@ -122,7 +117,7 @@ private:
   }
 
   // Parse date string like "2025-11-03" or "2025-11-03+3d"
-  std::pair<Date, Duration> parse_date(const std::string &s)
+  std::pair<Date, Duration> parse_date(const string &s)
   {
     using namespace std;
     regex re(R"((\d{4}-\d{2}-\d{2})(?:\+(\d+)d)?)");

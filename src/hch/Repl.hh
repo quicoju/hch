@@ -3,6 +3,10 @@
 #include <sstream>
 #include <string>
 
+#include <readline/readline.h>
+#include <readline/history.h>
+
+
 struct Repl {
   using string = std::string;
   using Tokens = std::vector<string>;
