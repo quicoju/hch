@@ -22,11 +22,12 @@ CXXFLAGS += -DUSE_$(BACKEND)
 OBJS = Room.o Hotel.o RateCalculator.o
 
 .SUFFIXES: .o .cc .hh
-.PATH.cc: src $(BACKEND_DIR) t
+.PATH.cc: src src/hch $(BACKEND_DIR) t
 
 .cc.o: src/concepts.hh Makefile
 	$(CXX) $(CXXFLAGS) -c $<
 
+hch.o: src/hch/Repl.hh
 hch: $(OBJS) hch.o
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $>
 
