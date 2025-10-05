@@ -48,7 +48,7 @@ db/hotel.db: db/schema.sql
 
 test: HotelTests hch
 	@echo "\n*Unit tests*"
-	./HotelTests
+	./HotelTests -a --colour-mode=none
 	@echo "*Integration tests*"
 	bash t/t_hch.bash
 
