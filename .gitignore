@@ -1,2 +1,4 @@
-/src/*.out
-/src/*.o
+*.o
+HotelTests*
+hch
+db/*.db
