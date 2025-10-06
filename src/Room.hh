@@ -1,6 +1,5 @@
 #pragma once
 
-#include <list>
 #include "concepts.hh"
 
 struct Room {
@@ -44,7 +43,7 @@ struct Room {
    *
    * The view is read only, it cannot be modified.
    */
-  const std::list<Reservation> reservations() const;
+  const Reservations reservations() const;
 
  /**
    * @brief Provide a view of the room amenities
