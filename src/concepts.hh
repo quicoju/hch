@@ -1,6 +1,7 @@
 #pragma once
 
 #include <list>
+#include <set>
 #include <boost/date_time/gregorian/gregorian.hpp>
 
 using Date = boost::gregorian::date;
@@ -30,4 +31,4 @@ namespace Amenity {
   static inline std::string Wifi = "Wifi";
   static inline std::string MiniBar = "MiniBar";
 };
-using Amenities = std::vector<std::string>;
+using Amenities = std::set<std::string>;

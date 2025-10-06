@@ -93,7 +93,7 @@ ORDER by amenity_name
   stmt.bind(id);
 
   while(stmt.next()) {
-    amenities_.emplace_back(stmt.get<std::string>());
+    amenities_.emplace(stmt.get<std::string>());
   }
 
   return amenities_;
