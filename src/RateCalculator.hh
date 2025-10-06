@@ -68,23 +68,39 @@ namespace Rate {
 
     double rate_for(Room& room, const Date& _, const Duration& duration)
       const {
-      auto base_rate = base_rates_.count(room.id)
-        ? base_rates_.at(room.id) : default_base_rate_;
-
-      auto capacity_rate = capacity_rates_.count(room.id)
-        ? capacity_rates_.at(room.id) : default_capacity_rate_;
+      auto base_rate = base_rate_for(room, _, duration);
+      auto capacity_rate = capacity_rate_for(room, _, duration);
 
       double total = base_rate;
 
       if (room.capacity > 1)
         total += base_rate * capacity_rate * (room.capacity - 1);
 
-      for (const auto& amenity : room.amenities()) {
-        if (amenity_rates_.count(amenity))
-          total += amenity_rates_.at(amenity);
-      }
+      for (const auto& amenity : room.amenities())
+        total += amenity_rate_for(amenity);
 
       return total * duration.days();
+    }
+
+    inline double
+    base_rate_for(Room& r, const Date& _, const Duration& dur=Days{1})
+      const {
+      return base_rates_.count(r.id)
+        ? base_rates_.at(r.id) : default_base_rate_;
+    }
+
+    inline double
+    capacity_rate_for(Room& r, const Date& _, const Duration& dur=Days{1})
+      const {
+      return capacity_rates_.count(r.id)
+        ? capacity_rates_.at(r.id) : default_capacity_rate_;
+    }
+
+    inline double
+    amenity_rate_for(const Amenity& name)
+      const {
+      return amenity_rates_.count(name)
+        ? amenity_rates_.at(name) : 0.00;
     }
 
   private:
@@ -97,4 +113,3 @@ namespace Rate {
     double default_capacity_rate_ = 0.0;
   };
 }
-
