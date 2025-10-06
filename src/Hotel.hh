@@ -24,7 +24,7 @@ struct Hotel {
    * @param Check for availability starting on this date
    * @param Number of days that the rooms are required to be available
    */
-  Rooms find_available_on(Date, Duration dur=Days{1})
+  Rooms find_available_on(Date, Duration dur=Days{1}, Amenities amenities={})
     const noexcept;
 
   /**
@@ -44,4 +44,3 @@ struct Hotel {
 private:
   void *src;
 };
-

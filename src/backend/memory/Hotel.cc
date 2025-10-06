@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "Hotel.hh"
 #include "HotelData.hh"
 
@@ -17,12 +19,12 @@ bool Hotel::is_available_on(Date date, Duration dur, size_t n_rooms)
   return false;
 }
 
-Rooms Hotel::find_available_on(Date d, Duration dur)
+Rooms Hotel::find_available_on(Date d, Duration dur, Amenities amenities)
   const noexcept {
   Rooms available_rooms{};
 
-  for (const auto &r: rooms()) {
-    if (r.is_available_on(d, dur))
+  for (auto &r: rooms()) {
+    if (r.is_available_on(d, dur) && r.has_amenities(amenities))
       available_rooms.emplace_back(r);
   }
   return available_rooms;

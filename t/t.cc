@@ -102,14 +102,27 @@ TEST_CASE("Hotel::is_available_on") {
 TEST_CASE("Hotel::find_available_on") {
   auto src = build_src();
   Hotel hotel{&src};
-  SECTION("available") {
+  SECTION("available w/o amenities") {
     Date date{2024, 12, 19};
     auto available = hotel.find_available_on(date, Days{3});
     REQUIRE(available.size() == 1);
     REQUIRE(available[0].id == "103");
   }
 
-  SECTION("unavailable") {
+  SECTION("available with amenities") {
+    Date date{2024, 12, 19};
+    auto a = hotel.find_available_on(date, Days{3}, {Balcony});
+    auto b = hotel.find_available_on(date, Days{3}, {Wifi, Balcony});
+    REQUIRE(a.size() == 1);
+    REQUIRE(a[0].id == "103");
+  }
+
+  SECTION("unavailable with amenities") {
+    Date date{2024, 12, 19};
+    REQUIRE(hotel.find_available_on(date, Days{3}, {MiniBar}).empty());
+  }
+
+  SECTION("unavailable w/o amenities") {
     Date date{2024, 12, 1};
     REQUIRE(hotel.find_available_on(date, Days{40}).empty());
   }
