@@ -96,17 +96,3 @@ ORDER by amenity_name
 
   return amenities_;
 }
-
-// TODO: note that this is the exact implementation
-// as the in-memory backend, this may be a candidate
-// to provide it as part of the interface
-const bool Room::has_amenities(const Amenities& list)
-{
-  auto& room_amenities = amenities();
-
-  for (auto& amenity: list)
-    if (!room_amenities.contains(amenity))
-      return false;
-
-  return true;
-}
