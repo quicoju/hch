@@ -53,6 +53,12 @@ struct Room {
    */
   const Amenities amenities();
 
+  /**
+   * @brief Returns true if the room provides  the given amenities
+   */
+  const bool has_amenities(const Amenities& amenities);
+
+
   double rate(const Date&, const Duration&) const;
 
   /* Properties */

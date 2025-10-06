@@ -59,3 +59,19 @@ const Amenities Room::amenities()
 
   return amenities_;
 }
+
+#include <set>
+
+const bool Room::has_amenities(const Amenities& list)
+{
+  std::set<std::string> a{};
+
+  for (auto amenity: amenities())
+    a.emplace(amenity);
+
+  for (auto& amenity: list)
+    if (!a.contains(amenity))
+      return false;
+
+  return true;
+}

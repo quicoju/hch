@@ -73,6 +73,19 @@ TEST_CASE("Room::cancel_reservation") {
   }
 }
 
+TEST_CASE("Room::has_amenities") {
+  auto src = room_with_amenities();
+  Room room{"103", 3, &src};
+  SECTION("true") {
+    REQUIRE(room.has_amenities({}));
+    REQUIRE(room.has_amenities({Balcony}));
+    REQUIRE(room.has_amenities({Balcony, Wifi}));
+  }
+  SECTION("false") {
+    REQUIRE_FALSE(room.has_amenities({MiniBar}));
+  }
+}
+
 /* Hotel Tests
  * ===========
  */
