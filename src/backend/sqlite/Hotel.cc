@@ -28,7 +28,7 @@ SELECT COUNT(*) >= ?
     : false;
 }
 
-Rooms Hotel::find_available_on(Date d, Duration dur)
+Rooms Hotel::find_available_on(Date d, Duration dur, Amenities amenities)
   const noexcept {
 
   Rooms available_rooms{};
@@ -52,7 +52,12 @@ SELECT r.name, capacity
     while (stmt.next()) {
       auto room_id = stmt.get<std::string>();
       auto capacity = stmt.get<size_t>(1);
-      available_rooms.emplace_back(room_id, capacity, db);
+
+      // TODO: it might be better to create a dynamic query that takes a
+      // number of amenities and filters the rooms directly in the database
+      Room r{room_id, capacity, db};
+      if (r.has_amenities(amenities))
+        available_rooms.push_back(std::move(r));
     }
   }
   catch (const std::runtime_error& e) {
