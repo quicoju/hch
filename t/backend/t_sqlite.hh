@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../src/backend/sqlite/SQLite.hh"
+#include "SQLite.hh"
 
 static auto test_db = "db/hotel.db";
 
@@ -65,7 +65,7 @@ SQLite room_with_amenities() {
 }
 
 // Rate tests
-#include "../src/RateCalculator.hh"
+#include "RateCalculator.hh"
 
 SQLite build_rate_table() {
   SQLite db{test_db};

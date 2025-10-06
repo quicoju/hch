@@ -1,8 +1,6 @@
 #pragma once
 
-#include "../src/backend/memory/HotelData.hh"
-
-using namespace Amenity;
+#include "HotelData.hh"
 
 RoomData build_agenda() {
   return {"101", 1, {Wifi}, {
@@ -34,7 +32,7 @@ HotelData build_src() {
 }
 
 // Rate tests
-#include "../src/RateCalculator.hh"
+#include "RateCalculator.hh"
 
 Rate::Table build_rate_table() {
   return Rate::Table {

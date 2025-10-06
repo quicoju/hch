@@ -25,10 +25,9 @@ struct Room;
 using Rooms = std::vector<Room>;
 using Reservations = std::list<Reservation>;
 
-namespace Amenity {
-  static inline std::string AirConditioning = "AirConditioning";
-  static inline std::string Balcony = "Balcony";
-  static inline std::string Wifi = "Wifi";
-  static inline std::string MiniBar = "MiniBar";
-};
-using Amenities = std::set<std::string>;
+using Amenity = std::string;
+using Amenities = std::set<Amenity>;
+static inline Amenity AirConditioning = "AirConditioning";
+static inline Amenity Balcony = "Balcony";
+static inline Amenity Wifi = "Wifi";
+static inline Amenity MiniBar = "MiniBar";

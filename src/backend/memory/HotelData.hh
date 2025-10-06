@@ -21,7 +21,6 @@ struct HotelData {
   // constructor, this helps to define a "Backend"
   // type and make it very simple to build the backend
   // specific source without using generic programming
-    using namespace Amenity;
     rooms = {
       {"101", 1, {Wifi}},
       {"102", 1, {Balcony, Wifi},},
