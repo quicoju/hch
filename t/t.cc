@@ -143,6 +143,30 @@ TEST_CASE("Hotel::room") {
  * ====================
  */
 auto table_src = build_rate_table();
+TEST_CASE("basic rate accessors") {
+  Rate::Calculator calc(&table_src);
+  auto src_1 = room_with_amenities(); // capacity 3, Balcony, Wifi
+  Room standard_room{"103", 3, &src_1};
+  Room premium_room{"101", 3, &src_1};
+
+  auto src_2 = room_without_wifi(); // capacity 1
+  Room single_room{"301", 1, &src_2};
+
+  SECTION("base_rate_for") {
+    REQUIRE_THAT(calc.base_rate_for(standard_room), APPROX(58.99));
+    REQUIRE_THAT(calc.base_rate_for(premium_room), APPROX(100.99));
+  }
+
+  SECTION("capacity_rate_for") {
+    REQUIRE_FALSE(calc.capacity_rate_for(single_room));
+    REQUIRE_THAT(calc.capacity_rate_for(standard_room), APPROX(58.99*0.2*2));
+  }
+
+  SECTION("amenity_rate_for") {
+    REQUIRE_THAT(calc.amenity_rate_for("Balcony"), APPROX(15.00));
+    REQUIRE_FALSE(calc.amenity_rate_for("MiniBar"));
+  }
+}
 
 TEST_CASE("Rate::Calculator::rate_for - Basic room pricing") {
   Rate::Calculator calc(&table_src);
