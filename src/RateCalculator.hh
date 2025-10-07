@@ -66,21 +66,15 @@ namespace Rate {
   struct Calculator {
     Calculator(void*);
 
-    double rate_for(Room& room, const Date& _, const Duration& duration)
-      const {
+    double rate_for(Room& room, const Date& _, const Duration& duration) const
+    {
       // TODO: to keep it simple, for now don't pass dates and durations
       // to the rate accessors, but the buisiness might want to include
       // those values in the calculations, but also another approach
       // is that the date and duration are relevant only to the final
       // calculation, which in that case the rate accessors might stay
       // simple as they are.
-      auto base_rate = base_rate_for(room);
-      auto capacity_rate = capacity_rate_for(room);
-
-      double total = base_rate;
-
-      if (room.capacity > 1)
-        total += base_rate * capacity_rate * (room.capacity - 1);
+      auto total = base_rate_for(room) + capacity_rate_for(room);
 
       for (const auto& amenity : room.amenities())
         total += amenity_rate_for(amenity);
@@ -89,8 +83,8 @@ namespace Rate {
     }
 
     std::map<std::string, double>
-    detailed_rate_for(Room& room, const Date& _, const Duration& dur)
-      const {
+    detailed_rate_for(Room& room, const Date& _, const Duration& dur) const
+    {
       std::map<std::string, double> report{
         {"Base", base_rate_for(room)},
         {"Capacity", capacity_rate_for(room)},
@@ -103,22 +97,25 @@ namespace Rate {
     }
 
     inline double
-    base_rate_for(Room& r)
-      const {
+    base_rate_for(Room& r) const
+    {
       return base_rates_.count(r.id)
         ? base_rates_.at(r.id) : default_base_rate_;
     }
 
     inline double
-    capacity_rate_for(Room& r)
-      const {
-      return capacity_rates_.count(r.id)
+    capacity_rate_for(Room& r) const
+    {
+      if (r.capacity <= 1) return 0;
+      auto cap_rate = capacity_rates_.count(r.id)
         ? capacity_rates_.at(r.id) : default_capacity_rate_;
+
+      return base_rate_for(r) * cap_rate * (r.capacity - 1);
     }
 
     inline double
-    amenity_rate_for(const Amenity& name)
-      const {
+    amenity_rate_for(const Amenity& name) const
+    {
       return amenity_rates_.count(name)
         ? amenity_rates_.at(name) : 0.00;
     }
