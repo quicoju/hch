@@ -124,10 +124,25 @@ private:
     return hotel.room(room_id);
   }
 
-  // Parse date string like "2025-11-03" or "2025-11-03+3d"
   std::pair<Date, Duration> parse_date(const string &s)
   {
     using namespace std;
+
+    if (s.empty()) return {Today, Days{1}};
+
+
+    // if no date is provided but a duration, then make it
+    // relative to today's date i.e. +3d
+    if (s.front() == '+') {
+      regex re(R"(\+(\d+)d)");
+      smatch match;
+      if (!regex_match(s, match, re))
+        throw std::invalid_argument{"Invalid duration format"};
+      return {Today, Days{stoi(match[1])}};
+    }
+
+    // Parse date string with optional duration, i.e.
+    // "2025-11-03" or "2025-11-03+3d"
     regex re(R"((\d{4}-\d{2}-\d{2})(?:\+(\d+)d)?)");
     smatch match;
 
