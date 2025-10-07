@@ -82,17 +82,17 @@ namespace Rate {
       return total * duration.days(); // maybe consider the date season here
     }
 
-    std::map<std::string, double>
-    detailed_rate_for(Room& room, const Date& _, const Duration& dur) const
+    RateReport
+    rate_report_for(Room& room, const Date& _, const Duration& dur) const
     {
-      std::map<std::string, double> report{
+      RateReport report{
         {"Base", base_rate_for(room)},
         {"Capacity", capacity_rate_for(room)},
       };
       for (auto& amenity: room.amenities())
-        report.emplace(amenity, amenity_rate_for(amenity));
+        report.emplace_back(amenity, amenity_rate_for(amenity));
 
-      report.emplace("Total", rate_for(room, _, Days{1}));
+      report.emplace_back("Total", rate_for(room, _, Days{1}));
       return report;
     }
 

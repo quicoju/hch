@@ -10,7 +10,7 @@ using Duration = boost::gregorian::date_duration;
 using Reservation = boost::gregorian::date_period;
 using Period = boost::gregorian::date_period;
 
-static Date Today(boost::gregorian::day_clock::local_day());
+static Date Today{ boost::gregorian::day_clock::local_day() };
 
 // period string
 static std::string (&_pstr)(const Period&)
@@ -33,3 +33,5 @@ static inline Amenity AirConditioning = "AirConditioning";
 static inline Amenity Balcony = "Balcony";
 static inline Amenity Wifi = "Wifi";
 static inline Amenity MiniBar = "MiniBar";
+
+using RateReport = std::vector<std::pair<std::string, double>>;
