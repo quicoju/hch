@@ -4,7 +4,7 @@
 #include <map>
 #include <vector>
 
-#include "Hotel.hh"
+#include "Room.hh"
 
 /**
  * @brief Implementation of Rate logic.

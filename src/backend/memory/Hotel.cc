@@ -37,7 +37,7 @@ Room Hotel::room(const std::string id) {
 }
 
 Rooms Hotel::rooms() const {
-  auto hotel_data =  static_cast<HotelData *>(src);
+  auto* hotel_data =  static_cast<HotelData *>(src);
   Rooms rooms{};
 
   for (auto& d: hotel_data->rooms) {
@@ -46,4 +46,9 @@ Rooms Hotel::rooms() const {
   }
 
   return rooms;
+}
+
+Rate::Calculator Hotel::rate_calculator() const {
+  auto* hotel_data = static_cast<HotelData*>(src);
+  return Rate::Calculator{&hotel_data->rates};
 }

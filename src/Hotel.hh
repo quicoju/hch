@@ -2,6 +2,7 @@
 
 #include "concepts.hh"
 #include "Room.hh"
+#include "RateCalculator.hh"
 
 struct Hotel {
   Hotel(void *src);
@@ -40,6 +41,11 @@ struct Hotel {
    *
    */
   Rooms rooms() const;
+
+  /**
+   * @brief return an instance of the Rate::Calculator
+   */
+  Rate::Calculator rate_calculator() const;
 
 private:
   void *src;

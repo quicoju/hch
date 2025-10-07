@@ -101,3 +101,9 @@ SELECT name, capacity
 
   return rooms;
 }
+
+Rate::Calculator Hotel::rate_calculator() const
+{
+  auto *db = static_cast<SQLite*>(src);
+  return Rate::Calculator{db};
+}
