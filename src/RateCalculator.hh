@@ -68,8 +68,14 @@ namespace Rate {
 
     double rate_for(Room& room, const Date& _, const Duration& duration)
       const {
-      auto base_rate = base_rate_for(room, _, duration);
-      auto capacity_rate = capacity_rate_for(room, _, duration);
+      // TODO: to keep it simple, for now don't pass dates and durations
+      // to the rate accessors, but the buisiness might want to include
+      // those values in the calculations, but also another approach
+      // is that the date and duration are relevant only to the final
+      // calculation, which in that case the rate accessors might stay
+      // simple as they are.
+      auto base_rate = base_rate_for(room);
+      auto capacity_rate = capacity_rate_for(room);
 
       double total = base_rate;
 
@@ -79,18 +85,32 @@ namespace Rate {
       for (const auto& amenity : room.amenities())
         total += amenity_rate_for(amenity);
 
-      return total * duration.days();
+      return total * duration.days(); // maybe consider the date season here
+    }
+
+    std::map<std::string, double>
+    detailed_rate_for(Room& room, const Date& _, const Duration& dur)
+      const {
+      std::map<std::string, double> report{
+        {"Base", base_rate_for(room)},
+        {"Capacity", capacity_rate_for(room)},
+      };
+      for (auto& amenity: room.amenities())
+        report.emplace(amenity, amenity_rate_for(amenity));
+
+      report.emplace("Total", rate_for(room, _, Days{1}));
+      return report;
     }
 
     inline double
-    base_rate_for(Room& r, const Date& _, const Duration& dur=Days{1})
+    base_rate_for(Room& r)
       const {
       return base_rates_.count(r.id)
         ? base_rates_.at(r.id) : default_base_rate_;
     }
 
     inline double
-    capacity_rate_for(Room& r, const Date& _, const Duration& dur=Days{1})
+    capacity_rate_for(Room& r)
       const {
       return capacity_rates_.count(r.id)
         ? capacity_rates_.at(r.id) : default_capacity_rate_;

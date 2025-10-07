@@ -45,6 +45,14 @@ struct Hch : Repl {
         for (const auto& a : r.amenities())
           std::cout << "  - " << a << std::endl;
       }
+      else if (command == "list-rate") {
+        auto r = ensure_room(command, tokens);
+        auto calc = hotel.rate_calculator();
+        auto report = calc.detailed_rate_for(r, Today, Days{1});
+
+        for(auto& [name, cost]: report)
+          std::cout << " - " << name << ": " << cost << std::endl;
+      }
       else if (command == "reserve") {
         if (tokens.size() < 2) throw std::invalid_argument {
           "Command usage: reserve DATE[+DAYS] [ROOM]"};
