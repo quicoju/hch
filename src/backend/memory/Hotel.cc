@@ -4,7 +4,7 @@
 #include "HotelData.hh"
 
 Hotel::Hotel(void *data_source)
-  : src{data_source} // src is expected to point to a HotelData object
+  : src{ data_source } // src is expected to point to a HotelData object
 {};
 
 bool Hotel::is_available_on(Date date, Duration dur, size_t n_rooms)
@@ -48,7 +48,9 @@ Rooms Hotel::rooms() const {
   return rooms;
 }
 
-Rate::Calculator Hotel::rate_calculator() const {
+const RateReport
+Hotel::rate_report_for(Room room, Date _, Duration dur) const {
   auto* hotel_data = static_cast<HotelData*>(src);
-  return Rate::Calculator{&hotel_data->rates};
+  auto calc = Rate::Calculator{&hotel_data->rates};
+  return calc.rate_report_for(room, _, dur);
 }

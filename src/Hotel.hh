@@ -43,11 +43,14 @@ struct Hotel {
   Rooms rooms() const;
 
   /**
-   * @brief return an instance of the Rate::Calculator
+   * @brief provide rate report associated to the room
    *
-   * TODO: maybe the calculator should be a cached instance
+   * @param Room identifier
+   * @param Date for the rate to be calculated (defaults to Today)
+   * @param Number of days for the rate to be calculated (defaults to 1)
    */
-  Rate::Calculator rate_calculator() const;
+  const RateReport
+  rate_report_for(Room, Date date=Today, Duration dur=Days{1}) const;
 
 private:
   void *src;
