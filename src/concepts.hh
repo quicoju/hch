@@ -10,6 +10,8 @@ using Duration = boost::gregorian::date_duration;
 using Reservation = boost::gregorian::date_period;
 using Period = boost::gregorian::date_period;
 
+static Date Today(boost::gregorian::day_clock::local_day());
+
 // period string
 static std::string (&_pstr)(const Period&)
   = boost::gregorian::to_simple_string;

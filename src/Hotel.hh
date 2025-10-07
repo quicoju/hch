@@ -44,6 +44,8 @@ struct Hotel {
 
   /**
    * @brief return an instance of the Rate::Calculator
+   *
+   * TODO: maybe the calculator should be a cached instance
    */
   Rate::Calculator rate_calculator() const;
 
