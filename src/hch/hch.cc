@@ -46,10 +46,13 @@ struct Hch : Repl {
           std::cout << "  - " << a << std::endl;
       }
       else if (command == "list-rate") {
-        auto r = ensure_room(command, tokens);
-        auto calc = hotel.rate_calculator();
-        auto report = calc.detailed_rate_for(r, Today, Days{1});
+        auto room = ensure_room(command, tokens);
 
+        auto n_arg = current_room.empty() ? 2 : 1;
+        auto date_str = tokens.size() > n_arg ? tokens[n_arg] : "";
+
+        // TODO: extend the rate_report to consider the Days
+        auto report = hotel.rate_report_for(room, Today, Days{1});
         for(auto& [name, cost]: report)
           std::cout << " - " << name << ": " << cost << std::endl;
       }
@@ -128,8 +131,8 @@ private:
   {
     using namespace std;
 
+    // provide defaults
     if (s.empty()) return {Today, Days{1}};
-
 
     // if no date is provided but a duration, then make it
     // relative to today's date i.e. +3d

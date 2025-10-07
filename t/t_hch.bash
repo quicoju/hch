@@ -86,3 +86,11 @@ run_test "Cancel reservation" \
 "Reservation cancelled.\|.* \
  - \[2025-Jan-05/2025-Jan-09\]"
 
+run_test "list rate" \
+"set-room 101
+ list-rate
+ quit" \
+"- Base: 100.99\|\
+ - Capacity: 0\|\
+ - Wifi: 5\|\
+ - Total: 105.99"
