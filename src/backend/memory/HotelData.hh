@@ -14,7 +14,7 @@ struct RoomData {
 using RoomsData = std::vector<RoomData>;
 
 struct HotelData {
-  HotelData(std::string _) : rooms{} {
+  HotelData(std::string _) : rooms{}, rates{} {
   // This constructor and data were made to feed
   // hch's src default hotel, it takes a string
   // as an argument to mirror the sqlite backend
@@ -29,10 +29,18 @@ struct HotelData {
       {"202", 1, {Wifi},},
       {"203", 1, {MiniBar},}
     };
+    rates = {
+      {Rate::Type::Base,     ""       , 58.99}, // default nightly rate
+      {Rate::Type::Base,     "101"    ,100.99}, // premium room rate
+      {Rate::Type::Capacity, ""       , 0.20},  // percent surcharge per extra bed
+      {Rate::Type::Amenity,  "Wifi"   ,  5.00}, // per night
+      {Rate::Type::Amenity,  "Balcony", 15.00}, // per night
+    };
   }
 
-  HotelData(RoomsData r) : rooms{r} {}
+  HotelData(RoomsData r) : rooms{r}, rates{} {}
 
   // Properties
   RoomsData rooms;
+  Rate::Table rates;
 };
