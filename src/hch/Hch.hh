@@ -27,70 +27,10 @@ struct Hch : Repl {
 
   void execute(const string& command, const Tokens& tokens) override {
     try {
-      if (command_table_.contains(command)) {
+      if (command_table_.contains(command))
         (this->*command_table_.at(command))(tokens);
-      }
-      else if (command == "list-reservations") {
-        auto r = ensure_room(command, tokens);
-        for (const auto& reservation : r.reservations())
-          std::cout << "  - " << _pstr(reservation) << std::endl;
-      }
-      else if (command == "list-amenities") {
-        auto r = ensure_room(command, tokens);
-        for (const auto& a : r.amenities())
-          std::cout << "  - " << a << std::endl;
-      }
-      else if (command == "list-rate") {
-        auto room = ensure_room(command, tokens);
-
-        auto n_arg = current_room.empty() ? 2 : 1;
-        auto date_str = tokens.size() > n_arg ? tokens[n_arg] : "";
-
-        // TODO: extend the rate_report to consider the Days
-        auto report = hotel.rate_report_for(room, Today, Days{1});
-        for(auto& [name, cost]: report)
-          std::cout << " - " << name << ": " << cost << std::endl;
-      }
-      else if (command == "reserve") {
-        if (tokens.size() < 2) throw std::invalid_argument {
-          "Command usage: reserve DATE[+DAYS] [ROOM]"};
-
-        string date_str{tokens[1]};
-        string room_id{current_room};
-
-        if (room_id.empty()) {
-          if (tokens.size() < 3) throw std::invalid_argument {
-              "Command usage: reserve DATE[+DAYS] ROOM" };
-          else room_id = tokens[2];
-        }
-
-        auto [date, duration] = parse_date(date_str);
-        hotel.room(room_id).reserve(date, duration);
-        std::cout << "Room reserved successfully.\n";
-      }
-      else if (command == "cancel-reservation") {
-        if (tokens.size() < 2) throw std::invalid_argument {
-          "Command usage: cancel-reservation DATE[+DAYS] [ROOM]"};
-
-        string date_str{tokens[1]};
-        string room_id{current_room};
-
-        if (room_id.empty()) {
-          if (tokens.size() < 3) throw std::invalid_argument {
-              "Command usage: cancel-reservation DATE[+DAYS] ROOM" };
-          else room_id = tokens[2];
-        }
-
-        auto [date, _] = parse_date(date_str);
-        hotel.room(room_id).cancel_reservation(date);
-        std::cout << "Reservation cancelled.\n";
-      }
-      else if (command == "quit" || command == "exit") {
-        std::exit(0);
-      }
-      else {
+      else
         std::cout << "Unknown command: " << command << std::endl;
-      }
     }
     catch (const std::exception& e) {
       std::cout << "Error: " << e.what() << std::endl;
@@ -167,9 +107,19 @@ private:
   std::unordered_map<string, Action> command_table_ = {
     {"set-room", &Hch::set_room},
     {"unset-room", &Hch::unset_room},
+    {"list-reservations", &Hch::list_reservations},
+    {"list-amenities", &Hch::list_amenities},
+    {"list-rate", &Hch::list_rate},
+    {"reserve", &Hch::reserve},
+    {"cancel-reservation", &Hch::cancel_reservation},
+    {"quit", &Hch::quit},
+    {"exit", &Hch::quit}
   };
 
-  /* Commands */
+  ////////////////////////////
+  // Command implementation //
+  ////////////////////////////
+
   void set_room(const Tokens& tokens)
   {
     if (tokens.size() < 2) throw std::invalid_argument{
@@ -182,5 +132,66 @@ private:
     current_room.clear();
   }
 
+  void list_reservations(const Tokens& tokens) {
+    auto r = ensure_room("list-reservations", tokens);
+    for (const auto& reservation : r.reservations())
+      std::cout << "  - " << _pstr(reservation) << std::endl;
+  }
 
+  void list_amenities(const Tokens& tokens) {
+    auto r = ensure_room("list-amenities", tokens);
+    for (const auto& a : r.amenities())
+      std::cout << "  - " << a << std::endl;
+  }
+
+  void list_rate(const Tokens& tokens) {
+    auto room = ensure_room("list-rate", tokens);
+
+    auto n_arg = current_room.empty() ? 2 : 1;
+    auto date_str = tokens.size() > n_arg ? tokens[n_arg] : "";
+
+    auto report = hotel.rate_report_for(room, Today, Days{1});
+    for(auto& [name, cost]: report)
+      std::cout << " - " << name << ": " << cost << std::endl;
+  }
+
+  void reserve(const Tokens& tokens) {
+    if (tokens.size() < 2) throw std::invalid_argument {
+        "Command usage: reserve DATE[+DAYS] [ROOM]"};
+
+    string date_str{tokens[1]};
+    string room_id{current_room};
+
+    if (room_id.empty()) {
+      if (tokens.size() < 3) throw std::invalid_argument {
+          "Command usage: reserve DATE[+DAYS] ROOM" };
+      else room_id = tokens[2];
+    }
+
+    auto [date, duration] = parse_date(date_str);
+    hotel.room(room_id).reserve(date, duration);
+    std::cout << "Room reserved successfully.\n";
+  }
+
+  void cancel_reservation(const Tokens& tokens) {
+    if (tokens.size() < 2) throw std::invalid_argument {
+        "Command usage: cancel-reservation DATE[+DAYS] [ROOM]"};
+
+    string date_str{tokens[1]};
+    string room_id{current_room};
+
+    if (room_id.empty()) {
+      if (tokens.size() < 3) throw std::invalid_argument {
+          "Command usage: cancel-reservation DATE[+DAYS] ROOM" };
+      else room_id = tokens[2];
+    }
+
+    auto [date, _] = parse_date(date_str);
+    hotel.room(room_id).cancel_reservation(date);
+    std::cout << "Reservation cancelled.\n";
+  }
+
+  void quit(const Tokens& tokens) {
+    std::exit(0);
+  }
 }; // struct Hch
