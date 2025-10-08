@@ -30,8 +30,8 @@ OBJS = Room.o Hotel.o RateCalculator.o Room_common.o
 .cc.o: src/concepts.hh Makefile
 	$(CXX) $(CXXFLAGS) -c $<
 
-hch.o: src/hch/Repl.hh
-hch: $(OBJS) hch.o
+main.o: src/hch/*.hh
+hch: $(OBJS) main.o
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $>
 
 t.o: src/RateCalculator.hh t/backend/*hh

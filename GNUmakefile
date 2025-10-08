@@ -29,8 +29,8 @@ OBJS = Room.o Hotel.o RateCalculator.o
 %.o: %.cc src/concepts.hh GNUmakefile
 	$(CXX) $(CXXFLAGS) -c $<
 
-hch.o: src/hch/Repl.hh
-hch: $(OBJS) hch.o
+main.o: src/hch/*.hh
+hch: $(OBJS) main.o
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
 
 t.o: src/RateCalculator.hh t/backend/*hh

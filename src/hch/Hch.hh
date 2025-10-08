@@ -168,12 +168,3 @@ private:
   Hotel hotel;
   string current_room;
 }; // struct Hch
-
-
-int main (int argc, char *argv[])
-{
-  Hch{argc, argv}.run();
-
-  std::cout << "bye!\n";
-  return 0;
-}
