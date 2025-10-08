@@ -153,11 +153,11 @@ private:
   void list_rate(const Tokens& tokens)
   {
     auto room = ensure_room("list-rate", tokens);
-
     auto n_arg = current_room.empty() ? 2 : 1;
     auto date_str = tokens.size() > n_arg ? tokens[n_arg] : "";
+    auto [date, duration] = parse_date(date_str);
 
-    auto report = hotel.rate_report_for(room, Today, Days{1});
+    auto report = hotel.rate_report_for(room, date, duration);
     for(auto& [name, cost]: report)
       std::cout << " - " << name << ": " << cost << std::endl;
   }

@@ -85,14 +85,15 @@ namespace Rate {
     RateReport
     rate_report_for(Room& room, const Date& _, const Duration& dur) const
     {
+      auto days = dur.days();
       RateReport report{
-        {"Base", base_rate_for(room)},
-        {"Capacity", capacity_rate_for(room)},
+        {"Base", base_rate_for(room) * days},
+        {"Capacity", capacity_rate_for(room) * days},
       };
       for (auto& amenity: room.amenities())
-        report.emplace_back(amenity, amenity_rate_for(amenity));
+        report.emplace_back(amenity, amenity_rate_for(amenity) * days);
 
-      report.emplace_back("Total", rate_for(room, _, Days{1}));
+      report.emplace_back("Total", rate_for(room, _, dur));
       return report;
     }
 
