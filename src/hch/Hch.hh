@@ -19,13 +19,15 @@ struct Hch : Repl {
     , hotel{ Hotel{&src} }
   { }
 
-  string prompt() const override {
+  string prompt() const override
+  {
     return current_room.empty()
       ? "(hch) "
       : "(hch " + current_room + ") ";
   }
 
-  void execute(const string& command, const Tokens& tokens) override {
+  void execute(const string& command, const Tokens& tokens) override
+  {
     try {
       if (command_table_.contains(command))
         (this->*command_table_.at(command))(tokens);
@@ -50,7 +52,8 @@ private:
   };
 
 
-  Room ensure_room(const string& command, const Tokens& tokens) {
+  Room ensure_room(const string& command, const Tokens& tokens)
+  {
     string room_id{current_room};
 
     if (room_id.empty() && tokens.size() >= 2)
@@ -93,7 +96,8 @@ private:
     return {date, duration};
   }
 
-  Backend get_source() {
+  Backend get_source()
+  {
     return Backend{conf.db_path};
   }
 
@@ -132,19 +136,22 @@ private:
     current_room.clear();
   }
 
-  void list_reservations(const Tokens& tokens) {
+  void list_reservations(const Tokens& tokens)
+  {
     auto r = ensure_room("list-reservations", tokens);
     for (const auto& reservation : r.reservations())
       std::cout << "  - " << _pstr(reservation) << std::endl;
   }
 
-  void list_amenities(const Tokens& tokens) {
+  void list_amenities(const Tokens& tokens)
+  {
     auto r = ensure_room("list-amenities", tokens);
     for (const auto& a : r.amenities())
       std::cout << "  - " << a << std::endl;
   }
 
-  void list_rate(const Tokens& tokens) {
+  void list_rate(const Tokens& tokens)
+  {
     auto room = ensure_room("list-rate", tokens);
 
     auto n_arg = current_room.empty() ? 2 : 1;
@@ -155,7 +162,8 @@ private:
       std::cout << " - " << name << ": " << cost << std::endl;
   }
 
-  void reserve(const Tokens& tokens) {
+  void reserve(const Tokens& tokens)
+  {
     if (tokens.size() < 2) throw std::invalid_argument {
         "Command usage: reserve DATE[+DAYS] [ROOM]"};
 
@@ -173,7 +181,8 @@ private:
     std::cout << "Room reserved successfully.\n";
   }
 
-  void cancel_reservation(const Tokens& tokens) {
+  void cancel_reservation(const Tokens& tokens)
+  {
     if (tokens.size() < 2) throw std::invalid_argument {
         "Command usage: cancel-reservation DATE[+DAYS] [ROOM]"};
 
@@ -191,7 +200,8 @@ private:
     std::cout << "Reservation cancelled.\n";
   }
 
-  void quit(const Tokens& tokens) {
+  void quit(const Tokens& tokens)
+  {
     std::exit(0);
   }
 }; // struct Hch
