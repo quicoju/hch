@@ -27,13 +27,8 @@ struct Hch : Repl {
 
   void execute(const string& command, const Tokens& tokens) override {
     try {
-      if (command == "set-room") {
-        if (tokens.size() < 2) throw std::invalid_argument{
-            "Command usage: set-room ROOM"};
-        current_room = hotel.room(tokens[1]).id;
-      }
-      else if (command == "unset-room") {
-        current_room.clear();
+      if (command_table_.contains(command)) {
+        (this->*command_table_.at(command))(tokens);
       }
       else if (command == "list-reservations") {
         auto r = ensure_room(command, tokens);
@@ -167,4 +162,25 @@ private:
   Backend src;
   Hotel hotel;
   string current_room;
+
+  using Action = void(Hch::*)(const Tokens&);
+  std::unordered_map<string, Action> command_table_ = {
+    {"set-room", &Hch::set_room},
+    {"unset-room", &Hch::unset_room},
+  };
+
+  /* Commands */
+  void set_room(const Tokens& tokens)
+  {
+    if (tokens.size() < 2) throw std::invalid_argument{
+        "Command usage: set-room ROOM"};
+    current_room = hotel.room(tokens[1]).id;
+  }
+
+  void unset_room(const Tokens& tokens)
+  {
+    current_room.clear();
+  }
+
+
 }; // struct Hch
