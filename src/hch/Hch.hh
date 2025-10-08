@@ -22,8 +22,8 @@ struct Hch : Repl {
   string prompt() const override
   {
     return current_room.empty()
-      ? "(hch) "
-      : "(hch " + current_room + ") ";
+      ? "hch> "
+      : "hch[room " + current_room + "]> ";
   }
 
   void execute(const string& command, const Tokens& tokens) override

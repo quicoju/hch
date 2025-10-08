@@ -43,18 +43,18 @@ cleanup
 
 run_test "Initial prompt" \
 "quit" \
-"(hch)"
+"hch>"
 
 run_test "Room context prompt" \
 "set-room 101
  quit" \
-"(hch 101)"
+"hch\[room 101\]>"
 
 run_test "Unset room prompt" \
 "set-room 101
  unset-room
  quit" \
-"(hch) "
+"hch>"
 
 run_test "Reserve with context" \
 "set-room 101
