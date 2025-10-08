@@ -104,7 +104,6 @@ SELECT name, capacity
 
 const RateReport
 Hotel::rate_report_for(Room room, Date _, Duration dur) const {
-  auto* db = static_cast<SQLite*>(src);
   auto calc = Rate::Calculator{src};
   return calc.rate_report_for(room, _, dur);
 }
