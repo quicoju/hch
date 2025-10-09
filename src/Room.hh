@@ -3,7 +3,11 @@
 #include "concepts.hh"
 
 struct Room {
-  Room(const std::string& id, size_t capacity, void* src);
+  Room(const std::string& id, size_t capacity, void* src)
+    : id{id}
+    , capacity{capacity}
+    , src{src}
+  {}
 
   /**
    * @brief Returns true if the room is available on a given date.
@@ -57,9 +61,6 @@ struct Room {
    */
   const bool has_amenities(const Amenities& amenities);
 
-
-  double rate(const Date&, const Duration&) const;
-
   /* Properties */
   /* ========== */
   const std::string id;
@@ -68,5 +69,4 @@ struct Room {
 private:
   void *src;
   Amenities amenities_;
-  double base_rate_;
 };

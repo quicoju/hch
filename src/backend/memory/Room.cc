@@ -1,18 +1,12 @@
-#include "Room.hh"
-#include "HotelData.hh"
-
 #include <exception>
 
-Room::Room(const std::string& id, size_t capacity, void *data_source)
- : id{id}
- , capacity{capacity}
- , src{data_source}
- , amenities_{} {}
+#include "Room.hh"
+#include "HotelData.hh"
 
 bool Room::is_available_on(Date date, Duration dur) const
 {
   const Period p{date, dur};
-  auto& agenda = static_cast<RoomData *>(src)->reservations;
+  auto& agenda = static_cast<RoomData*>(src)->reservations;
   auto end = agenda.cend();
 
   return end == std::find_if(agenda.cbegin(), end,
@@ -41,12 +35,12 @@ void Room::cancel_reservation(Date date)
     agenda_.erase(match);
 }
 
-const std::list<Reservation> Room::reservations() const
+const Reservations Room::reservations() const
 {
-  auto room_data = *static_cast<RoomData *>(src);
-  std::list<Reservation> reservations{};
+  auto* room_data = static_cast<RoomData*>(src);
+  Reservations reservations{};
 
-  for (const auto r: room_data.reservations)
+  for (const auto r: room_data->reservations)
     reservations.emplace_back(r);
 
   return reservations;
@@ -55,7 +49,7 @@ const std::list<Reservation> Room::reservations() const
 const Amenities Room::amenities()
 {
   if (!amenities_.size())
-      amenities_ =  static_cast<RoomData *>(src)->amenities;
+    amenities_ =  static_cast<RoomData*>(src)->amenities;
 
   return amenities_;
 }
