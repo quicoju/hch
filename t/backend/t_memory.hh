@@ -34,8 +34,6 @@ HotelData build_src() {
 }
 
 // Rate tests
-#include "RateCalculator.hh"
-
 Rate::Table build_rate_table() {
   return Rate::Table {
     {Rate::Type::Base,     ""       , 58.99}, // default nightly rate

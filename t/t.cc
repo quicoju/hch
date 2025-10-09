@@ -151,6 +151,8 @@ TEST_CASE("Hotel::room") {
 /* RateCalculator Tests
  * ====================
  */
+#include "RateCalculator.hh"
+
 auto table_src = build_rate_table();
 TEST_CASE("basic rate accessors") {
   Rate::Calculator calc(&table_src);

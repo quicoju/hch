@@ -72,8 +72,6 @@ SQLite room_with_amenities() {
 }
 
 // Rate tests
-#include "RateCalculator.hh"
-
 SQLite build_rate_table() {
   SQLite db{test_db};
   db.execute(R"(
