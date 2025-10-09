@@ -54,7 +54,7 @@ test: HotelTests hch
 database: db/hotel.db
 
 clean:
-	rm -f *.o HotelTests hch db/hotel.db
+	rm -f *.o HotelTests hch db/*.db
 
 help:
 	@echo "Available backends: memory, sqlite"
