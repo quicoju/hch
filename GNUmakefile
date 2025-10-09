@@ -46,9 +46,12 @@ db/hotel.db: db/schema.sql
 .PHONY: clean
 
 test: HotelTests hch
-	@echo "\n*Unit tests*"
+	@echo
+	@echo "UNIT TESTS"
+	@echo "----------"
 	./HotelTests -a --colour-mode=none
-	@echo "*Integration tests*"
+	@echo "INTEGRATION TESTS"
+	@echo "-----------------"
 	bash t/t_hch.bash
 
 database: db/hotel.db

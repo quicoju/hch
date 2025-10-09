@@ -25,7 +25,7 @@ CXXFLAGS += -DUSE_$(BACKEND)
 OBJS = Hotel.o RateCalculator.o Room.o Room_common.o
 
 .SUFFIXES: .o .cc .hh
-.PATH.cc: src src/hch src/backend $(BACKEND_DIR) t
+.PATH.cc: src src/backend src/hch $(BACKEND_DIR) t
 
 .cc.o: src/concepts.hh Makefile
 	$(CXX) $(CXXFLAGS) -c $<
@@ -47,9 +47,12 @@ db/hotel.db: db/schema.sql
 .PHONY: clean
 
 test: HotelTests hch
-	@echo "\n*Unit tests*"
+	@echo
+	@echo "UNIT TESTS"
+	@echo "----------"
 	./HotelTests -a --colour-mode=none
-	@echo "*Integration tests*"
+	@echo "INTEGRATION TESTS"
+	@echo "-----------------"
 	bash t/t_hch.bash
 
 database: db/hotel.db
