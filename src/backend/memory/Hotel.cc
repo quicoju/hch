@@ -3,14 +3,11 @@
 #include "Hotel.hh"
 #include "HotelData.hh"
 
-Hotel::Hotel(void *data_source)
-  : src{ data_source } // src is expected to point to a HotelData object
-{};
-
 bool Hotel::is_available_on(Date date, Duration dur, size_t n_rooms)
-  const noexcept {
+  const
+{
 
-  for (const auto &r: rooms()) {
+  for (const auto& r: rooms()) {
     if (r.is_available_on(date, dur)) {
       --n_rooms;
       if (!n_rooms) return true;
@@ -20,24 +17,27 @@ bool Hotel::is_available_on(Date date, Duration dur, size_t n_rooms)
 }
 
 Rooms Hotel::find_available_on(Date d, Duration dur, Amenities amenities)
-  const noexcept {
+  const
+{
   Rooms available_rooms{};
 
-  for (auto &r: rooms()) {
+  for (auto& r: rooms()) {
     if (r.is_available_on(d, dur) && r.has_amenities(amenities))
       available_rooms.emplace_back(r);
   }
   return available_rooms;
 }
 
-Room Hotel::room(const std::string id) {
-  for (auto &r : rooms())
+Room Hotel::room(const std::string id)
+{
+  for (auto& r : rooms())
     if (r.id == id) return r;
   throw std::invalid_argument{std::string{"Room "} + id + " not found"};
 }
 
-Rooms Hotel::rooms() const {
-  auto* hotel_data =  static_cast<HotelData *>(src);
+Rooms Hotel::rooms() const
+{
+  auto* hotel_data =  static_cast<HotelData*>(src);
   Rooms rooms{};
 
   for (auto& d: hotel_data->rooms) {
@@ -49,7 +49,8 @@ Rooms Hotel::rooms() const {
 }
 
 const RateReport
-Hotel::rate_report_for(Room room, Date _, Duration dur) const {
+Hotel::rate_report_for(Room room, Date _, Duration dur) const
+{
   auto* hotel_data = static_cast<HotelData*>(src);
   auto calc = Rate::Calculator{&hotel_data->rates};
   return calc.rate_report_for(room, _, dur);

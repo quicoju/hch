@@ -3,10 +3,8 @@
 #include "Hotel.hh"
 #include "SQLite.hh"
 
-Hotel::Hotel(void *data_source) : src{data_source} {}
-
 bool Hotel::is_available_on(Date date, Duration dur, size_t n_rooms)
-  const noexcept
+  const
 {
   auto* db = static_cast<SQLite*>(src);
   auto stmt = db->prepare(R"(
@@ -29,7 +27,8 @@ SELECT COUNT(*) >= ?
 }
 
 Rooms Hotel::find_available_on(Date d, Duration dur, Amenities amenities)
-  const noexcept {
+  const
+{
 
   Rooms available_rooms{};
   auto* db = static_cast<SQLite*>(src);
@@ -68,7 +67,7 @@ SELECT r.name, capacity
 };
 
 Room Hotel::room(const std::string name) {
-  auto *db = static_cast<SQLite*>(src);
+  auto* db = static_cast<SQLite*>(src);
   auto stmt = db->prepare(R"(
 SELECT name, capacity FROM rooms
  WHERE name = ?
@@ -86,7 +85,7 @@ SELECT name, capacity FROM rooms
 
 Rooms Hotel::rooms() const
 {
-  auto *db = static_cast<SQLite*>(src);
+  auto* db = static_cast<SQLite*>(src);
   auto stmt = db->prepare(R"(
 SELECT name, capacity
   FROM rooms

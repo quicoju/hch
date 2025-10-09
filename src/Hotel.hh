@@ -5,7 +5,7 @@
 #include "RateCalculator.hh"
 
 struct Hotel {
-  Hotel(void *src);
+  Hotel(void* src) noexcept : src{src} {};
 
   /**
    * @brief Returns true only if there are N_ROOMS available on
@@ -16,7 +16,7 @@ struct Hotel {
    * @param Number of days that the rooms are required to be available
    */
   bool is_available_on(Date, Duration dur=Days{1}, size_t n_rooms=1)
-    const noexcept;
+    const;
 
   /**
    * @brief Return all the available rooms for the given DATE and
@@ -26,7 +26,7 @@ struct Hotel {
    * @param Number of days that the rooms are required to be available
    */
   Rooms find_available_on(Date, Duration dur=Days{1}, Amenities amenities={})
-    const noexcept;
+    const;
 
   /**
    * @brief Returns the room identified with ID
@@ -53,5 +53,5 @@ struct Hotel {
   rate_report_for(Room, Date date=Today, Duration dur=Days{1}) const;
 
 private:
-  void *src;
+  void* src;
 };
