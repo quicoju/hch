@@ -7,6 +7,7 @@ cleanup() {
     if [[ x$BACKEND == "xsqlite" ]]; then
         rm $db 2>/dev/null
         sqlite3 $db ".read db/schema.sql"
+        sqlite3 $db ".read db/mockhotel.sql"
     fi
 }
 
