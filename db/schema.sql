@@ -15,11 +15,11 @@ CREATE TABLE IF NOT EXISTS reservations (
     FOREIGN KEY(room_id) REFERENCES rooms(id) ON DELETE CASCADE
 );
 
-CREATE TABLE amenities (
+CREATE TABLE IF NOT EXISTS amenities (
   name TEXT PRIMARY KEY
 );
 
-CREATE TABLE rooms_amenities (
+CREATE TABLE IF NOT EXISTS rooms_amenities (
   room_id TEXT,
   amenity_name TEXT,
   FOREIGN KEY (room_id) REFERENCES rooms(id),
