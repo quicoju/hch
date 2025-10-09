@@ -22,7 +22,7 @@ LDFLAGS += -lsqlite3
 CXXFLAGS += -DUSE_$(BACKEND)
 .endif
 
-OBJS = Room.o Hotel.o RateCalculator.o Room_common.o
+OBJS = Hotel.o RateCalculator.o Room.o Room_common.o
 
 .SUFFIXES: .o .cc .hh
 .PATH.cc: src src/hch src/backend $(BACKEND_DIR) t
@@ -34,7 +34,7 @@ main.o: src/hch/*.hh
 hch: $(OBJS) main.o
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $>
 
-t.o: src/RateCalculator.hh t/backend/*hh
+t.o: src/*.hh t/backend/*hh
 
 # The rule to build the test executable
 HotelTests: $(OBJS) t.o

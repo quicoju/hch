@@ -243,3 +243,14 @@ TEST_CASE("Rate::Calculator::rate_for - Complex pricing") {
     REQUIRE_THAT(rate, APPROX(expected));
   }
 }
+
+
+/* Guest tests
+ * ============
+ */
+#include "Guest.hh"
+
+TEST_CASE("Guest") {
+  Guest guest{"juan.camaney@aol.com"};
+  REQUIRE(guest.id() == "juan.camaney@aol.com");
+}

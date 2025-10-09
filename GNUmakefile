@@ -24,7 +24,7 @@ LDFLAGS += -lsqlite3
 CXXFLAGS += -DUSE_$(BACKEND)
 endif
 
-OBJS = Room.o Hotel.o RateCalculator.o
+OBJS = Hotel.o RateCalculator.o Room.o Room_common.o
 
 %.o: %.cc src/concepts.hh GNUmakefile
 	$(CXX) $(CXXFLAGS) -c $<
@@ -33,7 +33,7 @@ main.o: src/hch/*.hh
 hch: $(OBJS) main.o
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
 
-t.o: src/RateCalculator.hh t/backend/*hh
+t.o: src/*.hh t/backend/*hh
 
 # The rule to build the test executable
 HotelTests: $(OBJS) t.o
