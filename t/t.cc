@@ -11,6 +11,15 @@
 #include "t_memory.hh"
 #endif
 
+struct GlobalSetup {
+    GlobalSetup() {
+      std::cout << "Setting up tests...\n";
+      prepare_tests();
+    }
+};
+
+static GlobalSetup global_setup;
+
 /* Room Tests
  * ==========
  */

@@ -1,8 +1,27 @@
 #pragma once
 
+#include <fstream>
+#include <sstream>
+#include <string>
+
 #include "SQLite.hh"
 
-static auto test_db = "db/hotel.db";
+static auto test_db = "db/unit_test.db";
+
+std::string slurp(std::string path)
+{
+  std::ifstream ifs{ path };
+  std::stringstream ss;
+  ss << ifs.rdbuf();
+  return ss.str();
+}
+
+void prepare_tests()
+{
+  SQLite db{test_db};
+  db.execute(slurp("db/schema.sql"));
+  db.execute(slurp("db/mockhotel.sql"));
+}
 
 SQLite build_agenda() {
   SQLite db{test_db};

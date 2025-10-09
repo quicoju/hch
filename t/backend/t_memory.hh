@@ -2,6 +2,8 @@
 
 #include "HotelData.hh"
 
+void prepare_tests(){}
+
 RoomData build_agenda() {
   return {"101", 1, {Wifi}, {
       { {2024, 12, 19}, Days{3} },
