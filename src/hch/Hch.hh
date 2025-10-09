@@ -153,7 +153,7 @@ private:
   void list_rate(const Tokens& tokens)
   {
     auto room = ensure_room("list-rate", tokens);
-    auto n_arg = current_room.empty() ? 2 : 1;
+    auto n_arg = current_room.empty() ? 2U : 1;
     auto date_str = tokens.size() > n_arg ? tokens[n_arg] : "";
     auto [date, duration] = parse_date(date_str);
 
