@@ -1,8 +1,11 @@
 #pragma once
-#include <sqlite3.h>
+#include <fstream>
+#include <sstream>
 #include <string>
 #include <stdexcept>
 #include <tuple>
+
+#include <sqlite3.h>
 
 /**
    @brief Thin wrapper around sqlite3.h
@@ -20,7 +23,10 @@
 
       SQLite db{"db/file.db"};
 
-   2. Execute multiple SQL statements without parameter binding:
+   2. Read a file with SQL or DDL statements:
+       db.read_file("path/schema.sql");
+
+   3. Execute multiple SQL statements without parameter binding:
 
       db.execute(R"(
         DELETE FROM table_1;
@@ -28,7 +34,7 @@
         INSERT OR IGNORE INTO table_1(id) VALUES(101), (102), (103);
      )");
 
-    3. INSERT, DELETE and UPDATE statements. Prepare the statement
+   4. INSERT, DELETE and UPDATE statements. Prepare the statement
        and then call "execute"
 
       auto stmt = db.prepare(R"(
@@ -39,7 +45,7 @@
 
       stmt.execute(id, date);
 
-   4. SELECT statements. Prepare the statement and then call "bind" to
+   5. SELECT statements. Prepare the statement and then call "bind" to
       bind the parameters, finally iterate with "next".
 
       auto stmt = db->prepare(R"(
@@ -94,6 +100,13 @@ struct SQLite {
     int result = sqlite3_exec(db_, sql.c_str(), nullptr, nullptr, nullptr);
     if (result != SQLITE_OK)
       throw std::runtime_error{sqlite3_errmsg(db_)};
+  }
+
+  void read_file(const std::string& path) {
+      std::ifstream ifs{ path };
+      std::stringstream ss;
+      ss << ifs.rdbuf();
+      execute(ss.str());
   }
 
   /* This class will take the task of managing the details related to:
