@@ -3,9 +3,9 @@
 
 namespace Rate {
 
-  Calculator::Calculator(void* src) {
+  Calculator::Calculator(void* src)
+  {
     auto& db = *static_cast<SQLite*>(src);
-
     auto stmt = db.prepare(R"(
 SELECT rt.name, r.key_name, r.value
   FROM rates r

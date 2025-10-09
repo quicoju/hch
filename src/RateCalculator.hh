@@ -9,60 +9,31 @@
 /**
  * @brief Implementation of Rate logic.
  *
- * A user of this logic needs to create a rate table like the following:
+ * A user of this class needs to provide a "rate table"" each backend
+ * provides it's own table implementation, but it's expected to fillout
+ * the following information:
  *
- * Rate::Table Tab{
- *     {Rate::Type::Base,     ""       , 58.99}, // default nightly rate
- *     {Rate::Type::Base,     "101"    ,100.99}, // premium room rate
- *     {Rate::Type::Capacity, ""       , 0.20},  // percent surcharge per extra bed
- *     {Rate::Type::Amenity,  "Wifi"   ,  5.00}, // per night
- *     {Rate::Type::Amenity,  "Balcony", 15.00}, // per night
- * };
+ *  - default_base_rate_:
+ *      Default base rate (in currency) for the rooms
  *
- * Each entry of this table contains a rate description, and entry consists
- * of three columns. The first column is the rate type, followed by a "key"
- * and then followed by a "value".
- * The meaning of the "key" and the "value" changes depending on the  Rate::Type;
- * there are 3 different types:
+ *  - base_rates_ :
+ *      Room specific base rate, it overrides the default.
  *
- *   1. Base:
- *      it's the base rate for a single room per night, the key is a room
- *      identifier and the value is the base rate for that room in currencty. If
- *      the key is an empty string, then this is the default rate.
+ *  - default_capacity_rate:
+ *      Ratio (between 0.0 and 1.0) of the base rate to be surcharged
+ *      for each additional capacity unit
  *
- *   2. Capacity
- *      This is the additional surcharge per additional unit of capacity of the
- *      room. The "key"" is a room identifier and the "value" is a decimal number
- *      between 0.00 and 1.00, which represents the percentage of the base rate
- *      to be added per unit of capacity, i.e. If a room has a capacity greater than
- *      1, then an additional charge of "base_rate * capacity_rate * (cap-1)" per
- *      night will be added to the total.
+ *  - capacity_rates_:
+ *      Room specific capacity rate, it overrides the default.
  *
- *   3. Amenity
- *      The "key" is the name of the amenity, i.e. "Wifi", "Balcony", etc. And the
- *      value is the price of such amenity per night expressed in currency.
+ *  - amenity_rates_:
+ *      Costs (in currencty) for a "named" amenity, i.e. "Balcony",
+ *      "MiniBar", etc.
  *
- * Once the "Rate::Calculator" object is constructed, now it should be possible to
- * ask it to calculate the rate for a given room on a given period i.e.
- *
- *     calc.rate_for(room, {2024, 12, 23}, Days{1});
+ * This class will use this information to calculate costs and provide
+ * cost details to its users.
  */
-
 namespace Rate {
-  enum class Type {
-    Base,
-    Capacity,
-    Amenity
-  };
-
-  struct Entry {
-    Type type;
-    std::string key;     // room_id, amenity name, or empty for global
-    double value;        // price or multiplier
-  };
-
-  using Table = std::vector<Entry>;
-
   struct Calculator {
     Calculator(void*);
 

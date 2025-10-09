@@ -4,6 +4,27 @@
 
 #include "Hotel.hh"
 
+/* Rate type definitions
+ * =====================
+ * See the memory/RateCalculator.cc for a description of how
+ * the rate types are used.
+ */
+namespace Rate {
+  enum class Type {
+    Base,
+    Capacity,
+    Amenity
+  };
+
+  struct Entry {
+    Type type;
+    std::string key;
+    double value;
+  };
+
+  using Table = std::vector<Entry>;
+}
+
 struct RoomData {
   std::string id;
   size_t capacity;
