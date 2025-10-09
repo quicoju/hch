@@ -16,7 +16,7 @@ BACKEND ?= memory
 BACKEND_DIR = src/backend/$(BACKEND)
 CXXFLAGS += -I$(BACKEND_DIR)
 
-VPATH = src src/hch $(BACKEND_DIR) t
+VPATH = src src/backend src/hch $(BACKEND_DIR) t
 
 # Backend-specific flags
 ifeq ($(BACKEND),sqlite)
