@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 TEST_CMD="./hch"
 db="db/integration_test.db"
@@ -39,7 +39,7 @@ run_test() {
     fi
 }
 
-echo "The backend is *$BACKEND*"
+echo "The backend is *${BACKEND:-memory}*"
 cleanup
 
 run_test "Initial prompt" \

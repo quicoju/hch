@@ -53,7 +53,7 @@ test: HotelTests hch
 	./HotelTests -a --colour-mode=none
 	@echo "INTEGRATION TESTS"
 	@echo "-----------------"
-	bash t/t_hch.bash
+	sh t/t_hch.bash
 
 database: cleandb db/hotel.db
 
