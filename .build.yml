@@ -1,0 +1,14 @@
+image: OpenBSD
+packages:
+  - catch2
+  - boost
+  - sqlite3
+sources:
+  - https://git.sr.ht/~quicoju/hch.git
+tasks:
+  - test-memory: |
+      cd hch
+      make clean test
+  - test-sqlite: |
+      cd hch
+      make BACKEND=sqlite clean test
