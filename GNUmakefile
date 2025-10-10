@@ -43,7 +43,7 @@ db/hotel.db: db/schema.sql
 	sqlite3 db/hotel.db ".read $^"
 
 # A clean target to remove the built files
-.PHONY: clean
+.PHONY: clean cleandb
 
 test: HotelTests hch
 	@echo
@@ -54,7 +54,13 @@ test: HotelTests hch
 	@echo "-----------------"
 	bash t/t_hch.bash
 
-database: db/hotel.db
+database: cleandb db/hotel.db
+
+mockhotel: database
+	sqlite3 db/hotel.db ".read db/mockhotel.sql"
+
+cleandb:
+	rm -f db/hotel.db 2>/dev/null
 
 clean:
 	rm -f *.o HotelTests hch db/*.db
