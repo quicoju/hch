@@ -34,6 +34,10 @@ struct RoomData {
 
 using RoomsData = std::vector<RoomData>;
 
+struct GuestData{
+  std::string id;
+};
+
 struct HotelData {
   HotelData(std::string _) : rooms{}, rates{} {
   // This constructor and data were made to feed

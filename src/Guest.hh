@@ -8,11 +8,10 @@
 // NOTE: On the other hand, using this identifier might violate
 // the user's privacy, that's why this is a temporary solution
 struct Guest {
-  Guest(const std::string& id)
-  {
-    // TODO: maybe some logic to validate the ID
-    email = id;
-  }
+  Guest(const std::string& id, void* src)
+    : src{src}
+    , email{id} // TODO: maybe some logic to validate the ID
+  {}
 
   const std::string& id() const
   {
@@ -22,5 +21,6 @@ struct Guest {
 private:
   // state
   // =====
+  void* src;
   std::string email;
 };

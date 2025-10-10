@@ -253,6 +253,7 @@ TEST_CASE("Rate::Calculator::rate_for - Complex pricing") {
 #include "Guest.hh"
 
 TEST_CASE("Guest") {
-  Guest guest{"juan.camaney@aol.com"};
-  REQUIRE(guest.id() == "juan.camaney@aol.com");
+  auto id = "juan.camaney@aol.com";
+  auto src = a_guest(id);
+  REQUIRE(Guest{id, &src}.id() == id);
 }

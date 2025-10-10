@@ -33,6 +33,11 @@ HotelData build_src() {
     }};
 }
 
+GuestData a_guest(const std::string& id)
+{
+  return {id};
+}
+
 // Rate tests
 Rate::Table build_rate_table() {
   return Rate::Table {
