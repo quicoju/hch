@@ -71,6 +71,17 @@ SQLite room_with_amenities() {
   return build_src();
 }
 
+SQLite some_guests(const std::vector<std::string>& guests) {
+  SQLite db{test_db};
+  auto ix = 1;
+  auto stmt = db.prepare(R"(
+INSERT OR IGNORE INTO guests (id, email) VALUES(?, ?)
+)");
+  for (const auto& guest: guests)
+    stmt.execute(ix++, guest);
+  return db;
+}
+
 // Rate tests
 SQLite build_rate_table() {
   SQLite db{test_db};

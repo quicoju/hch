@@ -26,6 +26,13 @@ CREATE TABLE IF NOT EXISTS rooms_amenities (
   FOREIGN KEY (amenity_name) REFERENCES amenities(name)
 );
 
+-- Guest
+-- =====
+CREATE TABLE IF NOT EXISTS guests (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT NOT NULL UNIQUE
+);
+
 -- Rates
 -- =====
 CREATE TABLE IF NOT EXISTS rate_types (
@@ -49,7 +56,9 @@ CREATE TABLE IF NOT EXISTS rates (
 CREATE UNIQUE INDEX IF NOT EXISTS idx_reservtions_room_date
     ON reservations(room_id, begin_date);
 
--- Index for efficient lookups
+CREATE UNIQUE INDEX IF NOT EXISTS idx_guests_email
+    ON guests(email);
+
 CREATE INDEX IF NOT EXISTS idx_rates_type_key
     ON rates(type_id, key_name);
 

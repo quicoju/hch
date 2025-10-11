@@ -16,7 +16,7 @@ VALUES
   (5, '202', 1),
   (6, '203', 1);
 
-INSERT OR IGNORE into rooms_amenities (room_id, amenity_name)
+INSERT OR IGNORE INTO rooms_amenities (room_id, amenity_name)
 VALUES
   (1, 'Wifi'),
   (2, 'Wifi'),    (2,'Balcony'),
@@ -25,6 +25,11 @@ VALUES
   (5, 'Wifi'),
   (6, 'MiniBar');
 
+-- Guests
+-- ======
+INSERT OR IGNORE INTO guests (id, email)
+VALUES
+  (1, 'juan.camaney@aol.com');
 
 -- Rates
 -- =====
