@@ -24,7 +24,7 @@ LDFLAGS += -lsqlite3
 CXXFLAGS += -DUSE_$(BACKEND)
 endif
 
-OBJS = Hotel.o RateCalculator.o Room.o Room_common.o
+OBJS = Guest.o Hotel.o RateCalculator.o Room.o Room_common.o
 
 %.o: %.cc src/concepts.hh GNUmakefile
 	$(CXX) $(CXXFLAGS) -c $<

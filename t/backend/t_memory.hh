@@ -33,9 +33,11 @@ HotelData build_src() {
     }};
 }
 
-GuestData a_guest(const std::string& id)
+GuestsData some_guests()
 {
-  return {id};
+  return {
+    {"juan.camaney@aol.com"},
+  };
 }
 
 // Rate tests

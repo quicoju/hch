@@ -31,12 +31,12 @@ struct RoomData {
   Amenities amenities;
   Reservations reservations;
 };
-
 using RoomsData = std::vector<RoomData>;
 
 struct GuestData{
   std::string id;
 };
+using GuestsData = std::vector<GuestData>;
 
 struct HotelData {
   HotelData(std::string _) : rooms{}, rates{} {

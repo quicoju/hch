@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 // TODO: This class requires a unique identifier for the guests.
 // The different backends might want to keep internal identifiers
 // for identifying the records, but we need a client facing ID.
@@ -8,10 +10,7 @@
 // NOTE: On the other hand, using this identifier might violate
 // the user's privacy, that's why this is a temporary solution
 struct Guest {
-  Guest(const std::string& id, void* src)
-    : src{src}
-    , email{id} // TODO: maybe some logic to validate the ID
-  {}
+  Guest(const std::string& id, void* src);
 
   const std::string& id() const
   {
