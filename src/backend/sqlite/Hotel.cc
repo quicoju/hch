@@ -80,7 +80,7 @@ SELECT name, capacity FROM rooms
     return Room{name, capacity, db};
   }
 
-  throw std::invalid_argument{"Room" + name + " not found"};
+  throw std::invalid_argument{"Room " + name + " not found"};
 }
 
 Rooms Hotel::rooms() const

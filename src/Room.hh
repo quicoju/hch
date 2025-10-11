@@ -67,6 +67,6 @@ struct Room {
   const size_t capacity;
 
 private:
-  void *src;
+  void* src;
   Amenities amenities_;
 };
