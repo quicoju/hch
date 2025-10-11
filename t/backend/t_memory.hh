@@ -33,11 +33,12 @@ HotelData build_src() {
     }};
 }
 
-GuestsData some_guests()
+GuestsData some_guests(const std::vector<std::string>& ids)
 {
-  return {
-    {"juan.camaney@aol.com"},
-  };
+  GuestsData guests{};
+  for (const auto& id: ids)
+    guests.emplace_back(id);
+  return guests;
 }
 
 // Rate tests

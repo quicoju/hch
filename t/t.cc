@@ -253,10 +253,10 @@ TEST_CASE("Rate::Calculator::rate_for - Complex pricing") {
 #include "Guest.hh"
 
 TEST_CASE("Guest") {
-  auto src = some_guests();
+  auto guest = "juan.camaney@aol.com";
+  auto src = some_guests({guest});
   SECTION("Existing Guest") {
-    auto id = "juan.camaney@aol.com";
-    REQUIRE(Guest{id, &src}.id() == id);
+    REQUIRE(Guest{guest, &src}.id() == guest);
   }
   SECTION("Non-existing Guest") {
     REQUIRE_THROWS_AS(Guest("me@gmail.com", &src), std::runtime_error);
