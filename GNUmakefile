@@ -5,7 +5,7 @@ CXXFLAGS = -Wall -g -std=c++2a \
 	-I./src \
 	-I./t/backend
 
-LDFLAGS = -L/usr/local/lib \
+LDFLAGS = -L/usr/lib -L/usr/local/lib \
 	-lboost_date_time \
 	-lreadline
 
