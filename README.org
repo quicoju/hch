@@ -13,8 +13,8 @@ The following dependencies are required:
   + [[https://www.boost.org/][Boost]]
   + The GNU [[https://tiswww.cwru.edu/php/chet/readline/rltop.html][Readline]]
   + The [[https://sqlite.org/cintro.html][sqlite C/C++ interface]] (for the "sqlite" backend)
+  + The [[https://sqlite.org/cli.html][sqlite3]] cli (for testing the "sqlite" backend)
   + The [[https://github.com/catchorg/Catch2][Catch2]] test framework (for running the unit tests)
-
 
 ** Build
 The project contains 2 different "Makefiles", one for BSDMake =Makefile= and
@@ -25,22 +25,21 @@ This software supports two different backends:
   + sqlite: handles data persistence using sqlite
 
 The "memory" backend is the default, since it's very convenient for development.
-To change the backend, define the "BACKEND" variable to any of the supported
+To change the backend, set the "BACKEND" variable to any of the supported
 backend names.
 
-To build the in-memory backend:
+To build the in-memory backend (default):
 #+begin_src sh
   make hch
+  make BACKEND=memory hch   # set the backend explicitly
 #+end_src
 
 To build with the sqlite backend support:
 #+begin_src sh
   make BACKEND=sqlite hch
-  # or
-  BACKEND=sqlite make hch
 #+end_src
 
-To clean all the compiled code, use the ~clean~ target.
+To clean the compiled code and test data, use the ~clean~ target.
 #+begin_src sh
   make clean
 #+end_src
@@ -51,7 +50,8 @@ rebuild the whole project.
 ** Test
 In order to run the tests, use the make's ~test~ target.
 #+begin_src sh
-  make test
+  make clean test                  # in-memory backend
+  make BACKEND=sqlite clean test
 #+end_src
 
 ** Run
