@@ -37,7 +37,7 @@ t.o: src/*.hh t/backend/*hh
 
 # The rule to build the test executable
 HotelTests: $(OBJS) t.o
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -lCatch2Main -lCatch2 -o $@ $^
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -lCatch2Main -o $@ $^
 
 db/hotel.db: db/schema.sql
 	sqlite3 db/hotel.db ".read $^"
