@@ -1,0 +1,95 @@
+* hch - Hotel Check-in Helper
+
+** About
+This tool (WIP) assists hotel business with the task of handling room reservations.
+
+
+** Dependencies
+This software requires a Unix based OS to build and run, currently it's being developed
+and tested under Gentoo GNU/Linux and OpenBSD.
+
+The following dependencies are required:
+  + A c++20 compiler (GCC or LLVM)
+  + [[https://www.boost.org/][Boost]]
+  + The GNU [[https://tiswww.cwru.edu/php/chet/readline/rltop.html][Readline]]
+  + The [[https://sqlite.org/cintro.html][sqlite C/C++ interface]] (for the "sqlite" backend)
+  + The [[https://github.com/catchorg/Catch2][Catch2]] test framework (for running the unit tests)
+
+
+** Build
+The project contains 2 different "Makefiles", one for BSDMake =Makefile= and
+one for GNUMake =GNUmakefile=.
+
+This software supports two different backends:
+  + memory: handles only in-memory data, and everything is flushed after exit
+  + sqlite: handles data persistence using sqlite
+
+The "memory" backend is the default, since it's very convenient for development.
+To change the backend, define the "BACKEND" variable to any of the supported
+backend names.
+
+To build the in-memory backend:
+#+begin_src sh
+  make hch
+#+end_src
+
+To build with the sqlite backend support:
+#+begin_src sh
+  make BACKEND=sqlite hch
+  # or
+  BACKEND=sqlite make hch
+#+end_src
+
+To clean all the compiled code, use the ~clean~ target.
+#+begin_src sh
+  make clean
+#+end_src
+
+*Note:* Take into account that changing the "BACKEND" requires you to ~clean~ and
+rebuild the whole project.
+
+** Test
+In order to run the tests, use the make's ~test~ target.
+#+begin_src sh
+  make test
+#+end_src
+
+** Run
+Building =hch= will create an =hch= executable in the top directory of the
+project.
+
+If the executable was built with the "memory" backend, then it'll load
+a "mock" hotel by default. To get an idea of this mock see the =HotelData.hh= file.
+
+On the other hand, if the executable was built with the "sqlite" backend, then
+the database needs to be built before running =hch=, the database can be
+generated using the ~database~ target:
+
+#+begin_src sh
+  make database
+#+end_src
+
+But if you want to create a "mock" hotel, in your database call the ~mockhotel~
+target instead:
+
+#+begin_src sh
+  make mockhotel
+#+end_src
+
+Now it should be possible to execute the =hch= command:
+
+#+begin_src text
+$ ./hch
+hch> set-room 102
+hch[room 102]> list-amenities
+  - Balcony
+  - Wifi
+hch[room 102]> list-rate
+ - Base: 58.99
+ - Capacity: 0
+ - Balcony: 15
+ - Wifi: 5
+ - Total: 78.99
+hch[room 102]> unset-room
+hch> quit
+#+end_src
