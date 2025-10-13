@@ -31,13 +31,13 @@ OBJS = Guest.o Hotel.o RateCalculator.o Room.o Room_common.o
 
 main.o: src/hch/*.hh
 hch: $(OBJS) main.o
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
 t.o: src/*.hh t/backend/*hh
 
 # The rule to build the test executable
 HotelTests: $(OBJS) t.o
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -lCatch2Main -o $@ $^
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS) -lCatch2Main -lCatch2
 
 db/hotel.db: db/schema.sql
 	sqlite3 db/hotel.db ".read $^"
@@ -52,7 +52,7 @@ test: HotelTests hch
 	./HotelTests -a --colour-mode=none
 	@echo "INTEGRATION TESTS"
 	@echo "-----------------"
-	sh t/t_hch.sh
+	bash t/t_hch.sh
 
 database: cleandb db/hotel.db
 

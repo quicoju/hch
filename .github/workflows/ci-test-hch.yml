@@ -26,8 +26,9 @@ jobs:
           libsqlite3-dev \
           libreadline-dev \
           libboost-all-dev \
-          g++
-      
+          g++ \
+          sqlite3
+
     - name: test
       run: |
         make clean
