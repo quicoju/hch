@@ -22,7 +22,7 @@ LDFLAGS += -lsqlite3
 CXXFLAGS += -DUSE_$(BACKEND)
 .endif
 
-OBJS = Guest.o Hotel.o RateCalculator.o Room.o Room_common.o
+OBJS = Guest.o Hotel.o RateCalculator.o Reservation.o Room.o Room_common.o
 
 .SUFFIXES: .o .cc .hh
 .PATH.cc: src src/backend src/hch $(BACKEND_DIR) t

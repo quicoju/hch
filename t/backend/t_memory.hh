@@ -33,6 +33,8 @@ HotelData build_src() {
     }};
 }
 
+// Guest tests
+// ===========
 GuestsData some_guests(const std::vector<std::string>& ids)
 {
   GuestsData guests{};
@@ -42,6 +44,7 @@ GuestsData some_guests(const std::vector<std::string>& ids)
 }
 
 // Rate tests
+// ===========
 Rate::Table build_rate_table() {
   return Rate::Table {
     {Rate::Type::Base,     ""       , 58.99}, // default nightly rate
@@ -51,3 +54,10 @@ Rate::Table build_rate_table() {
     {Rate::Type::Amenity,  "Balcony", 15.00}, // per night
   };
 }
+
+// Reservation tests
+// =================
+static ReservationsData some_reservations{{
+    {"A-001",  "1", "101", {{2024,11,01}, Days(2)}},
+    {"A-002", "21", "201", {{2024,12,18}, Days(1)}},
+  }};

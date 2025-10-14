@@ -4,8 +4,8 @@
 
 #include "Hotel.hh"
 
-/* Rate type definitions
- * =====================
+/* Rate information
+ * ================
  * See the memory/RateCalculator.cc for a description of how
  * the rate types are used.
  */
@@ -21,10 +21,12 @@ namespace Rate {
     std::string key;
     double value;
   };
-
   using Table = std::vector<Entry>;
 }
 
+/* Room information
+ * ================
+ */
 struct RoomData {
   std::string id;
   size_t capacity;
@@ -33,10 +35,29 @@ struct RoomData {
 };
 using RoomsData = std::vector<RoomData>;
 
+/* Guest information
+ * =================
+ */
 struct GuestData{
   std::string id;
 };
 using GuestsData = std::vector<GuestData>;
+
+/* Reservation information
+ * =======================
+ */
+struct ReservationData{
+  std::string id;       // client facing reservation id
+  std::string guest_id;
+  std::string room_id;
+  Period period;
+  // TODO: add a rate snapshot that captures
+  // the rates at the time of the resrvation,
+  // don't want to charge a different rate
+  // if rates change between the reservation
+  // and the check-out date.
+};
+using ReservationsData = std::vector<ReservationData>;
 
 struct HotelData {
   HotelData(std::string _) : rooms{}, rates{} {

@@ -262,3 +262,13 @@ TEST_CASE("Guest") {
     REQUIRE_THROWS_AS(Guest("me@gmail.com", &src), std::runtime_error);
   }
 }
+
+/* Reservations tests
+ * ==================
+ */
+#include "Reservation.hh"
+auto src = some_reservations;
+TEST_CASE("Reservation") {
+  REQUIRE_NOTHROW(Reservation{"A-001", &src});
+  REQUIRE_THROWS_AS(Reservation("A-003", &src), std::runtime_error);
+}
