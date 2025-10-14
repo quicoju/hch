@@ -45,7 +45,7 @@ DELETE FROM reservations
 )").execute(id, date_, date_);
 }
 
-const std::list<Reservation> Room::reservations() const
+const std::list<Period> Room::reservations() const
 {
   auto* db = static_cast<SQLite*>(src);
   auto stmt = db->prepare(R"(
@@ -56,7 +56,7 @@ SELECT begin_date, duration_days
   ORDER BY begin_date
 )");
 
-  std::list<Reservation> l{};
+  std::list<Period> l{};
   stmt.bind(id);
 
   while (stmt.next()) {

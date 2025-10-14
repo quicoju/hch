@@ -7,7 +7,6 @@
 using Date = boost::gregorian::date;
 using Days = boost::gregorian::days;
 using Duration = boost::gregorian::date_duration;
-using Reservation = boost::gregorian::date_period;
 using Period = boost::gregorian::date_period;
 
 static Date Today{ boost::gregorian::day_clock::local_day() };
@@ -25,7 +24,7 @@ static Date (&from_string)(const std::string&)
 
 struct Room;
 using Rooms = std::vector<Room>;
-using Reservations = std::list<Reservation>;
+using Reservations = std::list<Period>;
 
 using Amenity = std::string;
 using Amenities = std::set<Amenity>;
