@@ -269,14 +269,18 @@ TEST_CASE("Guest") {
 #include "Reservation.hh"
 TEST_CASE("Reservation") {
   auto src = some_reservations();
-
   SECTION("find_by_id") {
-    REQUIRE_NOTHROW(Reservation::find_by_id("A-001", &src));
-    REQUIRE_THROWS_AS(Reservation::find_by_id("A-003", &src), std::invalid_argument);
+    auto got = Reservation::find_by_id("A-001", &src);
+    REQUIRE(got.id == "A-001");
+    REQUIRE(got.guest_id == "1");
+    REQUIRE(got.room_id == "101");
+    REQUIRE(got.period == Period{{2024,11,01},Days{2}});
+    REQUIRE_THROWS_AS(Reservation::find_by_id("A-103", &src), std::invalid_argument);
   }
   SECTION("find_by_room") {
     auto got = Reservation::find_by_room("101", &src);
-    REQUIRE(got.size() == 1);
+    REQUIRE(got.size() == 2);
     REQUIRE(got.front().id == "A-001");
+    REQUIRE(got.back().id == "A-003");
   }
 }
