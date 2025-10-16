@@ -267,8 +267,8 @@ TEST_CASE("Guest") {
  * ==================
  */
 #include "Reservation.hh"
-auto src = some_reservations;
 TEST_CASE("Reservation") {
+  auto src = some_reservations();
   REQUIRE_NOTHROW(Reservation{"A-001", &src});
   REQUIRE_THROWS_AS(Reservation("A-003", &src), std::runtime_error);
 }

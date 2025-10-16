@@ -102,3 +102,14 @@ VALUES
 
   return db;
 }
+
+SQLite some_reservations() {
+  SQLite db{test_db};
+  std::cout << "Inserting reservations\n";
+  db.execute(R"(
+INSERT OR IGNORE
+  INTO reservations (id, reservation_id, guest_id, room_id, begin_date, duration_days)
+VALUES (1, 'A-001', 1, (SELECT id FROM rooms WHERE name = '101'), '2024-11-01', 2),
+       (2, 'A-002', 1, (SELECT id FROM rooms WHERE name = '102'), '2024-12-18', 1))");
+  return db;
+}

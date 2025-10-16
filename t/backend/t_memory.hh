@@ -57,7 +57,10 @@ Rate::Table build_rate_table() {
 
 // Reservation tests
 // =================
-static ReservationsData some_reservations{{
+ReservationsData some_reservations()
+{
+  return {
     {"A-001",  "1", "101", {{2024,11,01}, Days(2)}},
     {"A-002", "21", "201", {{2024,12,18}, Days(1)}},
-  }};
+  };
+}
