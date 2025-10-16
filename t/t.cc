@@ -271,4 +271,10 @@ TEST_CASE("Reservation") {
   auto src = some_reservations();
   REQUIRE_NOTHROW(Reservation{"A-001", &src});
   REQUIRE_THROWS_AS(Reservation("A-003", &src), std::runtime_error);
+
+  SECTION("find_by_room") {
+    auto got = Reservation::find_by_room("101", &src);
+    REQUIRE(got.size() == 1);
+    REQUIRE(got.front().id == "A-001");
+  }
 }

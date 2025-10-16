@@ -26,6 +26,9 @@ struct Room;
 using Rooms = std::vector<Room>;
 using Reservations = std::list<Period>;
 
+struct Reservation;
+using Reservations_ = std::vector<Reservation>;
+
 using Amenity = std::string;
 using Amenities = std::set<Amenity>;
 static inline Amenity AirConditioning = "AirConditioning";
