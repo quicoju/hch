@@ -4,14 +4,12 @@
 #include "SQLite.hh"
 #include "concepts.hh"
 
-Reservation::Reservation(const std::string& id, void* src)
-    : src{ src }
-    , id{ id }
-    , period{ Period{Today, Days{1}} } // TODO: temporary default
-  {
+Reservation
+Reservation::find_by_id(const std::string& id, void* src)
+{
     auto* db = static_cast<SQLite*>(src);
     auto stmt = db->prepare(R"(
-SELECT room_id, guest_id, begin_date, duration_days
+SELECT reservation_id, room_id, guest_id, begin_date, duration_days
   FROM reservations
  WHERE reservation_id = ?
 )");
@@ -19,12 +17,13 @@ SELECT room_id, guest_id, begin_date, duration_days
     stmt.bind(id);
 
     if (!stmt.next())
-      throw std::runtime_error{"Reservation " + id + " not found"};
+      throw std::invalid_argument{"Reservation " + id + " doesn't exist"};
 
-    room_id = stmt.get<std::string>(0);
-    guest_id = stmt.get<std::string>(1);
-    period = {
-      from_string(stmt.get<std::string>(2)),
-      Days{stmt.get<int>(3)}
+    return {
+      stmt.get<std::string>(0),
+      stmt.get<std::string>(1),
+      stmt.get<std::string>(2),
+      { from_string(stmt.get<std::string>(3)), Days{stmt.get<int>(4)} },
+      src,
     };
-  }
+}

@@ -4,22 +4,16 @@
 #include "HotelData.hh"
 #include "concepts.hh"
 
-Reservation::Reservation(const std::string& id, void* src)
-    : src{ src }
-    , id{ id }
-    , period{ Period{Today, Days{1}} } // TODO: temporary default
-  {
+Reservation
+Reservation::find_by_id(const std::string& id, void* src)
+{
     auto* reservations = static_cast<ReservationsData*>(src);
     for (const auto& r: *reservations) {
-      if (r.id == id) {
-        guest_id = r.guest_id;
-        room_id = r.room_id;
-        period = r.period;
-        return;
-      }
+      if (r.id == id)
+        return {id, r.guest_id, r.room_id, r.period, src};
     }
-    throw std::runtime_error{"Reservation " + id + " not found"};
-  }
+    throw std::invalid_argument{"Reservation " + id + " doesn't exist"};
+}
 
 
 // static methods
@@ -31,12 +25,7 @@ Reservation::find_by_room(const std::string& room_id, void* src)
   auto* all_reservations = static_cast<ReservationsData*>(src);
   for (const auto& r: *all_reservations) {
     if (r.room_id == room_id) {
-      // TODO: we need a constructor that takes all the reservation
-      // properties. With the current setup we're searching the collection
-      // twice, the first one here to match the room_id and the second
-      // time on the constructor to validate that the given reservation
-      // exists.
-      reservations.emplace_back(r.id, src);
+      reservations.emplace_back(r.id, r.guest_id, r.room_id, r.period, src);
     }
   }
   return reservations;

@@ -269,9 +269,11 @@ TEST_CASE("Guest") {
 #include "Reservation.hh"
 TEST_CASE("Reservation") {
   auto src = some_reservations();
-  REQUIRE_NOTHROW(Reservation{"A-001", &src});
-  REQUIRE_THROWS_AS(Reservation("A-003", &src), std::runtime_error);
 
+  SECTION("find_by_id") {
+    REQUIRE_NOTHROW(Reservation::find_by_id("A-001", &src));
+    REQUIRE_THROWS_AS(Reservation::find_by_id("A-003", &src), std::invalid_argument);
+  }
   SECTION("find_by_room") {
     auto got = Reservation::find_by_room("101", &src);
     REQUIRE(got.size() == 1);
