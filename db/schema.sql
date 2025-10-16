@@ -6,15 +6,6 @@ CREATE TABLE IF NOT EXISTS rooms (
     capacity INTEGER NOT NULL CHECK (capacity > 0)
 );
 
-CREATE TABLE IF NOT EXISTS reservations (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    room_id INTEGER NOT NULL,
-    begin_date DATE NOT NULL,
-    duration_days INTEGER NOT NULL CHECK (duration_days > 0),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY(room_id) REFERENCES rooms(id) ON DELETE CASCADE
-);
-
 CREATE TABLE IF NOT EXISTS amenities (
   name TEXT PRIMARY KEY
 );
@@ -31,6 +22,21 @@ CREATE TABLE IF NOT EXISTS rooms_amenities (
 CREATE TABLE IF NOT EXISTS guests (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   email TEXT NOT NULL UNIQUE
+);
+
+-- Resevation
+-- ==========
+
+CREATE TABLE IF NOT EXISTS reservations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    reservation_id TEXT, -- NOT NULL UNIQUE, -- TODO: must be NOT NULL
+    room_id INTEGER NOT NULL,
+    guest_id INTEGER,    -- NOT NULL, -- TODO: must be NOT NULL
+    begin_date DATE NOT NULL,
+    duration_days INTEGER NOT NULL CHECK (duration_days > 0),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(room_id) REFERENCES rooms(id) ON DELETE CASCADE,
+    FOREIGN KEY(guest_id) REFERENCES guests(id) ON DELETE CASCADE
 );
 
 -- Rates
