@@ -16,6 +16,22 @@ struct Reservation {
     , src{src}
   {}
 
+  /** @brief Make a new reservation
+   *
+   *  @param guest identifier
+   *  @param room identifier
+   *  @param date where the room is to be reserved (defaults to Today)
+   *  @param duration in days that the room will reserved (defaults to one)
+   *
+   *  @return a unique identifier of the reservation
+   */
+  static std::string
+  reserve(const std::string& guest_id,
+          const std::string& room_id,
+          Date date,
+          Duration duration,
+          void* src);
+
   /**
    * @brief Find a reservation using its ID
    *

@@ -294,4 +294,13 @@ TEST_CASE("Reservation") {
     REQUIRE(got.front().id == "A-001");
     REQUIRE(got.back().id == "A-003");
   }
+  SECTION("reserve") {
+    auto src = some_reservations();
+    auto id = Reservation::reserve(
+      "juan.camaney@aol.com", "101", {2024,12,12}, Days{5}, &src);
+    auto rsv = Reservation::find_by_id(id, &src);
+    REQUIRE(rsv.id == "W-0001");
+    REQUIRE(rsv.room_id == "101");
+    REQUIRE(rsv.period == Period{{2024,12,12}, Days{5}});
+  }
 }
