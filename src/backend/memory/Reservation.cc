@@ -16,8 +16,6 @@ Reservation::find_by_id(const std::string& id, void* src)
 }
 
 
-// static methods
-// ==============
 Reservations_
 Reservation::find_by_room(const std::string& room_id, void* src)
 {

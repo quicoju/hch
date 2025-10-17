@@ -272,7 +272,7 @@ TEST_CASE("Reservation") {
   SECTION("find_by_id") {
     auto got = Reservation::find_by_id("A-001", &src);
     REQUIRE(got.id == "A-001");
-    REQUIRE(got.guest_id == "1");
+    REQUIRE(got.guest_id == "juan.camaney@aol.com");
     REQUIRE(got.room_id == "101");
     REQUIRE(got.period == Period{{2024,11,01},Days{2}});
     REQUIRE_THROWS_AS(Reservation::find_by_id("A-103", &src), std::invalid_argument);

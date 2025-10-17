@@ -60,8 +60,8 @@ Rate::Table build_rate_table() {
 ReservationsData some_reservations()
 {
   return {
-    {"A-001",  "1", "101", {{2024,11,01}, Days(2)}},
-    {"A-002", "21", "201", {{2024,12,18}, Days(1)}},
-    {"A-003", "21", "101", {{2025,01,01}, Days{5}}},
+    {"A-001", "juan.camaney@aol.com", "101", {{2024,11,01}, Days(2)}},
+    {"A-002", "juan.camaney@aol.com", "201", {{2024,12,18}, Days(1)}},
+    {"A-003", "juan.camaney@aol.com", "101", {{2025,01,01}, Days{5}}},
   };
 }
