@@ -1,6 +1,8 @@
 #include <exception>
 
 #include "Hotel.hh"
+#include "Reservation.hh"
+
 #include "SQLite.hh"
 
 bool Hotel::is_available_on(Date date, Duration dur, size_t n_rooms)
@@ -25,6 +27,18 @@ SELECT COUNT(*) >= ?
     ? stmt.get<int>() != 0
     : false;
 }
+
+bool Hotel::is_available_on(Room room, Date date, Duration dur)
+  const
+{
+  Period p{date, dur};
+  auto room_agenda = Reservation::find_by_room(room.id, src);
+  auto end = room_agenda.cend();
+
+  return end == std::find_if(room_agenda.cbegin(), end,
+      [&p](const auto& rsv) { return p.intersects(rsv.period); });
+}
+
 
 Rooms Hotel::find_available_on(Date d, Duration dur, Amenities amenities)
   const

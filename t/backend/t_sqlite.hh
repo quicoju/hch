@@ -35,17 +35,23 @@ VALUES
 SQLite build_src() {
   SQLite db{SQLite{test_db}};
   db.execute(R"(
+DELETE FROM guests;
 DELETE FROM reservations;
 DELETE FROM rooms;
-INSERT INTO rooms(id, name, capacity) VALUES
+INSERT INTO
+rooms(id, name, capacity) VALUES
  (1, '101', 1),
  (2, '102', 1),
  (3, '103', 3);
-INSERT OR IGNORE INTO reservations(room_id, begin_date, duration_days)
+INSERT INTO
+guests (id, email) VALUES
+  (1, 'juan.camaney@aol.com');
+INSERT INTO
+reservations(id, guest_id, reservation_id, room_id, begin_date, duration_days)
 VALUES
-  ((SELECT id FROM rooms WHERE name = '101'), '2024-12-19', 3),
-  ((SELECT id FROM rooms WHERE name = '102'), '2024-12-20', 1),
-  ((SELECT id FROM rooms WHERE name = '103'), '2024-12-31', 4);
+  (1, 1, "A-001", (SELECT id FROM rooms WHERE name = '101'), '2024-12-19', 3),
+  (2, 1, "A-001", (SELECT id FROM rooms WHERE name = '102'), '2024-12-20', 1),
+  (3, 1, "A-001", (SELECT id FROM rooms WHERE name = '103'), '2024-12-31', 4);
 )");
   return db;
 }
