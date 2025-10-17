@@ -19,6 +19,18 @@ struct Hotel {
     const;
 
   /**
+   * @brief Check if a ROOM is available on during the given DATE and DURATION
+   *
+   * @param The room to check availability for
+   * @param Date to check for availability (defaults to Today)
+   * @param The duration in days to check for availability (defaults to one)
+   *
+   * @return true if is available, false otherwise
+   */
+  bool is_available_on(Room, Date date=Today, Duration dur=Days{1})
+    const;
+
+  /**
    * @brief Return all the available rooms for the given DATE and
    *  DURATION,
    *

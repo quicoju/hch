@@ -106,6 +106,17 @@ TEST_CASE("Hotel::is_available_on") {
     REQUIRE(hotel.is_available_on(date, Days{2}, 2));
     REQUIRE(hotel.is_available_on(date));
   }
+
+  SECTION("Hotel::is_available_on (room)") {
+    Room room{"101", 1, &src}; // TODO: fix this source
+    Date date{2024, 12, 23};
+    REQUIRE(hotel.is_available_on(room, {2024, 12, 22}));
+    REQUIRE(hotel.is_available_on(room, date));
+    REQUIRE(hotel.is_available_on(room, date, Days{2}));
+    REQUIRE(hotel.is_available_on(room, {2024, 12, 23}, Days{2}));
+    REQUIRE(!hotel.is_available_on(room, {2024, 12, 19}));
+    REQUIRE(!hotel.is_available_on(room, {2024, 12, 21}, Days{3}));
+  }
 }
 
 TEST_CASE("Hotel::find_available_on") {
