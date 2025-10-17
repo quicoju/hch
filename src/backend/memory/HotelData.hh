@@ -60,7 +60,10 @@ struct ReservationData{
 using ReservationsData = std::vector<ReservationData>;
 
 struct HotelData {
-  HotelData(std::string _) : rooms{}, rates{} {
+  HotelData(std::string _)
+    : rooms{}
+    , reservations{}
+    , rates{} {
   // This constructor and data were made to feed
   // hch's src default hotel, it takes a string
   // as an argument to mirror the sqlite backend
@@ -84,9 +87,12 @@ struct HotelData {
     };
   }
 
-  HotelData(RoomsData r) : rooms{r}, rates{} {}
+  // This constructor is relevant for testing (see t_memory.hh)
+  HotelData(RoomsData r, ReservationsData rsv={})
+    : rooms{r}, reservations{rsv}, rates{} {}
 
   // Properties
   RoomsData rooms;
+  ReservationsData reservations;
   Rate::Table rates;
 };
