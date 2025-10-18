@@ -4,11 +4,6 @@
 #include "HotelData.hh"
 #include "concepts.hh"
 
-// TODO: create a type that can be injected
-// or user provided. Each business might have their
-// own rules to generate the reservation identifier
-static size_t reservation_counter = 1;
-
 std::string
 Reservation::reserve(const std::string& guest_id,
                      const std::string& room_id,
@@ -18,9 +13,11 @@ Reservation::reserve(const std::string& guest_id,
 {
   auto* reservations = static_cast<ReservationsData*>(src);
 
-  // TODO: this id is arbitrary, see the comment on the top
-  // about the "reservation_counter"
-  std::string id = "W-000" + std::to_string(reservation_counter++);
+  // TODO: create a type that can be injected
+  // or user provided. Each business might have their
+  // own rules to generate the reservation identifier
+  auto next_id = reservations->size() + 1;
+  std::string id = "W-000" + std::to_string(next_id);
   reservations->emplace_back(id, guest_id, room_id, Period{date, dur});
 
   return id;

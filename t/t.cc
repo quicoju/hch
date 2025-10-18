@@ -333,7 +333,7 @@ TEST_CASE("Reservation") {
 
     // TODO: preivous tests add reservations so the counter increases
     // find a more determinitstic test for this
-    REQUIRE(rsv.id == "W-0003");
+    REQUIRE(rsv.id == "W-0004");
     REQUIRE(rsv.room_id == "101");
     REQUIRE(rsv.period == Period{{2024,12,12}, Days{5}});
   }
