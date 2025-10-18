@@ -167,6 +167,19 @@ TEST_CASE("Hotel::reserve") {
   }
 }
 
+TEST_CASE("Hotel::cancel") {
+  auto src = build_src();
+  Hotel hotel{&src};
+  Room room{"101", 1, &src}; // TODO: fix this source
+  SECTION("success") {
+    hotel.cancel("A-001");
+    hotel.is_available_on(room, {2024,12,19});
+  }
+  SECTION("failed") {
+    REQUIRE_THROWS_AS(hotel.cancel("A-010"), std::invalid_argument);
+  }
+}
+
 TEST_CASE("Hotel::room") {
   auto src = build_one_room_src();
   Hotel hotel{&src};

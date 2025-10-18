@@ -51,6 +51,12 @@ std::string Hotel::reserve(const Guest& g, const Room& r, Date d, Duration dur)
   return Reservation::reserve(g.id(), r.id, d, dur, &agenda);
 }
 
+void Hotel::cancel(const std::string& id)
+{
+  auto& reservations = static_cast<HotelData*>(src)->reservations;
+  Reservation::find_by_id(id, &reservations).cancel();
+}
+
 Room Hotel::room(const std::string id)
 {
   for (auto& r : rooms())

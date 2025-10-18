@@ -55,6 +55,13 @@ struct Hotel {
                       Duration dur=Days{1});
 
   /**
+   * @brief Cancel a reservation by identifier
+   *
+   * @param Reservation identifier
+   */
+  void cancel(const std::string& id);
+
+  /**
    * @brief Returns the room identified with ID
    *
    * @param The room identifier
