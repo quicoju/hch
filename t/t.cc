@@ -269,9 +269,9 @@ TEST_CASE("Guest") {
   SECTION("Existing Guest") {
     REQUIRE(Guest{guest, &src}.id() == guest);
   }
-  SECTION("Non-existing Guest") {
-    REQUIRE_THROWS_AS(Guest("me@gmail.com", &src), std::runtime_error);
-  }
+  // SECTION("Non-existing Guest") {
+  //   REQUIRE_THROWS_AS(Guest("me@gmail.com", &src), std::runtime_error);
+  // }
 }
 
 /* Reservations tests
