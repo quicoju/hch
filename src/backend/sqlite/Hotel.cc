@@ -93,6 +93,10 @@ void Hotel::cancel(const std::string& id)
   Reservation::find_by_id(id, src).cancel();
 }
 
+Reservations_ Hotel::reservations_for(const Room& r)
+{
+  return Reservation::find_by_room(r.id, src);
+}
 
 Room Hotel::room(const std::string name) {
   auto* db = static_cast<SQLite*>(src);

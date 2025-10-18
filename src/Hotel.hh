@@ -4,6 +4,8 @@
 #include "Guest.hh"
 #include "Room.hh"
 #include "RateCalculator.hh"
+#include "Reservation.hh"
+
 
 struct Hotel {
   Hotel(void* src) noexcept : src{src} {};
@@ -60,6 +62,15 @@ struct Hotel {
    * @param Reservation identifier
    */
   void cancel(const std::string& id);
+
+  /**
+   * @brief Find the reservations for a room
+   *
+   * @param The Room to look the reservations for
+   *
+   * @return The list of reservations
+   */
+  Reservations_ reservations_for(const Room&);
 
   /**
    * @brief Returns the room identified with ID

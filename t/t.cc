@@ -180,6 +180,16 @@ TEST_CASE("Hotel::cancel") {
   }
 }
 
+TEST_CASE("Hotel::reservations_for") {
+  auto src = build_src();
+  Hotel hotel{&src};
+  Room room{"101", 1, &src};
+  SECTION("With reservations") {
+    REQUIRE(hotel.reservations_for(room).size() == 1);
+  }
+  // TODO: test the case without reservations
+}
+
 TEST_CASE("Hotel::room") {
   auto src = build_one_room_src();
   Hotel hotel{&src};
