@@ -148,6 +148,25 @@ TEST_CASE("Hotel::find_available_on") {
   }
 }
 
+TEST_CASE("Hotel::reserve") {
+  auto src = build_src();
+  Hotel hotel{&src};
+  Room room{"101", 1, &src}; // TODO: fix this source
+  Guest guest{"juan.camaney@aol.com", &src};
+
+  SECTION("success") {
+    Date date{2024,11,10};
+    hotel.reserve(guest, room, date);
+    REQUIRE_FALSE(hotel.is_available_on(room, date));
+
+    hotel.reserve(guest, room, {2024,11,12}, Days{2});
+    REQUIRE_FALSE(hotel.is_available_on(room, {2024,11,13}));
+  }
+  SECTION("failed") {
+    REQUIRE_THROWS_AS(hotel.reserve(guest, room, {2024,12,20}), std::runtime_error);
+  }
+}
+
 TEST_CASE("Hotel::room") {
   auto src = build_one_room_src();
   Hotel hotel{&src};
@@ -298,7 +317,10 @@ TEST_CASE("Reservation") {
     auto id = Reservation::reserve(
       "juan.camaney@aol.com", "101", {2024,12,12}, Days{5}, &src);
     auto rsv = Reservation::find_by_id(id, &src);
-    REQUIRE(rsv.id == "W-0001");
+
+    // TODO: preivous tests add reservations so the counter increases
+    // find a more determinitstic test for this
+    REQUIRE(rsv.id == "W-0003");
     REQUIRE(rsv.room_id == "101");
     REQUIRE(rsv.period == Period{{2024,12,12}, Days{5}});
   }

@@ -23,7 +23,7 @@ bool Hotel::is_available_on(Room room, Date date, Duration dur)
 {
   Period p{date, dur};
   auto* data = static_cast<HotelData*>(src);
-  auto room_agenda = Reservation::find_by_room(room.id, &(data->reservations));
+  const auto& room_agenda = Reservation::find_by_room(room.id, &(data->reservations));
   auto end = room_agenda.cend();
 
   return end == std::find_if(room_agenda.cbegin(), end,
@@ -40,6 +40,15 @@ Rooms Hotel::find_available_on(Date d, Duration dur, Amenities amenities)
       available_rooms.emplace_back(r);
   }
   return available_rooms;
+}
+
+std::string Hotel::reserve(const Guest& g, const Room& r, Date d, Duration dur)
+{
+  if (!is_available_on(r, d, dur))
+    throw std::runtime_error{"Room is already reserved for overlapping dates"};
+
+  auto& agenda = static_cast<HotelData*>(src)->reservations;
+  return Reservation::reserve(g.id(), r.id, d, dur, &agenda);
 }
 
 Room Hotel::room(const std::string id)

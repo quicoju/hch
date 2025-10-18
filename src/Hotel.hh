@@ -1,6 +1,7 @@
 #pragma once
 
 #include "concepts.hh"
+#include "Guest.hh"
 #include "Room.hh"
 #include "RateCalculator.hh"
 
@@ -39,6 +40,19 @@ struct Hotel {
    */
   Rooms find_available_on(Date, Duration dur=Days{1}, Amenities amenities={})
     const;
+
+  /**
+   * @brief make a new reservation
+   *
+   * @param The Guest that is requresting the reservation
+   * @param The Room to be reserved
+   * @param Date when the room is to be reserved (defaults to Today)
+   * @param Duration in days that the room is to be reserved (defaults to one)
+   */
+  std::string reserve(const Guest&,
+                      const Room&,
+                      Date date=Today,
+                      Duration dur=Days{1});
 
   /**
    * @brief Returns the room identified with ID
