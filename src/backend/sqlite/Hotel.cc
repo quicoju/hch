@@ -80,6 +80,20 @@ SELECT r.name, capacity
   return available_rooms;
 };
 
+std::string Hotel::reserve(const Guest& g, const Room& r, Date d, Duration dur)
+{
+  if (!is_available_on(r, d, dur))
+    throw std::runtime_error{"Room is already reserved for overlapping dates"};
+
+  return Reservation::reserve(g.id(), r.id, d, dur, src);
+}
+
+void Hotel::cancel(const std::string& id)
+{
+  Reservation::find_by_id(id, src).cancel();
+}
+
+
 Room Hotel::room(const std::string name) {
   auto* db = static_cast<SQLite*>(src);
   auto stmt = db->prepare(R"(

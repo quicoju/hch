@@ -4,6 +4,45 @@
 #include "SQLite.hh"
 #include "concepts.hh"
 
+std::string
+Reservation::reserve(const std::string& guest_id,
+                     const std::string& room_id,
+                     Date date,
+                     Duration dur,
+                     void* src)
+{
+  auto* db = static_cast<SQLite*>(src);
+  auto stmt = db->prepare(R"(
+SELECT IFNULL(MAX(id), 0)
+  FROM reservations
+)");
+
+  stmt.next();
+  auto next_id = stmt.get<int>() + 1;
+  std::string id = "W-000" + std::to_string(next_id);
+
+  auto stmt2 = db->prepare(R"(
+INSERT INTO
+reservations(id, reservation_id, guest_id, room_id, begin_date, duration_days)
+VALUES (?, ?,
+  (SELECT id FROM guests WHERE email = ?),
+  (SELECT id FROM rooms  WHERE name = ?),
+  ?, ?)
+)");
+  stmt2.execute(next_id, id, guest_id, room_id, _dstr(date), dur.days());
+  return id;
+}
+
+void Reservation::cancel()
+{
+  auto* db = static_cast<SQLite*>(src);
+  auto stmt = db->prepare(R"(
+DELETE FROM Reservations
+ WHERE reservation_id = ?
+)");
+  stmt.execute(id);
+}
+
 Reservation
 Reservation::find_by_id(const std::string& id, void* src)
 {
