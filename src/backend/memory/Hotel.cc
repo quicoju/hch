@@ -10,7 +10,7 @@ bool Hotel::is_available_on(Date date, Duration dur, size_t n_rooms)
 {
 
   for (const auto& r: rooms()) {
-    if (r.is_available_on(date, dur)) {
+    if (is_available_on(r, date, dur)) {
       --n_rooms;
       if (!n_rooms) return true;
     }
@@ -36,7 +36,7 @@ Rooms Hotel::find_available_on(Date d, Duration dur, Amenities amenities)
   Rooms available_rooms{};
 
   for (auto& r: rooms()) {
-    if (r.is_available_on(d, dur) && r.has_amenities(amenities))
+    if (is_available_on(r, d, dur) && r.has_amenities(amenities))
       available_rooms.emplace_back(r);
   }
   return available_rooms;
