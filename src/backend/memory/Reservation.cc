@@ -26,6 +26,14 @@ Reservation::reserve(const std::string& guest_id,
   return id;
 }
 
+void Reservation::cancel()
+{
+  // TODO: This method shows the need of a new "status" field
+  // in the reservation. Deleting the reservation without leaving
+  // a track isn't a good idea
+  auto* reservations = static_cast<ReservationsData*>(src);
+  reservations->remove_if([this](auto& r){ return r.id == id; });
+}
 
 Reservation
 Reservation::find_by_id(const std::string& id, void* src)

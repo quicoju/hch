@@ -1,5 +1,6 @@
 #pragma once
 
+#include <list>
 #include <vector>
 
 #include "Hotel.hh"
@@ -57,7 +58,7 @@ struct ReservationData{
   // if rates change between the reservation
   // and the check-out date.
 };
-using ReservationsData = std::vector<ReservationData>;
+using ReservationsData = std::list<ReservationData>;
 
 struct HotelData {
   HotelData(std::string _)

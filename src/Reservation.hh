@@ -32,6 +32,12 @@ struct Reservation {
           Duration duration,
           void* src);
 
+
+  /** @brief Cancel a reservation
+   *
+   */
+  void cancel();
+
   /**
    * @brief Find a reservation using its ID
    *
