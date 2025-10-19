@@ -59,13 +59,13 @@ run_test "Unset room prompt" \
 
 run_test "Reserve with context" \
 "set-room 101
- reserve 2024-12-01
+ reserve juan.camaney@aol.com 2024-12-01
  quit" \
-"Room reserved successfully"
+"Reservation W-0001 successfully created"
 
 run_test "List reservations shows period" \
 "set-room 101
- reserve 2024-12-01+3d
+ reserve juan.camaney@aol.com 2024-12-01+3d
  list-reservations
  quit" \
 "- \[2024-Dec-01/2024-Dec-03\]"
@@ -79,8 +79,8 @@ run_test "List amenities" \
 
 run_test "Cancel reservation" \
 "set-room 101
- reserve 2024-12-01+3d
- reserve 2025-01-05+5d
+ reserve juan.camaney@aol.com 2024-12-01+3d
+ reserve juan.camaney@aol.com 2025-01-05+5d
  cancel-reservation 2024-12-02
  list-reservations
  quit" \

@@ -164,21 +164,23 @@ private:
 
   void reserve(const Tokens& tokens)
   {
-    if (tokens.size() < 2) throw std::invalid_argument {
-        "Command usage: reserve DATE[+DAYS] [ROOM]"};
+    if (tokens.size() < 3) throw std::invalid_argument {
+        "Command usage: reserve GUEST-ID DATE[+DAYS] [ROOM]"};
 
-    string date_str{tokens[1]};
+    string guest_id{tokens[1]};
+    string date_str{tokens[2]};
     string room_id{current_room};
 
     if (room_id.empty()) {
-      if (tokens.size() < 3) throw std::invalid_argument {
-          "Command usage: reserve DATE[+DAYS] ROOM" };
-      else room_id = tokens[2];
+      if (tokens.size() < 4) throw std::invalid_argument {
+          "Command usage: reserve GUEST-ID DATE[+DAYS] ROOM" };
+      else room_id = tokens[3];
     }
 
     auto [date, duration] = parse_date(date_str);
-    hotel.room(room_id).reserve(date, duration);
-    std::cout << "Room reserved successfully.\n";
+    auto room = hotel.room(room_id);
+    auto id = hotel.reserve(guest_id, room, date, duration);
+    std::cout << "Reservation " << id << " successfully created\n";
   }
 
   void cancel_reservation(const Tokens& tokens)
