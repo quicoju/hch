@@ -23,16 +23,6 @@ SELECT COUNT(*)
     : false;
 }
 
-void  Room::reserve(Date date, Duration dur)
-{
-  auto* db = static_cast<SQLite*>(src);
-  auto date_ = _dstr(date);
-  db->prepare(R"(
-INSERT INTO reservations (room_id, begin_date, duration_days)
-VALUES ((SELECT id FROM rooms WHERE name = ?), ?, ?)
-)").execute(id, date_, dur.days());
-}
-
 void Room::cancel_reservation(Date date)
 {
   auto* db = static_cast<SQLite*>(src);

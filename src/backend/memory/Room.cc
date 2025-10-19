@@ -13,15 +13,6 @@ bool Room::is_available_on(Date date, Duration dur) const
       [&p](const Period& r){ return r.intersects(p); } );
 }
 
-void  Room::reserve(Date date, Duration dur)
-{
-  if (!is_available_on(date, dur))
-    throw std::runtime_error{"Room is already reserved for overlapping dates"};
-
-  auto& agenda = static_cast<RoomData *>(src)->reservations;
-  agenda.push_back({date, dur});
-}
-
 void Room::cancel_reservation(Date date)
 {
   const Period p{date, Days{1}};

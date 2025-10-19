@@ -51,22 +51,6 @@ TEST_CASE("Room::is_available_on") {
   }
 }
 
-TEST_CASE("Room::reserve") {
-  auto src = build_agenda();
-  Room room{ "101", 1, &src };
-  SECTION("success") {
-    Date date{2024, 11, 10};
-    room.reserve(date);
-    REQUIRE_FALSE(room.is_available_on(date));
-
-    room.reserve({2024, 11, 12}, Days{2});
-    REQUIRE_FALSE(room.is_available_on({2024, 11, 12}));
-  }
-  SECTION("failed") {
-    REQUIRE_THROWS_AS(room.reserve({2024, 12, 20}), std::runtime_error);
-  }
-}
-
 TEST_CASE("Room::cancel_reservation") {
   auto src = build_agenda();
   Room room{ "101", 1, &src };
