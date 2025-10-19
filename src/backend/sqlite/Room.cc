@@ -24,3 +24,22 @@ ORDER by amenity_name
 
   return amenities_;
 }
+
+
+Room Room::find_by_id(const std::string& id, void* src)
+{
+  auto* db = static_cast<SQLite*>(src);
+  auto stmt = db->prepare(R"(
+SELECT name, capacity
+  FROM rooms
+ WHERE name = ?
+)");
+  stmt.bind(id);
+
+  if (stmt.next()) {
+    auto name = stmt.get<std::string>();
+    auto capacity = stmt.get<size_t>(1);
+    return Room{name, capacity, db};
+  }
+  throw std::invalid_argument{std::string{"Room "} + id + " not found"};
+}

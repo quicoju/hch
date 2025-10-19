@@ -23,6 +23,8 @@ static GlobalSetup global_setup;
 /* Room Tests
  * ==========
  */
+#include "Room.hh"
+
 TEST_CASE("Room Initialization") {
   auto src = build_rooms();
   Room room{ "101", 5, &src };
@@ -43,6 +45,19 @@ TEST_CASE("Room::has_amenities") {
     REQUIRE_FALSE(room.has_amenities({MiniBar}));
   }
 }
+
+TEST_CASE("Room::find_by_id") {
+  auto src = build_src();
+  SECTION("Found") {
+    auto room = Room::find_by_id("103", &src);
+    REQUIRE(room.id == "103");
+    REQUIRE(room.capacity == 3);
+  }
+  SECTION("Not found") {
+    REQUIRE_THROWS_AS(Room::find_by_id("99", &src), std::invalid_argument);
+  }
+}
+
 
 /* Hotel Tests
  * ===========
