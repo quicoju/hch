@@ -108,20 +108,7 @@ Room Hotel::room(const std::string& id)
 
 Rooms Hotel::rooms() const
 {
-  auto* db = static_cast<SQLite*>(src);
-  auto stmt = db->prepare(R"(
-SELECT name, capacity
-  FROM rooms
-)");
-
-  Rooms rooms{};
-  while (stmt.next()) {
-    auto room_id = stmt.get<std::string>();
-    auto capacity = stmt.get<size_t>(1);
-    rooms.emplace_back(room_id, capacity, db);
-  }
-
-  return rooms;
+  return Room::find_all(src);
 }
 
 const RateReport
