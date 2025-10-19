@@ -51,7 +51,7 @@ struct Hotel {
    * @param Date when the room is to be reserved (defaults to Today)
    * @param Duration in days that the room is to be reserved (defaults to one)
    */
-  std::string reserve(const Guest&,
+  std::string reserve(const std::string& guest_id,
                       const Room&,
                       Date date=Today,
                       Duration dur=Days{1});

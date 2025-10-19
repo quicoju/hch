@@ -152,7 +152,7 @@ TEST_CASE("Hotel::reserve") {
   auto src = build_src();
   Hotel hotel{&src};
   Room room{"101", 1, &src}; // TODO: fix this source
-  Guest guest{"juan.camaney@aol.com", &src};
+  std::string guest{"juan.camaney@aol.com"};
 
   SECTION("success") {
     Date date{2024,11,10};
