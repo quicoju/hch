@@ -87,7 +87,5 @@ Rooms Hotel::rooms() const
 const RateReport
 Hotel::rate_report_for(Room room, Date _, Duration dur) const
 {
-  auto* hotel_data = static_cast<HotelData*>(src);
-  auto calc = Rate::Calculator{&hotel_data->rates};
-  return calc.rate_report_for(room, _, dur);
+  return Rate::Calculator{src}.rate_report_for(room, _, dur);
 }

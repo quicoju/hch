@@ -88,8 +88,8 @@ struct HotelData {
   }
 
   // This constructor is relevant for testing (see t_memory.hh)
-  HotelData(RoomsData r, ReservationsData rsv={})
-    : rooms{r}, reservations{rsv}, rates{} {}
+  HotelData(RoomsData r, ReservationsData rsv={}, Rate::Table rates={})
+    : rooms{r}, reservations{rsv}, rates{rates} {}
 
   // Properties
   RoomsData rooms;
