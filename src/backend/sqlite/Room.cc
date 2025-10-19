@@ -23,18 +23,6 @@ SELECT COUNT(*)
     : false;
 }
 
-void Room::cancel_reservation(Date date)
-{
-  auto* db = static_cast<SQLite*>(src);
-  auto date_ = _dstr(date);
-  db->prepare(R"(
-DELETE FROM reservations
- WHERE room_id = (SELECT id FROM rooms WHERE name = ?)
-   AND begin_date <= ?
-   AND date(begin_date, '+' || duration_days || ' days') > ?
-)").execute(id, date_, date_);
-}
-
 const std::list<Period> Room::reservations() const
 {
   auto* db = static_cast<SQLite*>(src);

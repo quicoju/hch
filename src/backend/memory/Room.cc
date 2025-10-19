@@ -13,19 +13,6 @@ bool Room::is_available_on(Date date, Duration dur) const
       [&p](const Period& r){ return r.intersects(p); } );
 }
 
-void Room::cancel_reservation(Date date)
-{
-  const Period p{date, Days{1}};
-  auto& agenda = static_cast<RoomData *>(src)->reservations;
-  auto end = agenda.end();
-
-  auto match = std::find_if(agenda.begin(), end,
-      [&p](Period& r){ return r.intersects(p); } );
-
-  if (match != end)
-    agenda.erase(match);
-}
-
 const Reservations Room::reservations() const
 {
   auto* room_data = static_cast<RoomData*>(src);

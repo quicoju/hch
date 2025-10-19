@@ -51,19 +51,6 @@ TEST_CASE("Room::is_available_on") {
   }
 }
 
-TEST_CASE("Room::cancel_reservation") {
-  auto src = build_agenda();
-  Room room{ "101", 1, &src };
-  SECTION("success") {
-    room.cancel_reservation({2024, 12, 20});
-    REQUIRE(room.is_available_on({2024, 12, 21}));
-  }
-  SECTION("No reservation match") {
-    room.cancel_reservation({2024, 12, 12});
-    REQUIRE(!room.is_available_on({2024, 12, 25}));
-  }
-}
-
 TEST_CASE("Room::has_amenities") {
   auto src = room_with_amenities();
   Room room{"103", 3, &src};

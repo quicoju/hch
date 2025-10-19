@@ -18,19 +18,6 @@ struct Room {
   bool is_available_on(Date, Duration d=Days{1}) const;
 
   /**
-   * @brief cancel the whole reservation associated to the given Date
-   *
-   * If a reservation matchies the given Date, the whole reservation
-   * is cancelled, note that a reservation might span more multiple days.
-   *
-   * If the given day doesn't match a reservation then this methods
-   * /silently/ does nothing.
-   *
-   * @param Date that will match the associated reservation
-   */
-  void cancel_reservation(Date);
-
-  /**
    * @brief Provide a view of the agenda.
    *
    * The view is read only, it cannot be modified.
