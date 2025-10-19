@@ -32,9 +32,21 @@ struct Room {
    * @brief Find a room by it's identifier
    *
    * @param Room identifier
+   * @param The pointer to the hotel's data source
+   *
+   * @return The Room instance associated to the ID
    */
   static Room
   find_by_id(const std::string& id, void* src);
+
+  /**
+   * @brief Find all rooms
+   *
+   * @param The pointer to the hotel's data source
+   *
+   * @return Instances for all the rooms
+   */
+  static Rooms find_all(void* src);
 
   /* Properties */
   /* ========== */

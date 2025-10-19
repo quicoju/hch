@@ -43,3 +43,20 @@ SELECT name, capacity
   }
   throw std::invalid_argument{std::string{"Room "} + id + " not found"};
 }
+
+Rooms Room::find_all(void* src)
+{
+  Rooms rooms{};
+  auto* db = static_cast<SQLite*>(src);
+  auto stmt = db->prepare(R"(
+SELECT name, capacity
+  FROM rooms
+)");
+
+  while (stmt.next()) {
+    auto room_id = stmt.get<std::string>();
+    auto capacity = stmt.get<size_t>(1);
+    rooms.emplace_back(room_id, capacity, db);
+  }
+  return rooms;
+}

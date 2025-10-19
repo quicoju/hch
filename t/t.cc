@@ -58,6 +58,14 @@ TEST_CASE("Room::find_by_id") {
   }
 }
 
+TEST_CASE("Room::find_all") {
+  auto src = build_src();
+  auto rooms = Room::find_all(&src);
+  REQUIRE(rooms.size() == 3);
+  REQUIRE(rooms.front().id == "101");
+  REQUIRE(rooms.back().id == "103");
+}
+
 
 /* Hotel Tests
  * ===========
