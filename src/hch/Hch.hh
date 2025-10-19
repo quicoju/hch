@@ -138,9 +138,9 @@ private:
 
   void list_reservations(const Tokens& tokens)
   {
-    auto r = ensure_room("list-reservations", tokens);
-    for (const auto& reservation : r.reservations())
-      std::cout << "  - " << _pstr(reservation) << std::endl;
+    auto room = ensure_room("list-reservations", tokens);
+    for (const auto& r : hotel.reservations_for(room))
+      std::cout << "  - " << _pstr(r.period) << std::endl;
   }
 
   void list_amenities(const Tokens& tokens)
