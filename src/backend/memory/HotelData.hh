@@ -32,7 +32,6 @@ struct RoomData {
   std::string id;
   size_t capacity;
   Amenities amenities;
-  Reservations reservations;
 };
 using RoomsData = std::vector<RoomData>;
 
