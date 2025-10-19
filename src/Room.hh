@@ -9,13 +9,6 @@ struct Room {
     , src{src}
   {}
 
-  /**
-   * @brief Provide a view of the agenda.
-   *
-   * The view is read only, it cannot be modified.
-   */
-  const Reservations reservations() const;
-
  /**
    * @brief Provide a view of the room amenities
    *
