@@ -64,11 +64,9 @@ Reservations Hotel::reservations_for(const Room& r)
 }
 
 
-Room Hotel::room(const std::string id)
+Room Hotel::room(const std::string& id)
 {
-  for (auto& r : rooms())
-    if (r.id == id) return r;
-  throw std::invalid_argument{std::string{"Room "} + id + " not found"};
+  return Room::find_by_id(id, src);
 }
 
 Rooms Hotel::rooms() const

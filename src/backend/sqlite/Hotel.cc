@@ -101,21 +101,9 @@ Reservations Hotel::reservations_for(const Room& r)
   return Reservation::find_by_room(r.id, src);
 }
 
-Room Hotel::room(const std::string name) {
-  auto* db = static_cast<SQLite*>(src);
-  auto stmt = db->prepare(R"(
-SELECT name, capacity FROM rooms
- WHERE name = ?
-)");
-  stmt.bind(name);
-
-  if (stmt.next()) {
-    auto name = stmt.get<std::string>();
-    auto capacity = stmt.get<size_t>(1);
-    return Room{name, capacity, db};
-  }
-
-  throw std::invalid_argument{"Room " + name + " not found"};
+Room Hotel::room(const std::string& id)
+{
+  return Room::find_by_id(id, src);
 }
 
 Rooms Hotel::rooms() const

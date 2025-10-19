@@ -78,7 +78,7 @@ struct Hotel {
    * @param The room identifier
    *
    */
-  Room room(const std::string id);
+  Room room(const std::string& id);
 
   /**
    * @brief Return all the rooms
