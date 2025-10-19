@@ -11,7 +11,7 @@ void prepare_tests()
   db.read_file("db/mockhotel.sql");
 }
 
-SQLite build_agenda() {
+SQLite build_rooms() {
   SQLite db{test_db};
   db.execute(R"(
 DELETE FROM rooms;

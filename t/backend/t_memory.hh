@@ -4,7 +4,7 @@
 
 void prepare_tests(){}
 
-RoomData build_agenda() {
+RoomData build_rooms() {
   return {"101", 1, {Wifi}};
 }
 

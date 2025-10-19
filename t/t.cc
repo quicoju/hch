@@ -24,7 +24,7 @@ static GlobalSetup global_setup;
  * ==========
  */
 TEST_CASE("Room Initialization") {
-  auto src = build_agenda();
+  auto src = build_rooms();
   Room room{ "101", 5, &src };
   REQUIRE(room.id == "101");
   REQUIRE(room.capacity == 5);
@@ -223,7 +223,7 @@ TEST_CASE("Rate::Calculator::rate_for - Capacity pricing") {
 
 TEST_CASE("Rate::Calculator::rate_for - Amenity pricing") {
   Rate::Calculator calc{&table_src};
-  auto src = build_agenda();
+  auto src = build_rooms();
 
   SECTION("Room with Wifi amenity") {
     Room room{"101", 1, &src};
