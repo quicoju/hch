@@ -10,14 +10,6 @@ struct Room {
   {}
 
   /**
-   * @brief Returns true if the room is available on a given date.
-   *
-   * @param Date to check if the reservation is available
-   * @param [Duration] since Date to check for availability (default 1 day)
-   */
-  bool is_available_on(Date, Duration d=Days{1}) const;
-
-  /**
    * @brief Provide a view of the agenda.
    *
    * The view is read only, it cannot be modified.

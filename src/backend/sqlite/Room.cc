@@ -3,26 +3,6 @@
 #include "Room.hh"
 #include "SQLite.hh"
 
-bool Room::is_available_on(Date date, Duration dur) const
-{
-  auto* db = static_cast<SQLite*>(src);
-  auto stmt = db->prepare(R"(
-SELECT COUNT(*)
-  FROM reservations
-  JOIN rooms r ON room_id = r.id
- WHERE name = ?
-   AND date(?, '+' || ? || ' days') > begin_date
-   AND ? < date(begin_date, '+' || duration_days || ' days')
-)");
-
-  auto date_ = _dstr(date);
-  stmt.bind(id, date_, dur.days(), date_);
-
-  return stmt.next()
-    ? stmt.get<int>() == 0
-    : false;
-}
-
 const std::list<Period> Room::reservations() const
 {
   auto* db = static_cast<SQLite*>(src);

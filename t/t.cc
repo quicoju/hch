@@ -35,22 +35,6 @@ TEST_CASE("Room Initialization") {
     });
 }
 
-TEST_CASE("Room::is_available_on") {
-  auto src = build_agenda();
-  Room room{ "101", 1, &src };
-  SECTION("available") {
-    Date date{2024, 12, 23};
-    REQUIRE(room.is_available_on({2024, 12, 22}));
-    REQUIRE(room.is_available_on(date));
-    REQUIRE(room.is_available_on(date, Days{2}));
-    REQUIRE(room.is_available_on({2024, 12, 23}, Days{2}));
-  }
-  SECTION("unavailable") {
-    REQUIRE(!room.is_available_on({2024, 12, 26}));
-    REQUIRE(!room.is_available_on({2024, 12, 23}, Days{3}));
-  }
-}
-
 TEST_CASE("Room::has_amenities") {
   auto src = room_with_amenities();
   Room room{"103", 3, &src};

@@ -3,16 +3,6 @@
 #include "Room.hh"
 #include "HotelData.hh"
 
-bool Room::is_available_on(Date date, Duration dur) const
-{
-  const Period p{date, dur};
-  const auto& agenda = static_cast<RoomData*>(src)->reservations;
-  auto end = agenda.cend();
-
-  return end == std::find_if(agenda.cbegin(), end,
-      [&p](const Period& r){ return r.intersects(p); } );
-}
-
 const Reservations Room::reservations() const
 {
   auto* room_data = static_cast<RoomData*>(src);
