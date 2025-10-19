@@ -81,7 +81,7 @@ run_test "Cancel reservation" \
 "set-room 101
  reserve juan.camaney@aol.com 2024-12-01+3d
  reserve juan.camaney@aol.com 2025-01-05+5d
- cancel-reservation 2024-12-02
+ cancel-reservation W-0001
  list-reservations
  quit" \
 "Reservation cancelled.\|.* \

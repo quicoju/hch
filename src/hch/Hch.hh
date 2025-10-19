@@ -186,19 +186,18 @@ private:
   void cancel_reservation(const Tokens& tokens)
   {
     if (tokens.size() < 2) throw std::invalid_argument {
-        "Command usage: cancel-reservation DATE[+DAYS] [ROOM]"};
+        "Command usage: cancel-reservation RESERVATION-ID [ROOM]"};
 
-    string date_str{tokens[1]};
+    string reservation_id{tokens[1]};
     string room_id{current_room};
 
     if (room_id.empty()) {
       if (tokens.size() < 3) throw std::invalid_argument {
-          "Command usage: cancel-reservation DATE[+DAYS] ROOM" };
+          "Command usage: cancel-reservation RESERVATION-ID ROOM" };
       else room_id = tokens[2];
     }
 
-    auto [date, _] = parse_date(date_str);
-    hotel.room(room_id).cancel_reservation(date);
+    hotel.cancel(reservation_id);
     std::cout << "Reservation cancelled.\n";
   }
 
