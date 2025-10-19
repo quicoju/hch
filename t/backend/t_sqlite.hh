@@ -45,8 +45,8 @@ INSERT INTO
 reservations(id, guest_id, reservation_id, room_id, begin_date, duration_days)
 VALUES
   (1, 1, "A-001", (SELECT id FROM rooms WHERE name = '101'), '2024-12-19', 3),
-  (2, 1, "A-001", (SELECT id FROM rooms WHERE name = '102'), '2024-12-20', 1),
-  (3, 1, "A-001", (SELECT id FROM rooms WHERE name = '103'), '2024-12-31', 4);
+  (2, 1, "A-002", (SELECT id FROM rooms WHERE name = '102'), '2024-12-20', 1),
+  (3, 1, "A-003", (SELECT id FROM rooms WHERE name = '103'), '2024-12-31', 4);
 )");
   return db;
 }
@@ -100,17 +100,5 @@ VALUES
     (3, 'Wifi',     5.00), -- wifi amenity
     (3, 'Balcony', 15.00); -- balcony amenity)");
 
-  return db;
-}
-
-SQLite some_reservations() {
-  SQLite db{test_db};
-  db.execute(R"(
-DELETE FROM reservations;
-INSERT OR IGNORE
-  INTO reservations (id, reservation_id, guest_id, room_id, begin_date, duration_days)
-VALUES (1, 'A-001', 1, (SELECT id FROM rooms WHERE name = '101'), '2024-11-01', 2),
-       (2, 'A-002', 1, (SELECT id FROM rooms WHERE name = '102'), '2024-12-18', 1),
-       (3, 'A-003', 1, (SELECT id FROM rooms WHERE name = '101'), '2025-01-01', 5))");
   return db;
 }
