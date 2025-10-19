@@ -9,13 +9,6 @@ struct Room {
     , src{src}
   {}
 
-  Room(const std::string& id, size_t capacity, const Amenities& a, void* src)
-    : id{id}
-    , capacity{capacity}
-    , src{src}
-    , amenities_{a}
-  {}
-
  /**
    * @brief Provide a view of the room amenities
    *

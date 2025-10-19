@@ -13,10 +13,10 @@ const Amenities Room::amenities()
 
 Room Room::find_by_id(const std::string& id, void* src)
 {
-  const auto& rooms = static_cast<HotelData*>(src)->rooms;
-  for (const auto& r: rooms) {
+  auto& rooms_data = static_cast<HotelData*>(src)->rooms;
+  for (auto& r: rooms_data) {
     if (r.id == id)
-      return {r.id, r.capacity, r.amenities, src}; // TODO: maybe room data
+      return {r.id, r.capacity, &r};
   }
   throw std::invalid_argument{std::string{"Room "} + id + " not found"};
 }
@@ -24,10 +24,10 @@ Room Room::find_by_id(const std::string& id, void* src)
 Rooms Room::find_all(void* src)
 {
   Rooms rooms{};
-  const auto& rooms_data = static_cast<HotelData*>(src)->rooms;
+  auto& rooms_data = static_cast<HotelData*>(src)->rooms;
 
-  for (const auto& r: rooms_data) {
-    rooms.emplace_back(r.id, r.capacity, r.amenities, src); // TODO:maybe room data
+  for (auto& r: rooms_data) {
+    rooms.emplace_back(r.id, r.capacity, &r); // TODO:maybe room data
   }
   return rooms;
 }
