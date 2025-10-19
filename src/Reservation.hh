@@ -60,7 +60,7 @@ struct Reservation {
    *
    * @return The recorded "Reservations" for the given room
    */
-  static Reservations_
+  static Reservations
   find_by_room(const std::string& room_id, void* src);
 
 

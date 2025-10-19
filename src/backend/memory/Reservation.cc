@@ -44,10 +44,10 @@ Reservation::find_by_id(const std::string& id, void* src)
 }
 
 
-Reservations_
+Reservations
 Reservation::find_by_room(const std::string& room_id, void* src)
 {
-  Reservations_ reservations{};
+  Reservations reservations{};
   auto* all_reservations = static_cast<ReservationsData*>(src);
   for (const auto& r: *all_reservations) {
     if (r.room_id == room_id) {

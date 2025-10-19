@@ -68,7 +68,7 @@ SELECT reservation_id, g.email, ro.name, begin_date, duration_days
     };
 }
 
-Reservations_
+Reservations
 Reservation::find_by_room(const std::string& room_id, void* src)
 {
   auto* db = static_cast<SQLite*>(src);
@@ -81,7 +81,7 @@ SELECT reservation_id, g.email, ro.name, begin_date, duration_days
 )");
   stmt.bind(room_id);
 
-  Reservations_ reservations{};
+  Reservations reservations{};
   while (stmt.next()) {
     reservations.emplace_back(
       stmt.get<std::string>(0),

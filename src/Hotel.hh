@@ -70,7 +70,7 @@ struct Hotel {
    *
    * @return The list of reservations
    */
-  Reservations_ reservations_for(const Room&);
+  Reservations reservations_for(const Room&);
 
   /**
    * @brief Returns the room identified with ID
