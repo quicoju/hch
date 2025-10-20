@@ -3,12 +3,9 @@
 #include "Hotel.hh"
 #include "Reservation.hh"
 
-#include "HotelData.hh"
-
 bool Hotel::is_available_on(Date date, Duration dur, size_t n_rooms)
   const
 {
-
   for (const auto& r: rooms()) {
     if (is_available_on(r, date, dur)) {
       --n_rooms;
@@ -57,12 +54,10 @@ void Hotel::cancel(const std::string& id)
   Reservation::find_by_id(id, src).cancel();
 }
 
-
 Reservations Hotel::reservations_for(const Room& r)
 {
   return Reservation::find_by_room(r.id, src);
 }
-
 
 Room Hotel::room(const std::string& id)
 {
