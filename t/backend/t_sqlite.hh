@@ -55,14 +55,6 @@ SQLite build_src() {
   SQLite db{SQLite{test_db}};
   db.execute(R"(
 DELETE FROM reservations;
-DELETE FROM rooms;
-INSERT INTO
-rooms(id, name, capacity) VALUES
- (1, '101', 1),
- (2, '102', 1),
- (3, '103', 3),
- (7, '301', 1),
- (8, '302', 3);
 INSERT INTO
 reservations(id, guest_id, reservation_id, room_id, begin_date, duration_days)
 VALUES
