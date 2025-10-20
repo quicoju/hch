@@ -12,5 +12,5 @@ Guest::Guest(const std::string& id, void* src)
     if (guest.id == id) return;
   }
 
-  //throw std::runtime_error{"Guest " + id + " not found"};
+  throw std::runtime_error{"Guest " + id + " not found"};
 }
