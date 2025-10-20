@@ -12,12 +12,6 @@ RoomData room_without_wifi() {
   return {"301", 1, {}};
 }
 
-HotelData build_one_room_src() {
-  return {{
-      {"A-102", 1, {Wifi}},
-    }};
-}
-
 HotelData build_src() {
   return {
     { // rooms

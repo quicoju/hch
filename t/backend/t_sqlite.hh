@@ -52,14 +52,6 @@ VALUES
   return db;
 }
 
-SQLite build_one_room_src() {
-  SQLite db{test_db};
-  db.execute(R"(
-DELETE FROM rooms;
-INSERT INTO rooms(id, name, capacity) VALUES(1, 'A-102', 1))");
-  return db;
-}
-
 SQLite room_without_wifi() {
   SQLite db{test_db};
   db.execute(R"(

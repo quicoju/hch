@@ -160,13 +160,13 @@ TEST_CASE("Hotel::reservations_for") {
 }
 
 TEST_CASE("Hotel::room") {
-  auto src = build_one_room_src();
+  auto src = build_src();
   Hotel hotel{&src};
   SECTION("existing") {
-    REQUIRE(hotel.room("A-102").id == "A-102");
+    REQUIRE(hotel.room("102").id == "102");
   }
   SECTION("non-existing") {
-    REQUIRE_THROWS_AS(hotel.room("102"), std::invalid_argument);
+    REQUIRE_THROWS_AS(hotel.room("A-102"), std::invalid_argument);
   }
 }
 
@@ -202,24 +202,24 @@ TEST_CASE("basic rate accessors") {
 TEST_CASE("Rate::Calculator::rate_for - Basic room pricing") {
   auto src = build_src();
   Rate::Calculator calc(&src);
-  auto src_1 = room_without_wifi();
+  Hotel hotel{&src};
 
   SECTION("Standard room with default rate") {
-    Room room{"102", 1, &src_1}; // capacity 1, basic room
+    auto room = hotel.room("301");
     auto rate = calc.rate_for(room, {2024, 12, 23}, Days{1});
     REQUIRE_THAT(rate, APPROX(58.99)); // base rate only
   }
 
   SECTION("Premium room with specific rate") {
-    Room room{"101", 1, &src_1}; // room 101 has premium rate
+    auto room = hotel.room("101");
     auto rate = calc.rate_for(room, {2024, 12, 23}, Days{1});
-    REQUIRE_THAT(rate, APPROX(100.99)); // premium base rate
+    REQUIRE_THAT(rate, APPROX(100.99 + 5.00)); // premium base rate with wifi
   }
 
   SECTION("Multiple nights") {
-    Room room{"102", 1, &src_1};
+    auto room = hotel.room("301");
     auto rate = calc.rate_for(room, {2024, 12, 23}, Days{3});
-    auto expected = 58.99 * 3;
+    auto expected = (58.99) * 3;
     REQUIRE_THAT(rate, APPROX(expected));
   }
 }
