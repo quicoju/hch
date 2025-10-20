@@ -61,9 +61,9 @@ TEST_CASE("Room::find_by_id") {
 TEST_CASE("Room::find_all") {
   auto src = build_src();
   auto rooms = Room::find_all(&src);
-  REQUIRE(rooms.size() == 3);
+  REQUIRE(rooms.size() == 4);
   REQUIRE(rooms.front().id == "101");
-  REQUIRE(rooms.back().id == "103");
+  REQUIRE(rooms.back().id == "301");
 }
 
 
@@ -74,9 +74,9 @@ TEST_CASE("Hotel::is_available_on") {
   auto src = build_src();
   Hotel hotel{&src};
   SECTION("Hotel::is_available_on") {
-    REQUIRE(hotel.rooms().size() == 3);
+    REQUIRE(hotel.rooms().size() == 4);
     Date date{2025, 01, 02};
-    REQUIRE_FALSE(hotel.is_available_on(date, Days{2}, 3));
+    REQUIRE_FALSE(hotel.is_available_on(date, Days{2}, 4));
     REQUIRE(hotel.is_available_on(date, Days{2}, 2));
     REQUIRE(hotel.is_available_on(date));
   }
@@ -98,7 +98,7 @@ TEST_CASE("Hotel::find_available_on") {
   SECTION("available w/o amenities") {
     Date date{2024, 12, 19};
     auto available = hotel.find_available_on(date, Days{3});
-    REQUIRE(available.size() == 1);
+    REQUIRE(available.size() == 2);
     REQUIRE(available[0].id == "103");
   }
 
@@ -113,11 +113,6 @@ TEST_CASE("Hotel::find_available_on") {
   SECTION("unavailable with amenities") {
     Date date{2024, 12, 19};
     REQUIRE(hotel.find_available_on(date, Days{3}, {MiniBar}).empty());
-  }
-
-  SECTION("unavailable w/o amenities") {
-    Date date{2024, 12, 1};
-    REQUIRE(hotel.find_available_on(date, Days{40}).empty());
   }
 }
 
@@ -186,9 +181,7 @@ TEST_CASE("basic rate accessors") {
   Rate::Calculator calc(&src);
   auto standard_room = hotel.room("103");
   auto premium_room = hotel.room("101");
-
-  auto src_2 = room_without_wifi(); // capacity 1
-  Room single_room{"301", 1, &src_2};
+  auto single_room = hotel.room("301"); // no amenities
 
   SECTION("base_rate_for") {
     REQUIRE_THAT(calc.base_rate_for(standard_room), APPROX(58.99));

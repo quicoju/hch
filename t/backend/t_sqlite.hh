@@ -37,7 +37,8 @@ INSERT INTO
 rooms(id, name, capacity) VALUES
  (1, '101', 1),
  (2, '102', 1),
- (3, '103', 3);
+ (3, '103', 3),
+ (7, '301', 1);
 INSERT INTO
 guests (id, email) VALUES
   (1, 'juan.camaney@aol.com');
