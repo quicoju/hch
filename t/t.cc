@@ -82,12 +82,11 @@ TEST_CASE("Hotel::is_available_on") {
   }
 
   SECTION("Hotel::is_available_on (room)") {
-    Room room{"101", 1, &src}; // TODO: fix this source
+    auto room = hotel.room("101");
     Date date{2024, 12, 23};
     REQUIRE(hotel.is_available_on(room, {2024, 12, 22}));
     REQUIRE(hotel.is_available_on(room, date));
     REQUIRE(hotel.is_available_on(room, date, Days{2}));
-    REQUIRE(hotel.is_available_on(room, {2024, 12, 23}, Days{2}));
     REQUIRE(!hotel.is_available_on(room, {2024, 12, 19}));
     REQUIRE(!hotel.is_available_on(room, {2024, 12, 21}, Days{3}));
   }
@@ -125,7 +124,7 @@ TEST_CASE("Hotel::find_available_on") {
 TEST_CASE("Hotel::reserve") {
   auto src = build_src();
   Hotel hotel{&src};
-  Room room{"101", 1, &src}; // TODO: fix this source
+  auto room = hotel.room("101");
   std::string guest{"juan.camaney@aol.com"};
 
   SECTION("success") {
@@ -144,7 +143,8 @@ TEST_CASE("Hotel::reserve") {
 TEST_CASE("Hotel::cancel") {
   auto src = build_src();
   Hotel hotel{&src};
-  Room room{"101", 1, &src}; // TODO: fix this source
+  auto room = hotel.room("101");
+
   SECTION("success") {
     hotel.cancel("A-001");
     hotel.is_available_on(room, {2024,12,19});
@@ -157,7 +157,7 @@ TEST_CASE("Hotel::cancel") {
 TEST_CASE("Hotel::reservations_for") {
   auto src = build_src();
   Hotel hotel{&src};
-  Room room{"101", 1, &src};
+  auto room = hotel.room("101");
   SECTION("With reservations") {
     REQUIRE(hotel.reservations_for(room).size() == 1);
   }
