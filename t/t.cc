@@ -61,9 +61,9 @@ TEST_CASE("Room::find_by_id") {
 TEST_CASE("Room::find_all") {
   auto src = build_src();
   auto rooms = Room::find_all(&src);
-  REQUIRE(rooms.size() == 4);
+  REQUIRE(rooms.size() == 5);
   REQUIRE(rooms.front().id == "101");
-  REQUIRE(rooms.back().id == "301");
+  REQUIRE(rooms.back().id == "302");
 }
 
 
@@ -74,9 +74,9 @@ TEST_CASE("Hotel::is_available_on") {
   auto src = build_src();
   Hotel hotel{&src};
   SECTION("Hotel::is_available_on") {
-    REQUIRE(hotel.rooms().size() == 4);
+    REQUIRE(hotel.rooms().size() == 5);
     Date date{2025, 01, 02};
-    REQUIRE_FALSE(hotel.is_available_on(date, Days{2}, 4));
+    REQUIRE_FALSE(hotel.is_available_on(date, Days{2}, 5));
     REQUIRE(hotel.is_available_on(date, Days{2}, 2));
     REQUIRE(hotel.is_available_on(date));
   }
@@ -98,7 +98,7 @@ TEST_CASE("Hotel::find_available_on") {
   SECTION("available w/o amenities") {
     Date date{2024, 12, 19};
     auto available = hotel.find_available_on(date, Days{3});
-    REQUIRE(available.size() == 2);
+    REQUIRE(available.size() == 3);
     REQUIRE(available[0].id == "103");
   }
 

@@ -19,6 +19,7 @@ HotelData build_src() {
       {"102", 1, {Wifi}},
       {"103", 3, {Balcony, Wifi}},
       {"301", 1, {}},
+      {"302", 3, {}},
     },
     { // reservations
       {"A-001", "juan.camaney@aol.com", "101", {{2024,12,19}, Days(3)}},
