@@ -4,14 +4,6 @@
 
 void prepare_tests(){}
 
-RoomData build_rooms() {
-  return {"101", 1, {Wifi}};
-}
-
-RoomData room_without_wifi() {
-  return {"301", 1, {}};
-}
-
 HotelData build_src() {
   return {
     { // rooms

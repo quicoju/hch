@@ -26,10 +26,10 @@ static GlobalSetup global_setup;
 #include "Room.hh"
 
 TEST_CASE("Room Initialization") {
-  auto src = build_rooms();
-  Room room{ "101", 5, &src };
+  auto src = build_src();
+  auto room = Hotel{&src}.room("101");
   REQUIRE(room.id == "101");
-  REQUIRE(room.capacity == 5);
+  REQUIRE(room.capacity == 1);
   REQUIRE(room.amenities() == Amenities{Wifi});
 }
 
@@ -226,11 +226,11 @@ TEST_CASE("Rate::Calculator::rate_for - Basic room pricing") {
 
 TEST_CASE("Rate::Calculator::rate_for - Capacity pricing") {
   auto src = build_src();
+  Hotel hotel{&src};
   Rate::Calculator calc(&src);
-  auto src_1 = room_without_wifi();
 
   SECTION("Higher capacity room") {
-    Room room{"102", 3, &src_1}; // capacity 3
+    auto room = hotel.room("302"); // capacity 3
     auto base_rate = 58.99;
     auto capacity_surcharge = base_rate * 0.20 * 2;
     auto expected = base_rate + capacity_surcharge;
@@ -242,10 +242,9 @@ TEST_CASE("Rate::Calculator::rate_for - Capacity pricing") {
 TEST_CASE("Rate::Calculator::rate_for - Amenity pricing") {
   auto src = build_src();
   Rate::Calculator calc{&src};
-  auto src_1 = build_rooms();
 
   SECTION("Room with Wifi amenity") {
-    Room room{"101", 1, &src_1};
+    auto room = Hotel{&src}.room("101");
     auto rate = calc.rate_for(room, {2024, 12, 23}, Days{1});
     auto expected = 100.99 + 5.00; // premium rate + wifi
     REQUIRE_THAT(rate, APPROX(expected));

@@ -11,22 +11,6 @@ void prepare_tests()
   db.read_file("db/mockhotel.sql");
 }
 
-SQLite build_rooms() {
-  SQLite db{test_db};
-  db.execute(R"(
-DELETE FROM rooms;
-INSERT INTO rooms(id, name, capacity)
-VALUES
- (1, '101', 1),
- (2, '102', 1),
- (3, '103', 1),
- (4, '201', 1),
- (5, '202', 1),
- (6, '203', 1);
-)");
-  return db;
-}
-
 SQLite build_src() {
   SQLite db{SQLite{test_db}};
   db.execute(R"(
@@ -50,14 +34,6 @@ VALUES
   (2, 1, "A-002", (SELECT id FROM rooms WHERE name = '102'), '2024-12-20', 1),
   (3, 1, "A-003", (SELECT id FROM rooms WHERE name = '103'), '2024-12-31', 4);
 )");
-  return db;
-}
-
-SQLite room_without_wifi() {
-  SQLite db{test_db};
-  db.execute(R"(
-DELETE FROM rooms;
-INSERT INTO rooms(id, name, capacity) VALUES(1, '301', 1))");
   return db;
 }
 
