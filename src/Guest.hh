@@ -10,16 +10,13 @@
 // NOTE: On the other hand, using this identifier might violate
 // the user's privacy, that's why this is a temporary solution
 struct Guest {
-  Guest(const std::string& id, void* src);
+  Guest(const std::string& id, void* src) : id{id}, src{src}
+  {};
 
-  const std::string& id() const
-  {
-    return email;
-  }
-
-private:
   // state
   // =====
+  const std::string id;
+
+private:
   void* src;
-  std::string email;
 };
