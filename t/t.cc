@@ -275,14 +275,16 @@ TEST_CASE("Rate::Calculator::rate_for - Complex pricing") {
 #include "Guest.hh"
 
 TEST_CASE("Guest") {
-  auto guest = "juan.camaney@aol.com";
-  auto src = some_guests({guest});
-  SECTION("Existing Guest") {
-    REQUIRE(Guest{guest, &src}.id == guest);
+  std::string id{"juan.camaney@aol.com"};
+  auto src = build_src();
+
+  SECTION("Constructor") {
+    REQUIRE(Guest{id, &src}.id == id);
   }
-  // SECTION("Non-existing Guest") {
-  //   REQUIRE_THROWS_AS(Guest("me@gmail.com", &src), std::runtime_error);
-  // }
+  SECTION("find_by_id") {
+    REQUIRE(Guest::find_by_id(id, &src).id == id);
+    REQUIRE_THROWS_AS(Guest::find_by_id("me@gmail.com", &src), std::runtime_error);
+  }
 }
 
 /* Reservations tests

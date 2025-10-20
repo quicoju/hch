@@ -13,6 +13,8 @@ struct Guest {
   Guest(const std::string& id, void* src) : id{id}, src{src}
   {};
 
+  static Guest find_by_id(const std::string& id, void* src);
+
   // state
   // =====
   const std::string id;
