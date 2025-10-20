@@ -29,9 +29,9 @@ CREATE TABLE IF NOT EXISTS guests (
 
 CREATE TABLE IF NOT EXISTS reservations (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    reservation_id TEXT, -- NOT NULL UNIQUE, -- TODO: must be NOT NULL
+    reservation_id TEXT NOT NULL UNIQUE,
     room_id INTEGER NOT NULL,
-    guest_id INTEGER,    -- NOT NULL, -- TODO: must be NOT NULL
+    guest_id INTEGER NOT NULL,
     begin_date DATE NOT NULL,
     duration_days INTEGER NOT NULL CHECK (duration_days > 0),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
