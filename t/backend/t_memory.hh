@@ -24,6 +24,9 @@ HotelData build_src() {
       {Rate::Type::Capacity, ""       , 0.20},  // percent surcharge per extra bed
       {Rate::Type::Amenity,  "Wifi"   ,  5.00}, // per night
       {Rate::Type::Amenity,  "Balcony", 15.00}, // per night
+    },
+    { // gests
+      {"juan.camaney@aol.com"}
     }
   };
 }

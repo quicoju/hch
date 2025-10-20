@@ -42,6 +42,12 @@ struct GuestData{
   std::string id;
 };
 using GuestsData = std::vector<GuestData>;
+// XXX: this isn't in the concepts because
+// I can't think of an immediate case where
+// we want to access to multiple guests at one;
+// except for a generic searching of guests, but
+// this is not to be implemented soon.
+using Guests = std::vector<Guest>;
 
 /* Reservation information
  * =======================
@@ -63,7 +69,8 @@ struct HotelData {
   HotelData(std::string _)
     : rooms{}
     , reservations{}
-    , rates{} {
+    , rates{}
+    , guests{} {
   // This constructor and data were made to feed
   // hch's src default hotel, it takes a string
   // as an argument to mirror the sqlite backend
@@ -88,11 +95,16 @@ struct HotelData {
   }
 
   // This constructor is relevant for testing (see t_memory.hh)
-  HotelData(RoomsData r, ReservationsData rsv={}, Rate::Table rates={})
-    : rooms{r}, reservations{rsv}, rates{rates} {}
+  HotelData(RoomsData r,
+            ReservationsData rsv={},
+            Rate::Table rates={},
+            GuestsData guests={})
+    : rooms{r}, reservations{rsv}, rates{rates}, guests{guests}
+  {}
 
   // Properties
   RoomsData rooms;
   ReservationsData reservations;
   Rate::Table rates;
+  GuestsData guests;
 };
