@@ -67,10 +67,6 @@ INSERT INTO rooms(id, name, capacity) VALUES(1, '301', 1))");
   return db;
 }
 
-SQLite room_with_amenities() {
-  return build_src();
-}
-
 SQLite some_guests(const std::vector<std::string>& guests) {
   SQLite db{test_db};
   auto ix = 1;
