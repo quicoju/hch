@@ -64,35 +64,3 @@ VALUES
 )");
   return db;
 }
-
-SQLite some_guests(const std::vector<std::string>& guests) {
-  SQLite db{test_db};
-  auto ix = 1;
-  auto stmt = db.prepare(R"(
-INSERT OR IGNORE INTO guests (id, email) VALUES(?, ?)
-)");
-  for (const auto& guest: guests)
-    stmt.execute(ix++, guest);
-  return db;
-}
-
-// Rate tests
-SQLite build_rate_table() {
-  SQLite db{test_db};
-  db.execute(R"(
-INSERT OR IGNORE INTO rate_types (id, name)
-VALUES
-    (1, 'Base'),
-    (2, 'Capacity'),
-    (3, 'Amenity');
-
-INSERT OR IGNORE INTO rates (type_id, key_name, value)
-VALUES
-    (1, '',        58.99), -- default base rate
-    (1, '101',    100.99), -- premium room rate
-    (2, '',         0.20), -- default capacity surcharge
-    (3, 'Wifi',     5.00), -- wifi amenity
-    (3, 'Balcony', 15.00); -- balcony amenity)");
-
-  return db;
-}

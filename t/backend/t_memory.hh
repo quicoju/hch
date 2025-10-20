@@ -33,13 +33,3 @@ HotelData build_src() {
     }
   };
 }
-
-// Guest tests
-// ===========
-GuestsData some_guests(const std::vector<std::string>& ids)
-{
-  GuestsData guests{};
-  for (const auto& id: ids)
-    guests.emplace_back(id);
-  return guests;
-}
