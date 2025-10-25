@@ -1,3 +1,4 @@
+#include <map>
 #include <regex>
 #include <stdexcept>
 
@@ -111,7 +112,7 @@ private:
   string current_room;
 
   using Action = void(Hch::*)(const Tokens&);
-  std::unordered_map<string, Action> command_table_ = {
+  std::map<string, Action> command_table_ = {
     {"set-room", &Hch::set_room},
     {"unset-room", &Hch::unset_room},
     {"list-reservations", &Hch::list_reservations},
@@ -119,6 +120,7 @@ private:
     {"list-rate", &Hch::list_rate},
     {"reserve", &Hch::reserve},
     {"cancel-reservation", &Hch::cancel_reservation},
+    {"help", &Hch::help},
     {"quit", &Hch::quit},
     {"exit", &Hch::quit}
   };
@@ -159,7 +161,7 @@ private:
 
     auto report = hotel.rate_report_for(room, date, duration);
     for(auto& [name, cost]: report)
-      std::cout << " - " << name << ": " << cost << std::endl;
+      std::cout << "  - " << name << ": " << cost << std::endl;
   }
 
   void reserve(const Tokens& tokens)
@@ -180,6 +182,13 @@ private:
 
     hotel.cancel(tokens[1]);
     std::cout << "Reservation cancelled.\n";
+  }
+
+  void help(const Tokens& tokens)
+  {
+    std::cout << "Available commands:\n";
+    for (const auto& [command, _]: command_table_)
+      std::cout << "  - "<< command << std::endl;
   }
 
   void quit(const Tokens& tokens)

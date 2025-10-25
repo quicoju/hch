@@ -91,7 +91,7 @@ run_test "list rate" \
 "set-room 101
  list-rate
  quit" \
-"- Base: 100.99\|\
- - Capacity: 0\|\
- - Wifi: 5\|\
- - Total: 105.99"
+" - Base: 100.99\|\
+  - Capacity: 0\|\
+  - Wifi: 5\|\
+  - Total: 105.99"
