@@ -166,9 +166,12 @@ private:
 
   void reserve(const Tokens& tokens)
   {
-    auto room = ensure_room("reserve GUEST-ID DATE[+DAYS]", tokens);
+    auto room = ensure_room("reserve GUEST-ID [DATE[+DAYS]]", tokens);
+    if (tokens.size() < 2) throw std::invalid_argument {
+        "Command usage: reserve GUEST-ID [DATE[+DAYS]]"};
+
     string guest_id{tokens[1]};
-    string date_str{tokens[2]};
+    string date_str{tokens.size()>=3 ? tokens[2]: ""};
 
     auto [date, duration] = parse_date(date_str);
     auto id = hotel.reserve(guest_id, room, date, duration);
