@@ -1,6 +1,8 @@
 #include <map>
 #include <regex>
 #include <stdexcept>
+#include <string>
+#include <vector>
 
 #include "Hotel.hh"
 #include "Repl.hh"
@@ -38,6 +40,15 @@ struct Hch : Repl {
     catch (const std::exception& e) {
       std::cout << "Error: " << e.what() << std::endl;
     }
+  }
+
+  std::vector<string> supported_commands() const override
+  {
+    std::vector<string> commands;
+    commands.reserve(command_table_.size());
+    for (const auto& [cmd, _]: command_table_)
+      commands.emplace_back(cmd);
+    return commands;
   }
 
 private:
