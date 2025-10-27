@@ -13,8 +13,11 @@ struct Repl {
 
   virtual string prompt() const = 0;
   virtual void execute(const string&, const Tokens&) = 0;
+  virtual std::vector<string> supported_commands() const { return {}; }
 
   void run() {
+    setup_completion();
+
     while (true) {
       char *line = readline(prompt().c_str());
       if (!line) break;              /* EOF */
@@ -25,6 +28,8 @@ struct Repl {
   }
 
 private:
+  static Repl* current_repl;
+
   Tokens tokenize(const string &line) {
     std::istringstream iss(line);
     string token;
@@ -41,4 +46,35 @@ private:
     string command = t[0];
     execute(command, t);
   }
+
+  void setup_completion() {
+    current_repl = this;
+    rl_attempted_completion_function = command_completion;
+  }
+
+  static char** command_completion(const char* text, int start, int end) {
+    if (current_repl && start == 0)
+      return rl_completion_matches(text, command_generator);
+    return nullptr;
+  }
+
+  static char* command_generator(const char* text, int state) {
+    static std::vector<string> commands;
+    static size_t index;
+
+    if (state == 0) {
+      commands = current_repl->supported_commands();
+      index = 0;
+    }
+
+    while(index < commands.size()) {
+      const std::string& cmd = commands[index++];
+      if (cmd.find(text) == 0)
+        return strdup(cmd.c_str());
+    }
+    return nullptr;
+  }
 };
+
+// for suporting command completion
+Repl* Repl::current_repl = nullptr;
