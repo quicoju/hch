@@ -142,6 +142,7 @@ private:
 
   void set_room(const Tokens& tokens)
   {
+    current_room.clear();
     current_room = ensure_room("set-room", tokens).id;
   }
 
