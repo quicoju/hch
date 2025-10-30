@@ -1,6 +1,6 @@
 #pragma once
 
-#include <list>
+#include <map>
 #include <set>
 #include <boost/date_time/gregorian/gregorian.hpp>
 
@@ -35,4 +35,4 @@ static inline Amenity Balcony = "Balcony";
 static inline Amenity Wifi = "Wifi";
 static inline Amenity MiniBar = "MiniBar";
 
-using RateReport = std::vector<std::pair<std::string, double>>;
+using RateReport = std::map<std::string, double>;

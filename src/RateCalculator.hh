@@ -62,9 +62,9 @@ namespace Rate {
         {"Capacity", capacity_rate_for(room) * days},
       };
       for (auto& amenity: room.amenities())
-        report.emplace_back(amenity, amenity_rate_for(amenity) * days);
+        report.emplace(amenity, amenity_rate_for(amenity) * days);
 
-      report.emplace_back("Total", rate_for(room, _, dur));
+      report.emplace("Total", rate_for(room, _, dur));
       return report;
     }
 

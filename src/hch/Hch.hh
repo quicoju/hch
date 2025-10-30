@@ -172,8 +172,11 @@ private:
     auto [date, duration] = parse_date(date_str);
 
     auto report = hotel.rate_report_for(room, date, duration);
-    for(auto& [name, cost]: report)
+    for(auto& [name, cost]: report) {
+      if (name == "Total") continue;
       std::cout << "  - " << name << ": " << cost << std::endl;
+    }
+    std::cout << "  - Total: " << report["Total"] << std::endl;
   }
 
   void reserve(const Tokens& tokens)
