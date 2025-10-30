@@ -35,4 +35,10 @@ static inline Amenity Balcony = "Balcony";
 static inline Amenity Wifi = "Wifi";
 static inline Amenity MiniBar = "MiniBar";
 
-using RateReport = std::map<std::string, double>;
+using RateDetails = std::map<std::string, double>;
+struct RateReport {
+  Date date;
+  Duration days;
+  double total;
+  RateDetails details;
+};
