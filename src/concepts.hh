@@ -1,7 +1,10 @@
 #pragma once
 
+#include <functional>
 #include <map>
 #include <set>
+#include <string>
+#include <vector>
 #include <boost/date_time/gregorian/gregorian.hpp>
 
 using Date = boost::gregorian::date;
@@ -38,7 +41,7 @@ static inline Amenity MiniBar = "MiniBar";
 using RateDetails = std::map<std::string, double>;
 struct RateReport {
   Date date;
-  Duration days;
+  Duration duration;
   double total;
   RateDetails details;
 };

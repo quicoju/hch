@@ -6,6 +6,7 @@
 
 #include "Hotel.hh"
 #include "Repl.hh"
+#include "Formatter.hh"
 
 #ifdef USE_sqlite
 #include "SQLite.hh"
@@ -18,6 +19,7 @@ using Backend = HotelData;
 struct Hch : Repl {
   Hch(int argc, char* argv[])
     : conf{ argc, argv }
+    , formatter{}
     , src{ get_source() }
     , hotel{ Hotel{&src} }
   { }
@@ -118,6 +120,7 @@ private:
 
   /* State */
   Config conf;
+  Formatter formatter;
   Backend src;
   Hotel hotel;
   string current_room;
@@ -154,28 +157,27 @@ private:
   void list_reservations(const Tokens& tokens)
   {
     auto room = ensure_room("list-reservations", tokens);
-    for (const auto& r : hotel.reservations_for(room))
-      std::cout << "  - " << _pstr(r.period) << std::endl;
+    auto reservations = hotel.reservations_for(room);
+    formatter.output(reservations, [](const auto& r) {
+      return _pstr(r.period);
+    });
   }
 
   void list_amenities(const Tokens& tokens)
   {
     auto r = ensure_room("list-amenities", tokens);
-    for (const auto& a : r.amenities())
-      std::cout << "  - " << a << std::endl;
+    formatter.output(r.amenities());
   }
 
   void list_rate(const Tokens& tokens)
   {
     auto room = ensure_room("list-rate [DATE[+DAYS]]", tokens);
-    auto date_str = tokens.size() > 2 ? tokens[1] : "";
+    auto date_str = tokens.size() > 1 ? tokens[1] : "";
     auto [date, duration] = parse_date(date_str);
-
     auto report = hotel.rate_report_for(room, date, duration);
-    for(auto& [name, cost]: report.details)
-      std::cout << "  - " << name << ": " << cost << std::endl;
 
-    std::cout << "  - Total: " << report.total << std::endl;
+    formatter.output(report.details);
+    formatter.output({"Total", report.total});
   }
 
   void reserve(const Tokens& tokens)

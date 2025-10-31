@@ -3,6 +3,7 @@ CXX = c++
 CXXFLAGS = -Wall -g -std=c++2a \
 	-I/usr/local/include \
 	-I./src \
+    -I./src/views \
 	-I./t/backend
 
 LDFLAGS = -L/usr/local/lib \
@@ -30,7 +31,7 @@ OBJS = Guest.o Hotel.o RateCalculator.o Reservation.o Room.o Room_common.o
 .cc.o: src/concepts.hh Makefile
 	$(CXX) $(CXXFLAGS) -c $<
 
-main.o: src/hch/*.hh
+main.o: src/hch/*.hh src/views/Formatter.hh
 hch: $(OBJS) main.o
 	$(CXX) $(CXXFLAGS) -o $@ $> $(LDFLAGS)
 
