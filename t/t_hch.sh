@@ -74,8 +74,9 @@ run_test "List amenities" \
 "set-room 102
  list-amenities
  quit" \
-" - Balcony\|\
-  - Wifi"
+"---
+- Balcony\|\
+- Wifi"
 
 run_test "Cancel reservation" \
 "set-room 101
@@ -85,13 +86,14 @@ run_test "Cancel reservation" \
  list-reservations
  quit" \
 "Reservation cancelled.\|.* \
- - \[2025-Jan-05/2025-Jan-09\]"
+---\|
+- \[2025-Jan-05/2025-Jan-09\]"
 
 run_test "list rate" \
 "set-room 101
  list-rate
  quit" \
-" - Base: 100.99\|\
-  - Capacity: 0\|\
-  - Wifi: 5\|\
-  - Total: 105.99"
+"Base: 100.99\|\
+Capacity: 0.00\|\
+Wifi: 5.00\|\
+Total: 105.99"
