@@ -51,7 +51,7 @@ public:
   template<typename K, typename V>
   requires std::convertible_to<K, std::string_view>
        && (std::is_arithmetic_v<V> || std::convertible_to<V, double>)
-  void output(const std::map<K, V>& m)
+  void output(const std::map<K, V>& m, const char* indent="")
   {
     std::cout.setf(std::ios::fixed);
     std::cout.precision(2);
@@ -60,13 +60,31 @@ public:
       for (const auto& [key, value] : m) {
         std::string_view k = key;
         if constexpr (std::is_arithmetic_v<V>) {
-          std::cout << k << ": " << value << std::endl;
+          std::cout << indent << k << ": " << value << std::endl;
         } else {
-          std::cout << k << ": " << static_cast<double>(value) << std::endl;
+          std::cout << indent << k << ": " << static_cast<double>(value) << std::endl;
         }
       }
     }
   }
+
+  // TODO: This output formatter is temporary, while I use a third
+  // party serializer. The problem with this formatter is that it
+  // knows too much details about the application, this particular
+  // case, it needs to know how to serialize a "RateReport" type
+  void output(const RateReport report)
+  {
+    if (format_ == "yaml") {
+      std::cout
+        << "---\n"
+        << "date: "    << _dstr(report.date) << "\n"
+        << "days: "    << report.duration.days() << "\n"
+        << "total: "   << report.total << "\n"
+        << "details: " << "\n";
+      output(report.details, "    ");
+    }
+  }
+
 private:
   std::string format_;
 };

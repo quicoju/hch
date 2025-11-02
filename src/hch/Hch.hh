@@ -174,10 +174,7 @@ private:
     auto room = ensure_room("list-rate [DATE[+DAYS]]", tokens);
     auto date_str = tokens.size() > 1 ? tokens[1] : "";
     auto [date, duration] = parse_date(date_str);
-    auto report = hotel.rate_report_for(room, date, duration);
-
-    formatter.output(report.details);
-    formatter.output({"Total", report.total});
+    formatter.output(hotel.rate_report_for(room, date, duration));
   }
 
   void reserve(const Tokens& tokens)
