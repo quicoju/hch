@@ -187,32 +187,32 @@ private:
 
   void list_rate(const Tokens& tokens)
   {
-    auto room = ensure_room("list-rate [DATE[+DAYS]]", tokens);
-    auto date_str = tokens.size() > 1 ? tokens[1] : "";
+    auto room = ensure_room("list-rate [--during=[DATE][+DAYS]]", tokens);
+    auto date_str = value_for("--during", tokens).value_or("");
     auto [date, duration] = parse_date(date_str);
     formatter.output(hotel.rate_report_for(room, date, duration));
   }
 
   void reserve(const Tokens& tokens)
   {
-    auto room = ensure_room("reserve GUEST-ID [DATE[+DAYS]]", tokens);
-    if (tokens.size() < 2) throw std::invalid_argument {
-        "Command usage: reserve GUEST-ID [DATE[+DAYS]]"};
+    string usage{"reserve --guest=ID [--during=[DATE][+DAYS]]"};
+    auto room = ensure_room(usage, tokens);
+    auto guest_opt = value_for("--guest", tokens);
+    if (!guest_opt)
+      throw std::invalid_argument {"Command usage: " + usage};
 
-    string guest_id{tokens[1]};
-    string date_str{tokens.size()>=3 ? tokens[2]: ""};
-
-    auto [date, duration] = parse_date(date_str);
-    auto id = hotel.reserve(guest_id, room, date, duration);
+    auto [date, duration] = parse_date(value_for("--during", tokens).value_or(""));
+    auto id = hotel.reserve(*guest_opt, room, date, duration);
     std::cout << "Reservation " << id << " successfully created\n";
   }
 
   void cancel_reservation(const Tokens& tokens)
   {
-    if (tokens.size() < 2) throw std::invalid_argument {
-        "Command usage: cancel-reservation RESERVATION-ID"};
+    auto reservation_opt = value_for("--id", tokens);
+    if (!reservation_opt) throw std::invalid_argument {
+        "Command usage: cancel-reservation --id=RESERVATION-ID"};
 
-    hotel.cancel(tokens[1]);
+    hotel.cancel(*reservation_opt);
     std::cout << "Reservation cancelled.\n";
   }
 
