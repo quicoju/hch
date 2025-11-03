@@ -66,19 +66,32 @@ private:
   };
 
 
-  Room ensure_room(const string& usage, const Tokens& tokens)
+  /*
+    extract the first value with the form "name=value" from the tokens
+   */
+  std::optional<string> value_for(const string& name, const Tokens& tokens)
+  {
+    for (const auto& t: tokens ) {
+      if ( t.find(name) != t.npos) {
+        if (auto pos = t.find("="); pos != t.npos)
+          return t.substr(pos+1);
+      }
+    }
+    return {};
+  }
 
+  Room ensure_room(const string& usage, const Tokens& tokens)
   {
     string room_id{current_room};
 
     // if no room is in the context, then expect
     // the room to be the last argument
     if (room_id.empty())
-      room_id = tokens.back();
+      room_id = *value_for("--room", tokens);
 
     try { return hotel.room(room_id); }
     catch(const std::invalid_argument& e) {
-      throw std::invalid_argument{"Command usage: " + usage + " ROOM"};
+      throw std::invalid_argument{"Command usage: " + usage + " --room=ROOM"};
     }
   }
 
@@ -146,7 +159,10 @@ private:
   void set_room(const Tokens& tokens)
   {
     current_room.clear();
-    current_room = ensure_room("set-room", tokens).id;
+    try { current_room = hotel.room(tokens[1]).id; }
+    catch(const std::invalid_argument& e) {
+      throw std::invalid_argument{"Command usage: set-room ID"};
+    }
   }
 
   void unset_room(const Tokens& tokens)
