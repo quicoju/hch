@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-TEST_CMD="./hch"
+TEST_CMD="./hch --repl"
 db="db/integration_test.db"
 
 cleanup() {
@@ -14,7 +14,7 @@ cleanup() {
 prepare_test() {
     if [[ x$BACKEND == "xsqlite" ]]; then
         sqlite3 $db "DELETE FROM reservations;"
-        TEST_CMD="./hch --db=$db"
+        TEST_CMD="./hch --repl --db=$db"
     fi
 }
 

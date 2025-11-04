@@ -32,6 +32,12 @@ struct Hch : Repl {
       : "hch[room " + current_room + "]> ";
   }
 
+  void execute()
+  {
+    if (conf.use_repl) run();
+    else execute(conf.cli_argv.front(), conf.cli_argv);
+  }
+
   void execute(const string& command, const Tokens& tokens) override
   {
     try {
@@ -61,9 +67,15 @@ private:
         string arg{argv[i]};
         if (arg.find("--db=") == 0)
           db_path = arg.substr(5);
+        else if (arg.find("--repl") == 0)
+          use_repl = true;
+        // keep the command line arguments
+        cli_argv.push_back(std::move(arg));
       }
     }
+    Tokens cli_argv;
     string db_path = "db/hotel.db";
+    bool use_repl = false;
   };
 
 

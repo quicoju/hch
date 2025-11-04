@@ -4,8 +4,7 @@
 
 int main (int argc, char *argv[])
 {
-  Hch{argc, argv}.run();
+  Hch{argc, argv}.execute();
 
-  std::cout << "bye!\n";
   return 0;
 }
