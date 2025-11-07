@@ -97,10 +97,8 @@ private:
   {
     string room_id{current_room};
 
-    // if no room is in the context, then expect
-    // the room to be the last argument
     if (room_id.empty())
-      room_id = *value_for("--room", tokens);
+      room_id = value_for("--room", tokens).value_or("");
 
     try { return hotel.room(room_id); }
     catch(const std::invalid_argument& e) {
