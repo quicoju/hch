@@ -97,6 +97,7 @@ private:
   {
     string room_id{current_room};
 
+    // if not in a room context, check for the "room" argument
     if (room_id.empty())
       room_id = value_for("--room", tokens).value_or("");
 
