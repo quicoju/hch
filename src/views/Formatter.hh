@@ -45,6 +45,20 @@ public:
     return output(items, [](const auto& x) { return std::string{x}; });
   }
 
+  /* TODO: comodity method to print string pairs, but it's making
+   * the check at runtime. Modify this with a more robust solution
+   */
+  stringstream output(std::initializer_list<std::string> items)
+  {
+    stringstream ss{};
+    if (format_ == "yaml" && items.size() == 2) {
+      auto it = items.begin();
+      ss << "---\n" << *it << ": " << *std::next(it);
+    }
+    return ss;
+  }
+
+
   stringstream output(std::pair<std::string, double> p) {
     return output<std::string, double>(p);
   }
