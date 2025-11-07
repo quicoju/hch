@@ -185,15 +185,15 @@ private:
   {
     auto room = ensure_room("list-reservations", tokens);
     auto reservations = hotel.reservations_for(room);
-    formatter.output(reservations, [](const auto& r) {
+    std::cout << formatter.output(reservations, [](const auto& r) {
       return _pstr(r.period);
-    });
+    }).str() << std::endl;
   }
 
   void list_amenities(const Tokens& tokens)
   {
     auto r = ensure_room("list-amenities", tokens);
-    formatter.output(r.amenities());
+    std::cout << formatter.output(r.amenities()).str() << std::endl;
   }
 
   void list_rate(const Tokens& tokens)
@@ -201,7 +201,9 @@ private:
     auto room = ensure_room("list-rate [--during=[DATE][+DAYS]]", tokens);
     auto date_str = value_for("--during", tokens).value_or("");
     auto [date, duration] = parse_date(date_str);
-    formatter.output(hotel.rate_report_for(room, date, duration));
+    std::cout
+      << formatter.output(hotel.rate_report_for(room, date, duration)).str()
+      << std::endl;
   }
 
   void reserve(const Tokens& tokens)

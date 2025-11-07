@@ -1,4 +1,7 @@
 #pragma once
+
+#include <sstream>
+
 #include "concepts.hh"
 
 // output formatter
@@ -9,6 +12,8 @@
 //       implementing our own serializers, but for now I'll
 //       make a simple one to shape the interface of the
 //       Formatter
+using stringstream = std::stringstream;
+
 class Formatter {
 public:
   Formatter(): format_{"yaml"} {}
@@ -18,13 +23,16 @@ public:
    * in the container
    */
   template<typename Container, typename F>
-  void output(const Container& items, F f)
+  stringstream output(const Container& items, F f)
   {
+    stringstream ss{};
+
     if (format_ == "yaml") {
-      std::cout << "---" << std::endl;
+      ss << "---\n";
       for (const auto& item: items)
-        std::cout << "- " << f(item) << std::endl;
+        ss << "- " << f(item) << "\n";
     }
+    return ss;
   }
 
   /* serialize a Container, it provides a default serialization function
@@ -32,27 +40,28 @@ public:
   template<typename Container>
   requires std::ranges::range<Container>
     && std::convertible_to<typename Container::value_type, std::string>
-  void output(const Container& items)
+  stringstream output(const Container& items)
   {
-    output(items, [](const auto& x) { return std::string{x}; });
+    return output(items, [](const auto& x) { return std::string{x}; });
   }
 
-  void output(std::pair<std::string, double> p) {
-    output<std::string, double>(p);
+  stringstream output(std::pair<std::string, double> p) {
+    return output<std::string, double>(p);
   }
 
   template<typename U, typename V>
   requires std::convertible_to<U, std::string_view> &&
            (std::is_arithmetic_v<V> || std::convertible_to<V, double>)
-  void output(const std::pair<U, V>& p) {
-  output(std::map<U, V>{{p.first, p.second}});
+  stringstream output(const std::pair<U, V>& p) {
+    return output(std::map<U, V>{{p.first, p.second}});
 }
 
   template<typename K, typename V>
   requires std::convertible_to<K, std::string_view>
        && (std::is_arithmetic_v<V> || std::convertible_to<V, double>)
-  void output(const std::map<K, V>& m, const char* indent="")
+  stringstream output(const std::map<K, V>& m, const char* indent="")
   {
+    stringstream ss{};
     std::cout.setf(std::ios::fixed);
     std::cout.precision(2);
 
@@ -60,29 +69,31 @@ public:
       for (const auto& [key, value] : m) {
         std::string_view k = key;
         if constexpr (std::is_arithmetic_v<V>) {
-          std::cout << indent << k << ": " << value << std::endl;
+          ss << indent << k << ": " << value;
         } else {
-          std::cout << indent << k << ": " << static_cast<double>(value) << std::endl;
+          ss << indent << k << ": " << static_cast<double>(value);
         }
       }
     }
+    return ss;
   }
 
   // TODO: This output formatter is temporary, while I use a third
   // party serializer. The problem with this formatter is that it
   // knows too much details about the application, this particular
   // case, it needs to know how to serialize a "RateReport" type
-  void output(const RateReport report)
+  stringstream output(const RateReport report)
   {
+    stringstream ss{};
     if (format_ == "yaml") {
-      std::cout
-        << "---\n"
-        << "date: "    << _dstr(report.date) << "\n"
-        << "days: "    << report.duration.days() << "\n"
-        << "total: "   << report.total << "\n"
-        << "details: " << "\n";
-      output(report.details, "    ");
+      ss << "---\n"
+         << "date: "    << _dstr(report.date) << "\n"
+         << "days: "    << report.duration.days() << "\n"
+         << "total: "   << report.total << "\n"
+         << "details: " << "\n"
+         << output(report.details, "    ").str();
     }
+    return ss;
   }
 
 private:
