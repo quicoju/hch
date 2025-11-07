@@ -23,7 +23,7 @@ public:
    * in the container
    */
   template<typename Container, typename F>
-  stringstream output(const Container& items, F f)
+  std::string output(const Container& items, F f)
   {
     stringstream ss{};
 
@@ -32,7 +32,7 @@ public:
       for (const auto& item: items)
         ss << "- " << f(item) << "\n";
     }
-    return ss;
+    return ss.str();
   }
 
   /* serialize a Container, it provides a default serialization function
@@ -40,7 +40,7 @@ public:
   template<typename Container>
   requires std::ranges::range<Container>
     && std::convertible_to<typename Container::value_type, std::string>
-  stringstream output(const Container& items)
+  std::string output(const Container& items)
   {
     return output(items, [](const auto& x) { return std::string{x}; });
   }
@@ -48,32 +48,32 @@ public:
   /* TODO: comodity method to print string pairs, but it's making
    * the check at runtime. Modify this with a more robust solution
    */
-  stringstream output(std::initializer_list<std::string> items)
+  std::string output(std::initializer_list<std::string> items)
   {
     stringstream ss{};
     if (format_ == "yaml" && items.size() == 2) {
       auto it = items.begin();
       ss << "---\n" << *it << ": " << *std::next(it);
     }
-    return ss;
+    return ss.str();
   }
 
 
-  stringstream output(std::pair<std::string, double> p) {
+  std::string output(std::pair<std::string, double> p) {
     return output<std::string, double>(p);
   }
 
   template<typename U, typename V>
   requires std::convertible_to<U, std::string_view> &&
            (std::is_arithmetic_v<V> || std::convertible_to<V, double>)
-  stringstream output(const std::pair<U, V>& p) {
+  std::string output(const std::pair<U, V>& p) {
     return output(std::map<U, V>{{p.first, p.second}});
 }
 
   template<typename K, typename V>
   requires std::convertible_to<K, std::string_view>
        && (std::is_arithmetic_v<V> || std::convertible_to<V, double>)
-  stringstream output(const std::map<K, V>& m, const char* indent="")
+  std::string output(const std::map<K, V>& m, const char* indent="")
   {
     stringstream ss{};
     std::cout.setf(std::ios::fixed);
@@ -89,14 +89,14 @@ public:
         }
       }
     }
-    return ss;
+    return ss.str();
   }
 
   // TODO: This output formatter is temporary, while I use a third
   // party serializer. The problem with this formatter is that it
   // knows too much details about the application, this particular
   // case, it needs to know how to serialize a "RateReport" type
-  stringstream output(const RateReport report)
+  std::string output(const RateReport report)
   {
     stringstream ss{};
     if (format_ == "yaml") {
@@ -105,9 +105,9 @@ public:
          << "days: "    << report.duration.days() << "\n"
          << "total: "   << report.total << "\n"
          << "details: " << "\n"
-         << output(report.details, "    ").str();
+         << output(report.details, "    ");
     }
-    return ss;
+    return ss.str();
   }
 
 private:

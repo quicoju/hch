@@ -45,11 +45,11 @@ struct Hch : Repl {
         (this->*command_table_.at(command))(tokens);
       else
         std::cout
-          << formatter.output({"Error", "Unknown command "+ command}).str()
+          << formatter.output({"Error", "Unknown command "+ command})
           << std::endl;
     }
     catch (const std::exception& e) {
-      std::cout << formatter.output({"Error", e.what()}).str() << std::endl;
+      std::cout << formatter.output({"Error", e.what()}) << std::endl;
     }
   }
 
@@ -189,13 +189,13 @@ private:
     auto reservations = hotel.reservations_for(room);
     std::cout << formatter.output(reservations, [](const auto& r) {
       return _pstr(r.period);
-    }).str() << std::endl;
+    }) << std::endl;
   }
 
   void list_amenities(const Tokens& tokens)
   {
     auto r = ensure_room("list-amenities", tokens);
-    std::cout << formatter.output(r.amenities()).str() << std::endl;
+    std::cout << formatter.output(r.amenities()) << std::endl;
   }
 
   void list_rate(const Tokens& tokens)
@@ -204,7 +204,7 @@ private:
     auto date_str = value_for("--during", tokens).value_or("");
     auto [date, duration] = parse_date(date_str);
     std::cout
-      << formatter.output(hotel.rate_report_for(room, date, duration)).str()
+      << formatter.output(hotel.rate_report_for(room, date, duration))
       << std::endl;
   }
 
@@ -218,7 +218,7 @@ private:
 
     auto [date, duration] = parse_date(value_for("--during", tokens).value_or(""));
     auto id = hotel.reserve(*guest_opt, room, date, duration);
-    std::cout << formatter.output({"Reservation", id}).str() << std::endl;
+    std::cout << formatter.output({"Reservation", id}) << std::endl;
   }
 
   void cancel_reservation(const Tokens& tokens)
@@ -228,7 +228,7 @@ private:
         "Command usage: cancel-reservation --id=RESERVATION-ID"};
 
     hotel.cancel(*reservation_opt);
-    std::cout << formatter.output({"Reservation", "cancelled"}).str() << std::endl;
+    std::cout << formatter.output({"Reservation", "cancelled"}) << std::endl;
   }
 
   void help(const Tokens& tokens)
