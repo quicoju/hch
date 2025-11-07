@@ -61,7 +61,8 @@ run_test "Reserve with context" \
 "set-room 101
  reserve --guest=juan.camaney@aol.com --during=2024-12-01
  quit" \
-"Reservation W-0001 successfully created"
+"---
+Reservation: W-0001"
 
 run_test "List reservations shows period" \
 "set-room 101

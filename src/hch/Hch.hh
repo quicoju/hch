@@ -44,10 +44,10 @@ struct Hch : Repl {
       if (command_table_.contains(command))
         (this->*command_table_.at(command))(tokens);
       else
-        std::cout << "Unknown command: " << command << std::endl;
+        std::cout << "---\nError: Unknown command " << command << std::endl;
     }
     catch (const std::exception& e) {
-      std::cout << "Error: " << e.what() << std::endl;
+      std::cout << "---\nError: " << e.what() << std::endl;
     }
   }
 
@@ -97,7 +97,6 @@ private:
   {
     string room_id{current_room};
 
-    // if not in a room context, check for the "room" argument
     if (room_id.empty())
       room_id = value_for("--room", tokens).value_or("");
 
@@ -215,7 +214,7 @@ private:
 
     auto [date, duration] = parse_date(value_for("--during", tokens).value_or(""));
     auto id = hotel.reserve(*guest_opt, room, date, duration);
-    std::cout << "Reservation " << id << " successfully created\n";
+    std::cout << "---\nReservation: " << id << std::endl;
   }
 
   void cancel_reservation(const Tokens& tokens)
@@ -225,7 +224,7 @@ private:
         "Command usage: cancel-reservation --id=RESERVATION-ID"};
 
     hotel.cancel(*reservation_opt);
-    std::cout << "Reservation cancelled.\n";
+    std::cout << "---\nReservation: cancelled.\n";
   }
 
   void help(const Tokens& tokens)
