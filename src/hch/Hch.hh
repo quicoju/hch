@@ -34,8 +34,11 @@ struct Hch : Repl {
 
   void execute()
   {
-    if (conf.use_repl) run();
-    else execute(conf.cli_argv.front(), conf.cli_argv);
+    if (conf.use_repl) return run();
+
+    auto& args = conf.cli_argv;
+    auto command = args.size() ? args.front() : "help";
+    execute(command, args);
   }
 
   void execute(const string& command, const Tokens& tokens) override
