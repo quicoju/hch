@@ -8,11 +8,13 @@ struct Reservation {
               const std::string& guest_id,
               const std::string& room_id,
               const Period& period,
+              const std::string& notes,
               void* src)
     : id{id}
     , guest_id{guest_id}
     , room_id{room_id}
     , period{period}
+    , notes{std::move(notes)}
     , src{src}
   {}
 
@@ -30,6 +32,7 @@ struct Reservation {
           const std::string& room_id,
           Date date,
           Duration duration,
+          std::string_view notes,
           void* src);
 
 
@@ -70,6 +73,7 @@ struct Reservation {
   std::string guest_id;
   std::string room_id;
   Period period;
+  std::string notes;
 
 private:
   void* src;
