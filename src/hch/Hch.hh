@@ -86,8 +86,8 @@ private:
    */
   std::optional<string> value_for(const string& name, const Tokens& tokens)
   {
-    for (const auto& t: tokens ) {
-      if ( t.find(name) != t.npos) {
+    for (const auto& t: tokens) {
+      if (t.find(name) != t.npos) {
         if (auto pos = t.find("="); pos != t.npos)
           return t.substr(pos+1);
       }
@@ -217,7 +217,11 @@ private:
       throw std::invalid_argument {"Command usage: " + usage};
 
     auto [date, duration] = parse_date(value_for("--during", tokens).value_or(""));
-    auto id = hotel.reserve(*guest_opt, room, date, duration);
+
+    // save the current rates in the reservation, it's needed in case
+    // the room rates change, we need to honor the original prices
+    auto notes = formatter.output(hotel.rate_report_for(room, date, duration));
+    auto id = hotel.reserve(*guest_opt, room, date, duration, notes);
     std::cout << formatter.output({"Reservation", id}) << std::endl;
   }
 
