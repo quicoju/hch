@@ -192,6 +192,9 @@ struct SQLite {
       else if constexpr (std::is_same_v<std::decay_t<T>, const std::string>) {
         result = sqlite3_bind_text(stmt_, index, value.c_str(), -1, SQLITE_TRANSIENT);
       }
+      else if constexpr (std::is_same_v<std::decay_t<T>, std::string_view>) {
+        result = sqlite3_bind_text(stmt_, index, value.data(), -1, SQLITE_TRANSIENT);
+      }
       else if constexpr (std::is_same_v<std::decay_t<T>, const char*>) {
         result = sqlite3_bind_text(stmt_, index, value, -1, SQLITE_TRANSIENT);
       }
