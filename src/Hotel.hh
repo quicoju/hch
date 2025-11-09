@@ -54,7 +54,8 @@ struct Hotel {
   std::string reserve(const std::string& guest_id,
                       const Room&,
                       Date date=Today,
-                      Duration dur=Days{1});
+                      Duration dur=Days{1},
+                      std::string_view="");
 
   /**
    * @brief Cancel a reservation by identifier
