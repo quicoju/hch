@@ -9,6 +9,7 @@ Reservation::reserve(const std::string& guest_id,
                      const std::string& room_id,
                      Date date,
                      Duration dur,
+                     std::string_view notes,
                      void* src)
 {
   auto* db = static_cast<SQLite*>(src);
@@ -23,13 +24,13 @@ SELECT IFNULL(MAX(id), 0)
 
   auto stmt2 = db->prepare(R"(
 INSERT INTO
-reservations(id, reservation_id, guest_id, room_id, begin_date, duration_days)
+reservations(id, reservation_id, guest_id, room_id, begin_date, duration_days, notes)
 VALUES (?, ?,
   (SELECT id FROM guests WHERE email = ?),
   (SELECT id FROM rooms  WHERE name = ?),
-  ?, ?)
+  ?, ?, ?)
 )");
-  stmt2.execute(next_id, id, guest_id, room_id, _dstr(date), dur.days());
+  stmt2.execute(next_id, id, guest_id, room_id, _dstr(date), dur.days(), notes);
   return id;
 }
 
@@ -48,7 +49,7 @@ Reservation::find_by_id(const std::string& id, void* src)
 {
     auto* db = static_cast<SQLite*>(src);
     auto stmt = db->prepare(R"(
-SELECT reservation_id, g.email, ro.name, begin_date, duration_days
+SELECT reservation_id, g.email, ro.name, begin_date, duration_days, notes
   FROM reservations re
   LEFT JOIN guests  g ON g.id = guest_id
   LEFT JOIN rooms  ro ON ro.id = room_id
@@ -64,6 +65,7 @@ SELECT reservation_id, g.email, ro.name, begin_date, duration_days
       stmt.get<std::string>(1),
       stmt.get<std::string>(2),
       { from_string(stmt.get<std::string>(3)), Days{stmt.get<int>(4)} },
+      stmt.get<std::string>(5),
       src,
     };
 }
@@ -73,7 +75,7 @@ Reservation::find_by_room(const std::string& room_id, void* src)
 {
   auto* db = static_cast<SQLite*>(src);
   auto stmt = db->prepare(R"(
-SELECT reservation_id, g.email, ro.name, begin_date, duration_days
+SELECT reservation_id, g.email, ro.name, begin_date, duration_days, notes
   FROM reservations re
   LEFT JOIN guests  g ON g.id = guest_id
   LEFT JOIN rooms  ro ON ro.id = room_id
@@ -88,6 +90,7 @@ SELECT reservation_id, g.email, ro.name, begin_date, duration_days
       stmt.get<std::string>(1),
       stmt.get<std::string>(2),
       Period{ from_string(stmt.get<std::string>(3)), Days{stmt.get<int>(4)} },
+      stmt.get<std::string>(5),
       src
     );
   }

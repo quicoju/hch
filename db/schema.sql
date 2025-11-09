@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS reservations (
     guest_id INTEGER NOT NULL,
     begin_date DATE NOT NULL,
     duration_days INTEGER NOT NULL CHECK (duration_days > 0),
+    notes TEXT NOT NULL DEFAULT "",
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(room_id) REFERENCES rooms(id) ON DELETE CASCADE,
     FOREIGN KEY(guest_id) REFERENCES guests(id) ON DELETE CASCADE
