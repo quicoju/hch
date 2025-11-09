@@ -171,10 +171,12 @@ private:
 
   void set_room(const Tokens& tokens)
   {
-    current_room.clear();
+    if (tokens.size() < 2)
+      throw std::invalid_argument{"Command usage: set-room ID"};
+
     try { current_room = hotel.room(tokens[1]).id; }
     catch(const std::invalid_argument& e) {
-      throw std::invalid_argument{"Command usage: set-room ID"};
+      throw std::invalid_argument{"this room doesn't exist"};
     }
   }
 
