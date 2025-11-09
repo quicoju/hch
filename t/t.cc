@@ -258,7 +258,7 @@ TEST_CASE("Reservation") {
   }
   SECTION("reserve") {
     std::string guest_id{ "juan.camaney@aol.com"};
-    auto id = Reservation::reserve(guest_id, "101", {2024,12,12}, Days{5}, &src);
+    auto id = Reservation::reserve(guest_id, "101", {2024,12,12}, Days{5}, "", &src);
     // TODO: this test relies on an incremental counter
     // find a more determinitstic test for this
     REQUIRE(id == "W-0004");

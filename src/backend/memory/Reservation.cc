@@ -9,6 +9,7 @@ Reservation::reserve(const std::string& guest_id,
                      const std::string& room_id,
                      Date date,
                      Duration dur,
+                     std::string_view notes,
                      void* src)
 {
   auto& reservations = static_cast<HotelData*>(src)->reservations;
@@ -18,7 +19,8 @@ Reservation::reserve(const std::string& guest_id,
   // own rules to generate the reservation identifier
   auto next_id = reservations.size() + 1;
   std::string id = "W-000" + std::to_string(next_id);
-  reservations.emplace_back(id, guest_id, room_id, Period{date, dur});
+  std::string n{notes};
+  reservations.emplace_back(id, guest_id, room_id, Period{date, dur}, n);
 
   return id;
 }
@@ -38,11 +40,10 @@ Reservation::find_by_id(const std::string& id, void* src)
   const auto& reservations = static_cast<HotelData*>(src)->reservations;
   for (const auto& r: reservations) {
     if (r.id == id)
-      return {id, r.guest_id, r.room_id, r.period, src};
+      return {id, r.guest_id, r.room_id, r.period, r.notes, src};
   }
   throw std::invalid_argument{"Reservation " + id + " doesn't exist"};
 }
-
 
 Reservations
 Reservation::find_by_room(const std::string& room_id, void* src)
@@ -51,7 +52,7 @@ Reservation::find_by_room(const std::string& room_id, void* src)
   const auto& all_reservations = static_cast<HotelData*>(src)->reservations;
   for (const auto& r: all_reservations) {
     if (r.room_id == room_id) {
-      reservations.emplace_back(r.id, r.guest_id, r.room_id, r.period, src);
+      reservations.emplace_back(r.id, r.guest_id, r.room_id, r.period, r.notes, src);
     }
   }
   return reservations;

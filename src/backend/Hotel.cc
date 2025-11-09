@@ -46,7 +46,7 @@ std::string Hotel::reserve(const std::string& guest_id,
   if (!is_available_on(r, d, dur))
     throw std::runtime_error{"Room is already reserved for overlapping dates"};
 
-  return Reservation::reserve(guest_id, r.id, d, dur, src);
+  return Reservation::reserve(guest_id, r.id, d, dur, "", src);
 }
 
 void Hotel::cancel(const std::string& id)

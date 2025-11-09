@@ -62,6 +62,7 @@ struct ReservationData{
   // don't want to charge a different rate
   // if rates change between the reservation
   // and the check-out date.
+  std::string notes;
 };
 using ReservationsData = std::list<ReservationData>;
 
