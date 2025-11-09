@@ -83,9 +83,9 @@ public:
       for (const auto& [key, value] : m) {
         std::string_view k = key;
         if constexpr (std::is_arithmetic_v<V>) {
-          ss << indent << k << ": " << value;
+          ss << indent << k << ": " << value << "\n";
         } else {
-          ss << indent << k << ": " << static_cast<double>(value);
+          ss << indent << k << ": " << static_cast<double>(value) << "\n";
         }
       }
     }
