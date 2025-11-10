@@ -29,7 +29,8 @@ VALUES
 -- ======
 INSERT OR IGNORE INTO guests (id, email)
 VALUES
-  (1, 'juan.camaney@aol.com');
+  (1, 'juan.camaney@aol.com'),
+  (2, 'sultana.bella@corazon.mx');
 
 -- Rates
 -- =====
