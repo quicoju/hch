@@ -192,8 +192,8 @@ private:
   {
     auto room = ensure_room("list-reservations", tokens);
     auto reservations = hotel.reservations_for(room);
-    std::cout << formatter.output(reservations, [](const auto& r) {
-      return _pstr(r.period);
+    std::cout << formatter.output(reservations, [this](const auto& r) {
+      return formatter.output({r.id, _pstr(r.period)}, false);
     }) << std::endl;
   }
 

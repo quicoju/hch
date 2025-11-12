@@ -69,7 +69,7 @@ run_test "List reservations shows period" \
  reserve --guest=juan.camaney@aol.com --during=2024-12-01+3d
  list-reservations
  quit" \
-"- \[2024-Dec-01/2024-Dec-03\]"
+"- W-0001: \[2024-Dec-01/2024-Dec-03\]"
 
 run_test "List amenities" \
 "set-room 102
@@ -88,7 +88,7 @@ run_test "Cancel reservation" \
  quit" \
 "Reservation cancelled.\|.* \
 ---\|
-- \[2025-Jan-05/2025-Jan-09\]"
+- W-0002: \[2025-Jan-05/2025-Jan-09\]"
 
 run_test "list rate" \
 "set-room 101
