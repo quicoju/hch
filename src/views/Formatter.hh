@@ -48,16 +48,16 @@ public:
   /* TODO: comodity method to print string pairs, but it's making
    * the check at runtime. Modify this with a more robust solution
    */
-  std::string output(std::initializer_list<std::string> items)
+  std::string output(std::initializer_list<std::string> items, bool with_header=true)
   {
     stringstream ss{};
     if (format_ == "yaml" && items.size() == 2) {
       auto it = items.begin();
-      ss << "---\n" << *it << ": " << *std::next(it);
+      if (with_header) ss << "---\n";
+      ss << *it << ": " << *std::next(it);
     }
     return ss.str();
   }
-
 
   std::string output(std::pair<std::string, double> p) {
     return output<std::string, double>(p);
