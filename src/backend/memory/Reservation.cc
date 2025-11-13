@@ -45,27 +45,28 @@ Reservation::find_by_id(const std::string& id, void* src)
   throw std::invalid_argument{"Reservation " + id + " doesn't exist"};
 }
 
-Reservations
-Reservation::find_by_room(const std::string& room_id, void* src)
+static Reservations
+find_by_predicate(std::function<bool(const ReservationData&)> p, void* src)
 {
   Reservations reservations{};
   const auto& all_reservations = static_cast<HotelData*>(src)->reservations;
   for (const auto& r: all_reservations) {
-    if (r.room_id == room_id) {
+    if (p(r))
       reservations.emplace_back(r.id, r.guest_id, r.room_id, r.period, r.notes, src);
-    }
   }
   return reservations;
 }
 
 Reservations
-Reservation::find_by_guest(std::string_view guest_id, void* src)
+Reservation::find_by_room(const std::string& id, void* src)
 {
-  Reservations reservations{};
-  const auto& all_reservations = static_cast<HotelData*>(src)->reservations;
-  for (const auto& r: all_reservations) {
-    if (r.guest_id == guest_id)
-      reservations.emplace_back(r.id, r.guest_id, r.room_id, r.period, r.notes, src);
-  }
-  return reservations;
+  auto p = [id](const auto& r){ return r.room_id == id; };
+  return find_by_predicate(p, src);
+}
+
+Reservations
+Reservation::find_by_guest(std::string_view id, void* src)
+{
+  auto p = [id](const auto& r){ return r.guest_id == id; };
+  return find_by_predicate(p, src);
 }
