@@ -71,44 +71,17 @@ SELECT reservation_id, g.email, ro.name, begin_date, duration_days, notes
 }
 
 Reservations
-Reservation::find_by_room(const std::string& room_id, void* src)
+find_by_column(std::string_view cond, std::string_view id, void* src)
 {
   auto* db = static_cast<SQLite*>(src);
-  auto stmt = db->prepare(R"(
-SELECT reservation_id, g.email, ro.name, begin_date, duration_days, notes
+  std::stringstream query;
+  query << R"(
+SELECT reservation_id, email, rooms.name, begin_date, duration_days, notes
   FROM reservations re
-  LEFT JOIN guests  g ON g.id = guest_id
-  LEFT JOIN rooms  ro ON ro.id = room_id
- WHERE ro.name = ?
-)");
-  stmt.bind(room_id);
-
-  Reservations reservations{};
-  while (stmt.next()) {
-    reservations.emplace_back(
-      stmt.get<std::string>(0),
-      stmt.get<std::string>(1),
-      stmt.get<std::string>(2),
-      Period{ from_string(stmt.get<std::string>(3)), Days{stmt.get<int>(4)} },
-      stmt.get<std::string>(5),
-      src
-    );
-  }
-
-  return reservations;
-}
-
-Reservations
-Reservation::find_by_guest(std::string_view id, void* src)
-{
-  auto* db = static_cast<SQLite*>(src);
-  auto stmt = db->prepare(R"(
-SELECT reservation_id, g.email, ro.name, begin_date, duration_days, notes
-  FROM reservations re
-  LEFT JOIN guests  g ON g.id = guest_id
-  LEFT JOIN rooms  ro ON ro.id = room_id
- WHERE g.email = ?
-)");
+  LEFT JOIN guests ON guests.id = guest_id
+  LEFT JOIN rooms  ON rooms.id = room_id
+ WHERE )" << cond << " = ?";
+  auto stmt = db->prepare(query.str());
   stmt.bind(id);
 
   Reservations reservations{};
@@ -122,6 +95,17 @@ SELECT reservation_id, g.email, ro.name, begin_date, duration_days, notes
       src
     );
   }
-
   return reservations;
+}
+
+Reservations
+Reservation::find_by_room(const std::string& id, void* src)
+{
+  return find_by_column("rooms.name", id, src);
+}
+
+Reservations
+Reservation::find_by_guest(std::string_view id, void* src)
+{
+  return find_by_column("guests.email", id, src);
 }
