@@ -71,12 +71,21 @@ run_test "List reservations shows period" \
  quit" \
 "- W-0001: \[2024-Dec-01/2024-Dec-03\]"
 
+run_test "List reservations by guest" \
+"reserve --guest=juan.camaney@aol.com --room=101 --during=2024-12-01+3d
+ reserve --guest=juan.camaney@aol.com --room=102 --during=2024-12-01+3d
+ list-reservations --guest=juan.camaney@aol.com
+ quit" \
+"---\|
+- W-0001: \[2024-Dec-01/2024-Dec-03\]\|
+- W-0002: \[2024-Dec-01/2024-Dec-03\]"
+
 run_test "List amenities" \
 "set-room 102
  list-amenities
  quit" \
 "---
-- Balcony\|\
+- Balcony\|
 - Wifi"
 
 run_test "Cancel reservation" \
@@ -96,9 +105,9 @@ run_test "list rate" \
  quit" \
 "---\|
 date: 2025-11-02\|\
-days: 2\|\
-total: 211.98\|\
-details:\|\
-    Base: 201.98\|\
-    Capacity: 0.00\|\
+days: 2\|
+total: 211.98\|
+details:\|
+    Base: 201.98\|
+    Capacity: 0.00\|
     Wifi: 10.00"

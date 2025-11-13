@@ -98,7 +98,7 @@ private:
     return {};
   }
 
-  Room ensure_room(const string& usage, const Tokens& tokens)
+  Room ensure_room(const std::string& usage, const Tokens& tokens)
   {
     string room_id{current_room};
 
@@ -190,8 +190,12 @@ private:
 
   void list_reservations(const Tokens& tokens)
   {
-    auto room = ensure_room("list-reservations", tokens);
-    auto reservations = hotel.reservations_for(room);
+    const string usage{"list-reservations [--guest=ID | --room=ID]"};
+    auto guest = value_for("--guest", tokens);
+    auto reservations = guest
+      ? hotel.reservations_for(guest.value())
+      : hotel.reservations_for(ensure_room(usage, tokens));
+
     std::cout << formatter.output(reservations, [this](const auto& r) {
       return formatter.output({r.id, _pstr(r.period)}, false);
     }) << std::endl;
