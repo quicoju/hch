@@ -60,6 +60,11 @@ Reservations Hotel::reservations_for(const Room& r)
   return Reservation::find_by_room(r.id, src);
 }
 
+Reservations Hotel::reservations_for(std::string_view id)
+{
+  return Reservation::find_by_guest(id, src);
+}
+
 Room Hotel::room(const std::string& id)
 {
   return Room::find_by_id(id, src);

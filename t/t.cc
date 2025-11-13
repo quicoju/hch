@@ -88,13 +88,23 @@ TEST_CASE("Hotel", "[Hotel]") {
     }
   }
   SECTION("reservations_for") {
-    SECTION("Case: with reservations") {
-      auto room = hotel.room("101");
-      REQUIRE(hotel.reservations_for(room).size() == 1);
+    SECTION("by Room") {
+      SECTION("Case: with reservations") {
+        auto room = hotel.room("101");
+        REQUIRE(hotel.reservations_for(room).size() == 1);
+      }
+      SECTION("Case: without reservations") {
+        auto room = hotel.room("301");
+        REQUIRE_FALSE(hotel.reservations_for(room).size());
+      }
     }
-    SECTION("Case: without reservations") {
-      auto room = hotel.room("301");
-      REQUIRE_FALSE(hotel.reservations_for(room).size());
+    SECTION("by Guest") {
+      SECTION("Case: with reservations") {
+        REQUIRE(hotel.reservations_for("juan.camaney@aol.com").size() == 3);
+      }
+      SECTION("Case: without reservations") {
+        REQUIRE_FALSE(hotel.reservations_for("me@gmail.com").size());
+      }
     }
   }
   SECTION("room") {

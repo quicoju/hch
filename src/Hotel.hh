@@ -74,6 +74,15 @@ struct Hotel {
   Reservations reservations_for(const Room&);
 
   /**
+   * @brief Find the reservations for a guest
+   *
+   * @param The Guest to look the reservations for
+   *
+   * @return The list of reservations
+   */
+  Reservations reservations_for(std::string_view guest_id);
+
+  /**
    * @brief Returns the room identified with ID
    *
    * @param The room identifier
