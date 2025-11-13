@@ -57,3 +57,15 @@ Reservation::find_by_room(const std::string& room_id, void* src)
   }
   return reservations;
 }
+
+Reservations
+Reservation::find_by_guest(std::string_view guest_id, void* src)
+{
+  Reservations reservations{};
+  const auto& all_reservations = static_cast<HotelData*>(src)->reservations;
+  for (const auto& r: all_reservations) {
+    if (r.guest_id == guest_id)
+      reservations.emplace_back(r.id, r.guest_id, r.room_id, r.period, r.notes, src);
+  }
+  return reservations;
+}

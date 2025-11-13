@@ -256,6 +256,16 @@ TEST_CASE("Reservation") {
       REQUIRE_FALSE(Reservation::find_by_room("303", &src).size());
     }
   }
+  SECTION("find_by_guest") {
+    SECTION("Case: found") {
+      auto got = Reservation::find_by_guest("juan.camaney@aol.com", &src);
+      REQUIRE(got.size() == 3);
+      REQUIRE(got.front().id == "A-001");
+    }
+    SECTION("Case: not found"){
+      REQUIRE_FALSE(Reservation::find_by_guest("me@gmail.com", &src).size());
+    }
+  }
   SECTION("reserve") {
     std::string guest_id{ "juan.camaney@aol.com"};
     auto id = Reservation::reserve(guest_id, "101", {2024,12,12}, Days{5}, "", &src);

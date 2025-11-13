@@ -59,13 +59,24 @@ struct Reservation {
    * @brief Find the reservations associted to a room
    *
    * @param room identifier to retrieve the reservations for
-   * @param the source that holds the reservation information
+   * @param the source that holds the hotel information
    *
    * @return The recorded "Reservations" for the given room
    */
   static Reservations
   find_by_room(const std::string& room_id, void* src);
 
+
+  /**
+   * @brief Find the reservations associated to a guest
+   *
+   * @param guest identifier to retrieve the reservations for
+   * @param the source that holds the hotel information
+   *
+   * @return The "Reservations" for the given guest
+   */
+  static Reservations
+  find_by_guest(std::string_view guest_id, void* src);
 
   // state
   // =====
