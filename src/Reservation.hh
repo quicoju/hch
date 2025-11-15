@@ -84,8 +84,8 @@ struct Reservation {
   std::string guest_id;
   std::string room_id;
   Period period;
-  std::optional<DateTime> check_in = std::nullopt;
-  std::optional<DateTime> check_out = std::nullopt;
+  std::optional<DateTime> checkin_at = std::nullopt;
+  std::optional<DateTime> checkout_at = std::nullopt;
   std::string notes;
 
 private:
