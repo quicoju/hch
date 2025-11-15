@@ -63,6 +63,8 @@ struct ReservationData{
   // if rates change between the reservation
   // and the check-out date.
   std::string notes;
+  std::optional<DateTime> checkin_at = std::nullopt;
+  std::optional<DateTime> checkout_at = std::nullopt;
 };
 using ReservationsData = std::list<ReservationData>;
 
