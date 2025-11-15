@@ -36,10 +36,21 @@ struct Reservation {
           void* src);
 
 
-  /** @brief Cancel a reservation
+  /**
+   * @brief Cancel a reservation
    *
    */
   void cancel();
+
+  /**
+   * @brief Store the check-in time
+   */
+  void checkin(DateTime stamp=std::chrono::system_clock::now());
+
+  /**
+   * @brief Store the check-out time
+   */
+  void checkout(DateTime stamp=std::chrono::system_clock::now());
 
   /**
    * @brief Find a reservation using its ID
