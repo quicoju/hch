@@ -39,8 +39,12 @@ Reservation::find_by_id(const std::string& id, void* src)
 {
   const auto& reservations = static_cast<HotelData*>(src)->reservations;
   for (const auto& r: reservations) {
-    if (r.id == id)
-      return {id, r.guest_id, r.room_id, r.period, r.notes, src};
+    if (r.id == id) {
+      Reservation rsv {id, r.guest_id, r.room_id, r.period, r.notes, src};
+      rsv.checkin_at = r.checkin_at;
+      rsv.checkout_at = r.checkout_at;
+      return rsv;
+    }
   }
   throw std::invalid_argument{"Reservation " + id + " doesn't exist"};
 }
@@ -51,8 +55,12 @@ find_by_predicate(std::function<bool(const ReservationData&)> p, void* src)
   Reservations reservations{};
   const auto& all_reservations = static_cast<HotelData*>(src)->reservations;
   for (const auto& r: all_reservations) {
-    if (p(r))
-      reservations.emplace_back(r.id, r.guest_id, r.room_id, r.period, r.notes, src);
+    if (p(r)) {
+      Reservation rsv{r.id, r.guest_id, r.room_id, r.period, r.notes, src};
+      rsv.checkin_at = r.checkin_at;
+      rsv.checkout_at = r.checkout_at;
+      reservations.push_back(std::move(rsv));
+    }
   }
   return reservations;
 }
