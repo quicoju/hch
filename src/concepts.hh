@@ -8,6 +8,7 @@
 #include <boost/date_time/gregorian/gregorian.hpp>
 
 using Date = boost::gregorian::date;
+using DateTime = std::chrono::system_clock::time_point;
 using Days = boost::gregorian::days;
 using Duration = boost::gregorian::date_duration;
 using Period = boost::gregorian::date_period;
