@@ -34,6 +34,26 @@ void Reservation::cancel()
   reservations.remove_if([this](auto& r){ return r.id == id; });
 }
 
+void Reservation::checkin(DateTime stamp)
+{
+  auto& reservations = static_cast<HotelData*>(src)->reservations;
+  auto it = std::ranges::find_if(reservations,
+    [this](const auto& r){ return r.id == id; });
+
+  // store the property in the object and in the data storage
+  it->checkin_at = checkin_at = stamp;
+}
+
+void Reservation::checkout(DateTime stamp)
+{
+  auto& reservations = static_cast<HotelData*>(src)->reservations;
+  auto it = std::ranges::find_if(reservations,
+    [this](const auto& r){ return r.id == id; });
+
+  // store the property in the object and in the daa storage
+  it->checkout_at = *checkout_at = stamp;
+}
+
 Reservation
 Reservation::find_by_id(const std::string& id, void* src)
 {

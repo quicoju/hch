@@ -1,3 +1,4 @@
+#include <chrono>
 #include <iostream>
 
 #include <catch2/catch_test_macros.hpp>
@@ -10,6 +11,8 @@
 #else
 #include "t_memory.hh"
 #endif
+
+using namespace std::chrono;
 
 struct GlobalSetup {
     GlobalSetup() {
@@ -290,5 +293,17 @@ TEST_CASE("Reservation") {
   SECTION("cancel") {
     Reservation::find_by_id("A-001", &src).cancel();
     REQUIRE(Reservation::find_by_room("101", &src).size() == 0);
+  }
+  SECTION("checkin") {
+    auto s = 1763152245;  // 2025-11-14 20:30:45
+    auto stamp = system_clock::time_point{ seconds{s} };
+    Reservation::find_by_id("A-001", &src).checkin(stamp);
+    REQUIRE(Reservation::find_by_id("A-001", &src).checkin_at == stamp);
+  }
+  SECTION("checkout") {
+    auto s = 1763238645;  // 2025-11-15 20:30:45
+    auto stamp = system_clock::time_point{ seconds{s} };
+    Reservation::find_by_id("A-001", &src).checkout(stamp);
+    REQUIRE(Reservation::find_by_id("A-001", &src).checkout_at == stamp);
   }
 }
