@@ -49,7 +49,8 @@ Reservation::find_by_id(const std::string& id, void* src)
 {
     auto* db = static_cast<SQLite*>(src);
     auto stmt = db->prepare(R"(
-SELECT reservation_id, g.email, ro.name, begin_date, duration_days, notes
+SELECT reservation_id, g.email, ro.name, begin_date, duration_days,
+       checkin_at, checkout_at, notes
   FROM reservations re
   LEFT JOIN guests  g ON g.id = guest_id
   LEFT JOIN rooms  ro ON ro.id = room_id
@@ -60,14 +61,17 @@ SELECT reservation_id, g.email, ro.name, begin_date, duration_days, notes
     if (!stmt.next())
       throw std::invalid_argument{"Reservation " + id + " doesn't exist"};
 
-    return {
+    Reservation r{
       stmt.get<std::string>(0),
       stmt.get<std::string>(1),
       stmt.get<std::string>(2),
       { from_string(stmt.get<std::string>(3)), Days{stmt.get<int>(4)} },
-      stmt.get<std::string>(5),
+      stmt.get<std::string>(7),
       src,
     };
+    r.checkin_at = stmt.get<std::optional<DateTime>>(5);
+    r.checkout_at = stmt.get<std::optional<DateTime>>(6);
+    return r;
 }
 
 Reservations
@@ -76,7 +80,8 @@ find_by_column(std::string_view cond, std::string_view id, void* src)
   auto* db = static_cast<SQLite*>(src);
   std::stringstream query;
   query << R"(
-SELECT reservation_id, email, rooms.name, begin_date, duration_days, notes
+SELECT reservation_id, email, rooms.name, begin_date, duration_days,
+       checkin_at, checkout_at, notes
   FROM reservations re
   LEFT JOIN guests ON guests.id = guest_id
   LEFT JOIN rooms  ON rooms.id = room_id
@@ -86,14 +91,17 @@ SELECT reservation_id, email, rooms.name, begin_date, duration_days, notes
 
   Reservations reservations{};
   while (stmt.next()) {
-    reservations.emplace_back(
+    Reservation r {
       stmt.get<std::string>(0),
       stmt.get<std::string>(1),
       stmt.get<std::string>(2),
       Period{ from_string(stmt.get<std::string>(3)), Days{stmt.get<int>(4)} },
-      stmt.get<std::string>(5),
+      stmt.get<std::string>(7),
       src
-    );
+    };
+    r.checkin_at = stmt.get<std::optional<DateTime>>(5);
+    r.checkout_at = stmt.get<std::optional<DateTime>>(6);
+    reservations.push_back(std::move(r));
   }
   return reservations;
 }
