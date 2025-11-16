@@ -85,7 +85,7 @@ SELECT reservation_id, g.email, ro.name, begin_date, duration_days,
     stmt.bind(id);
 
     if (!stmt.next())
-      throw std::invalid_argument{"Reservation " + id + " doesn't exist"};
+      throw std::invalid_argument{std::format("Reservation {} doesn't exist", id)};
 
     Reservation r{
       stmt.get<std::string>(0),
