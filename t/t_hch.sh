@@ -99,6 +99,19 @@ run_test "Cancel reservation" \
 ---\|
 - W-0002: \[2025-Jan-05/2025-Jan-09\]"
 
+run_test "Check-in/out reservation" \
+"set-room 101
+ reserve --guest=juan.camaney@aol.com --during=2024-12-01+3d
+ checkin --id=W-0001
+ checkout --id=W-0001
+ list-reservations
+ quit" \
+"Reservation: checked-in\|.* \
+---\|
+Reservation: checked-out\|.* \
+---\|
+- W-0001: \[2024-Dec-01/2025-Dec-03\]"
+
 run_test "list rate" \
 "set-room 101
  list-rate --during=2025-11-02+2d

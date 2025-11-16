@@ -163,6 +163,8 @@ private:
     {"list-rate", &Hch::list_rate},
     {"reserve", &Hch::reserve},
     {"cancel-reservation", &Hch::cancel_reservation},
+    {"checkin", &Hch::checkin},
+    {"checkout", &Hch::checkout},
     {"help", &Hch::help},
     {"quit", &Hch::quit},
     {"exit", &Hch::quit}
@@ -242,6 +244,24 @@ private:
 
     hotel.cancel(*reservation_opt);
     std::cout << formatter.output({"Reservation", "cancelled"}) << std::endl;
+  }
+
+  void checkin(const Tokens& tokens)
+  {
+    auto reservation_opt = value_for("--id", tokens);
+    if (!reservation_opt) throw std::invalid_argument {
+      "Command usage: checkin --id=RESERVATION-ID"};
+    hotel.checkin(*reservation_opt);
+    std::cout << formatter.output({"Reservation", "checked-in"}) << std::endl;
+  }
+
+  void checkout(const Tokens& tokens)
+  {
+    auto reservation_opt = value_for("--id", tokens);
+    if (!reservation_opt) throw std::invalid_argument {
+      "Command usage: checkout --id=RESERVATION-ID"};
+    hotel.checkout(*reservation_opt);
+    std::cout << formatter.output({"Reservation", "checked-out"}) << std::endl;
   }
 
   void help(const Tokens& tokens)
