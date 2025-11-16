@@ -1,11 +1,19 @@
 #pragma once
+
+#include <chrono>
 #include <fstream>
+#include <optional>
 #include <sstream>
 #include <string>
 #include <stdexcept>
 #include <tuple>
 
+
+using namespace std::chrono;
+
 #include <sqlite3.h>
+
+using DateTime = std::chrono::system_clock::time_point;
 
 /**
    @brief Thin wrapper around sqlite3.h
@@ -171,6 +179,21 @@ struct SQLite {
         const char* text = (const char*)sqlite3_column_text(stmt_, column);
         return std::string{text};
       }
+      else if constexpr (std::is_same_v<T, std::optional<DateTime>>) {
+        // TODO: generalize for columns that might contain NULL values.
+        // In such case, maybe it's best to return a `std::optional`
+        if (sqlite3_column_type(stmt_, column) == SQLITE_NULL)
+          return std::nullopt;
+
+        const char* text = (const char*) sqlite3_column_text(stmt_, column);
+        std::istringstream iss{text};
+        std::tm tm;
+
+        // TODO: std::chrono::parse is better but my compiler doesn't support it
+        iss >> std::get_time(&tm, "%Y-%m-%d %H:%M:%S");
+        auto tp_utc = std::chrono::system_clock::from_time_t(timegm(&tm));
+        return std::optional{tp_utc};
+      }
       else
         throw std::runtime_error{"Can't 'get' unsupported type"};
     }
@@ -197,6 +220,10 @@ struct SQLite {
       }
       else if constexpr (std::is_same_v<std::decay_t<T>, const char*>) {
         result = sqlite3_bind_text(stmt_, index, value, -1, SQLITE_TRANSIENT);
+      }
+      else if constexpr (std::is_same_v<std::decay_t<T>, DateTime>) {
+        auto str = std::format("{:%Y-%m-%d %H:%M:%S}", value);
+        result = sqlite3_bind_text(stmt_, index, str.c_str(), -1, SQLITE_TRANSIENT);
       }
       else {
         throw std::runtime_error{"Unsupported parameter type for binding"};
