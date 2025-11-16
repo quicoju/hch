@@ -65,6 +65,22 @@ struct Hotel {
   void cancel(const std::string& id);
 
   /**
+   * @brief Check-in a reservation.
+   *
+   * @param Reservation identifier
+   * @param UTC stamp to record the check-in. If none is given, set it to NOW
+   */
+  void checkin(std::string_view id, std::optional<DateTime> utc_stamp=std::nullopt);
+
+  /**
+   * @brief Check-out a reservation
+   *
+   * @param Reservation identifier
+   * @param UTC stamp to record the check-out. If none is given, set it to NOW
+   */
+  void checkout(std::string_view id, std::optional<DateTime> utc_stamp=std::nullopt);
+
+  /**
    * @brief Find the reservations for a room
    *
    * @param The Room to look the reservations for

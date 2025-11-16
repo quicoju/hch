@@ -55,6 +55,18 @@ void Hotel::cancel(const std::string& id)
   Reservation::find_by_id(id, src).cancel();
 }
 
+void Hotel::checkin(std::string_view id, std::optional<DateTime> utc_stamp)
+{
+  auto stamp = utc_stamp.value_or(std::chrono::system_clock::now());
+  Reservation::find_by_id(id, src).checkin(stamp);
+}
+
+void Hotel::checkout(std::string_view id, std::optional<DateTime> utc_stamp)
+{
+  auto stamp = utc_stamp.value_or(std::chrono::system_clock::now());
+  Reservation::find_by_id(id, src).checkout(stamp);
+}
+
 Reservations Hotel::reservations_for(const Room& r)
 {
   return Reservation::find_by_room(r.id, src);

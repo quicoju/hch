@@ -90,6 +90,20 @@ TEST_CASE("Hotel", "[Hotel]") {
       REQUIRE_THROWS_AS(hotel.cancel("A-010"), std::invalid_argument);
     }
   }
+  SECTION("checkin") {
+    auto utc_stamp  = DateTime{ seconds{1763152245} }; // 2025-11-14 20:30:45 UTC
+    hotel.checkin("A-001", utc_stamp);
+
+    auto r = hotel.reservations_for(hotel.room("101")).front();
+    REQUIRE(r.checkin_at == utc_stamp);
+  }
+  SECTION("checkout") {
+    auto utc_stamp = DateTime{ seconds{1763238645} }; // 2025-11-15 20:30:45 UTC
+    hotel.checkout("A-001", utc_stamp);
+
+    auto r = hotel.reservations_for(hotel.room("101")).front();
+    REQUIRE(r.checkout_at == utc_stamp);
+  }
   SECTION("reservations_for") {
     SECTION("by Room") {
       SECTION("Case: with reservations") {
