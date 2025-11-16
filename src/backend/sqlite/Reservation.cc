@@ -44,6 +44,32 @@ DELETE FROM Reservations
   stmt.execute(id);
 }
 
+void Reservation::checkin(DateTime stamp)
+{
+  auto* db = static_cast<SQLite*>(src);
+  auto stmt = db->prepare(R"(
+UPDATE Reservations
+   SET checkin_at = ?
+ WHERE reservation_id = ?
+)");
+  // store the property in the object and in the data storage
+  stmt.execute(stamp, id);
+  checkin_at = stamp;
+}
+
+void Reservation::checkout(DateTime stamp)
+{
+  auto* db = static_cast<SQLite*>(src);
+  auto stmt = db->prepare(R"(
+UPDATE Reservations
+   SET checkout_at = ?
+ WHERE reservation_id = ?
+)");
+  // store the property in the object and in the data storage
+  stmt.execute(stamp, id);
+  checkout_at = stamp;
+}
+
 Reservation
 Reservation::find_by_id(const std::string& id, void* src)
 {
