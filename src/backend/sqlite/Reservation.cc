@@ -71,7 +71,7 @@ UPDATE Reservations
 }
 
 Reservation
-Reservation::find_by_id(const std::string& id, void* src)
+Reservation::find_by_id(std::string_view id, void* src)
 {
     auto* db = static_cast<SQLite*>(src);
     auto stmt = db->prepare(R"(

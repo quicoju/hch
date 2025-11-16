@@ -4,7 +4,7 @@
 #include "concepts.hh"
 
 struct Reservation {
-  Reservation(const std::string& id,
+  Reservation(std::string_view id,
               const std::string& guest_id,
               const std::string& room_id,
               const Period& period,
@@ -64,7 +64,7 @@ struct Reservation {
    * @return The matched "Reservation"
    */
   static Reservation
-  find_by_id(const std::string& id, void* src);
+  find_by_id(std::string_view id, void* src);
 
   /**
    * @brief Find the reservations associted to a room

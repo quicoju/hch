@@ -55,7 +55,7 @@ void Reservation::checkout(DateTime stamp)
 }
 
 Reservation
-Reservation::find_by_id(const std::string& id, void* src)
+Reservation::find_by_id(std::string_view id, void* src)
 {
   const auto& reservations = static_cast<HotelData*>(src)->reservations;
   for (const auto& r: reservations) {
@@ -66,7 +66,7 @@ Reservation::find_by_id(const std::string& id, void* src)
       return rsv;
     }
   }
-  throw std::invalid_argument{"Reservation " + id + " doesn't exist"};
+  throw std::invalid_argument{std::format("Reservation {} doesn't exist", id)};
 }
 
 static Reservations
