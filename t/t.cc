@@ -84,7 +84,7 @@ TEST_CASE("Hotel", "[Hotel]") {
     auto room = hotel.room("101");
     SECTION("Case: success") {
       hotel.cancel("A-001");
-      hotel.is_available_on(room, {2024,12,19});
+      REQUIRE(hotel.is_available_on(room, {2024,12,19}));
     }
     SECTION("Case: failed") {
       REQUIRE_THROWS_AS(hotel.cancel("A-010"), std::invalid_argument);
