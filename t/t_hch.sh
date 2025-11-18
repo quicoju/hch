@@ -19,21 +19,26 @@ prepare_test() {
 }
 
 run_test() {
-    local test_name="$1"
-    local input="$2"
-    local expected="$3"
+    local test_name="$1"; shift
+    local input="$1"; shift
+    local expected="$@"
+    local expected_=$(echo -n "$@" | tr '\n' '@')
 
     echo -n "Test $test_name ..."
     prepare_test
     local got=$(echo -e "$input" | $TEST_CMD 2>&1)
+    local got_=$(echo -n "$got" | tr '\n' '@')
 
-    if echo "$got" | tr '\n' '|' | grep -q -- "$expected"; then
+    if echo "$got_" | grep -q -- "$expected_"; then
         echo "ok"
         return 0
     else
         echo "FAIL"
-        echo "* Expected: $expected"
-        echo "* Got:"
+        echo
+        echo "* EXPECTED:"
+        echo "$expected"
+        echo
+        echo "* GOT:"
         echo "$got"
         exit 1
     fi
@@ -76,8 +81,8 @@ run_test "List reservations by guest" \
  reserve --guest=juan.camaney@aol.com --room=102 --during=2024-12-01+3d
  list-reservations --guest=juan.camaney@aol.com
  quit" \
-"---\|
-- W-0001: \[2024-Dec-01/2024-Dec-03\]\|
+"---
+- W-0001: \[2024-Dec-01/2024-Dec-03\]
 - W-0002: \[2024-Dec-01/2024-Dec-03\]"
 
 run_test "List amenities" \
@@ -85,7 +90,7 @@ run_test "List amenities" \
  list-amenities
  quit" \
 "---
-- Balcony\|
+- Balcony
 - Wifi"
 
 run_test "Cancel reservation" \
@@ -95,8 +100,8 @@ run_test "Cancel reservation" \
  cancel-reservation --id=W-0001
  list-reservations
  quit" \
-"Reservation cancelled.\|.* \
----\|
+"Reservation: cancelled
+.*---
 - W-0002: \[2025-Jan-05/2025-Jan-09\]"
 
 run_test "Check-in/out reservation" \
@@ -106,32 +111,32 @@ run_test "Check-in/out reservation" \
  checkout --id=W-0001
  list-reservations
  quit" \
-"Reservation: checked-in\|.* \
----\|
-Reservation: checked-out\|.* \
----\|
-- W-0001: \[2024-Dec-01/2025-Dec-03\]"
+"Reservation: checked-in
+.*---
+Reservation: checked-out
+.*---
+- W-0001: \[2024-Dec-01/2024-Dec-03\]"
 
 run_test "show-reservation" \
 "reserve --guest=juan.camaney@aol.com --room=101
  show-reservation --id=W-0001
  quit" \
-"---\|\
-id: W-0001\|\
-guest: juan.camaney@aol.com\|\
-room: 101\|\
-checkin_at: ~\|\
+"---
+id: W-0001
+guest: juan.camaney@aol.com
+room: 101
+checkin_at: ~
 checkout_at: ~"
 
 run_test "list rate" \
 "set-room 101
  list-rate --during=2025-11-02+2d
  quit" \
-"---\|\
-date: 2025-11-02\|\
-days: 2\|\
-total: 211.98\|\
-details: \|\
-    Base: 201.98\|\
-    Capacity: 0\|\
+"---
+date: 2025-11-02
+days: 2
+total: 211.98
+details:.
+    Base: 201.98
+    Capacity: 0
     Wifi: 10"
