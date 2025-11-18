@@ -3,7 +3,6 @@
 ** About
 This tool (WIP) assists hotel business with the task of handling room reservations.
 
-
 ** Dependencies
 This software requires a Unix based OS to build and run, currently it's being developed
 and tested under Gentoo GNU/Linux and OpenBSD.
@@ -15,6 +14,7 @@ The following dependencies are required:
   + The [[https://sqlite.org/cintro.html][sqlite C/C++ interface]] (for the "sqlite" backend)
   + The [[https://sqlite.org/cli.html][sqlite3]] cli (for testing the "sqlite" backend)
   + The [[https://github.com/catchorg/Catch2][Catch2]] test framework (for running the unit tests)
+  + [[https://github.com/jbeder/yaml-cpp][yaml-cpp]] which is a YAML parser and emitter in C++
 
 ** Build
 The project contains 2 different "Makefiles", one for BSDMake =Makefile= and
