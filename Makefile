@@ -1,6 +1,6 @@
 CXX = c++
 
-CXXFLAGS = -Wall -g -std=c++2a \
+CXXFLAGS = -Wall -g2 -gline-tables-only -O0 -fno-omit-frame-pointer -std=c++2a \
 	-I/usr/local/include \
 	-I./src \
     -I./src/views \
@@ -8,7 +8,8 @@ CXXFLAGS = -Wall -g -std=c++2a \
 
 LDFLAGS = -L/usr/local/lib \
 	-lboost_date_time \
-	-lreadline
+	-lreadline \
+    -lyaml-cpp
 
 # Possible backends are:
 # - memory
@@ -31,7 +32,7 @@ OBJS = Guest.o Hotel.o RateCalculator.o Reservation.o Room.o Room_common.o
 .cc.o: src/concepts.hh Makefile
 	$(CXX) $(CXXFLAGS) -c $<
 
-main.o: src/hch/*.hh src/views/Formatter.hh
+main.o: src/hch/*.hh src/views/*.hh
 hch: $(OBJS) main.o
 	$(CXX) $(CXXFLAGS) -o $@ $> $(LDFLAGS)
 
