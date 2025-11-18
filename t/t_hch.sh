@@ -112,15 +112,26 @@ Reservation: checked-out\|.* \
 ---\|
 - W-0001: \[2024-Dec-01/2025-Dec-03\]"
 
+run_test "show-reservation" \
+"reserve --guest=juan.camaney@aol.com --room=101
+ show-reservation --id=W-0001
+ quit" \
+"---\|\
+id: W-0001\|\
+guest: juan.camaney@aol.com\|\
+room: 101\|\
+checkin_at: ~\|\
+checkout_at: ~"
+
 run_test "list rate" \
 "set-room 101
  list-rate --during=2025-11-02+2d
  quit" \
-"---\|
+"---\|\
 date: 2025-11-02\|\
-days: 2\|
-total: 211.98\|
-details:\|
-    Base: 201.98\|
-    Capacity: 0.00\|
-    Wifi: 10.00"
+days: 2\|\
+total: 211.98\|\
+details: \|\
+    Base: 201.98\|\
+    Capacity: 0\|\
+    Wifi: 10"
