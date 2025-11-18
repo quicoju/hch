@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "Annotate.hh"
 #include "Hotel.hh"
 #include "Repl.hh"
 #include "Formatter.hh"
@@ -83,6 +84,14 @@ private:
     bool use_repl = false;
   };
 
+
+  template<typename T>
+  void reply_with(const T& data)
+  {
+    std::cout << "---\n";
+    annotate::to(std::cout, data);
+    std::cout << std::endl;
+  }
 
   /*
     extract the first value with the form "name=value" from the tokens
@@ -163,6 +172,7 @@ private:
     {"list-rate", &Hch::list_rate},
     {"reserve", &Hch::reserve},
     {"cancel-reservation", &Hch::cancel_reservation},
+    {"show-reservation", &Hch::show_reservation},
     {"checkin", &Hch::checkin},
     {"checkout", &Hch::checkout},
     {"help", &Hch::help},
@@ -244,6 +254,14 @@ private:
 
     hotel.cancel(*reservation_opt);
     std::cout << formatter.output({"Reservation", "cancelled"}) << std::endl;
+  }
+
+  void show_reservation(const Tokens& tokens)
+  {
+    auto id = value_for("--id", tokens);
+    if (!id) throw std::invalid_argument {
+        "Command usage: show-reservation --id=RESERVATION-ID"};
+    reply_with(hotel.reservation(*id));
   }
 
   void checkin(const Tokens& tokens)
