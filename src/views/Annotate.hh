@@ -1,9 +1,12 @@
 #pragma once
 
+#include <chrono>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <yaml-cpp/yaml.h>
+
+#include "Reservation.hh"
 
 /**
  * @brief Add "annotation" capabilities to the project.
@@ -49,4 +52,40 @@ namespace annotate {
     to(ss, data);
     return ss.str();
   }
+}
+
+////////////////////////////////////////////////////////////
+//  Serialize specific types using the yaml-cpp interface //
+////////////////////////////////////////////////////////////
+
+// DateTime to string
+static std::string to_string(const DateTime& dt)
+{
+  return std::format("{:%Y-%m-%d %H:%M:%S}", dt);
+}
+
+namespace YAML {
+  template<>
+  struct convert<std::optional<DateTime>> {
+    static Node encode(const std::optional<DateTime>& dt)
+    {
+      Node node;
+      if (dt) node = to_string(dt.value());
+      return node;
+    }
+  };
+
+  template<>
+  struct convert<Reservation> {
+    static Node encode(const Reservation& r)
+    {
+      Node node;
+      node["id"] = r.id;
+      node["guest"] = r.guest_id;
+      node["room"] = r.room_id;
+      node["checkin_at"] = r.checkin_at;
+      node["checkout_at"] = r.checkout_at;
+      return node;
+    }
+  };
 }
