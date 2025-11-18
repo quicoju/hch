@@ -26,7 +26,7 @@ jobs:
           libsqlite3-dev \
           libreadline-dev \
           libboost-all-dev \
-          yaml-cpp \
+          libyaml-cpp-dev \
           g++ \
           sqlite3
 
