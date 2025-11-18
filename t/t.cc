@@ -105,6 +105,10 @@ TEST_CASE("Hotel", "[Hotel]") {
     REQUIRE(r.checkout_at == utc_stamp);
   }
   SECTION("reservations_for") {
+    SECTION("by ID") {
+      auto r = hotel.reservation("A-001");
+      REQUIRE(r.id == "A-001");
+    }
     SECTION("by Room") {
       SECTION("Case: with reservations") {
         auto room = hotel.room("101");

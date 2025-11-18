@@ -67,6 +67,11 @@ void Hotel::checkout(std::string_view id, std::optional<DateTime> utc_stamp)
   Reservation::find_by_id(id, src).checkout(stamp);
 }
 
+Reservation Hotel::reservation(std::string_view id) const
+{
+  return Reservation::find_by_id(id, src);
+}
+
 Reservations Hotel::reservations_for(const Room& r)
 {
   return Reservation::find_by_room(r.id, src);

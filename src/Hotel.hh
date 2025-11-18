@@ -80,6 +80,16 @@ struct Hotel {
    */
   void checkout(std::string_view id, std::optional<DateTime> utc_stamp=std::nullopt);
 
+
+  /**
+   * @brief Return a reservation matched by its identifier
+   *
+   * @param The reservation identifier
+   *
+   * @return The matched Reservation
+   */
+  Reservation reservation(std::string_view id) const;
+
   /**
    * @brief Find the reservations for a room
    *
