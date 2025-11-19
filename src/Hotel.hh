@@ -43,6 +43,23 @@ struct Hotel {
   Rooms find_available_on(Date, Duration dur=Days{1}, Amenities amenities={})
     const;
 
+  ////////////
+  // Guests //
+  ////////////
+
+  /**
+   * @brief records a new guest or does nothing if it already exists
+   *
+   * @param The E-mail address of the guest
+   *
+   * @return The identifier for the new/existing guest
+   */
+  std::string record_guest(std::string_view email);
+
+  //////////////////
+  // Reservationa //
+  //////////////////
+
   /**
    * @brief make a new reservation
    *

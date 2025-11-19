@@ -38,6 +38,17 @@ Rooms Hotel::find_available_on(Date d, Duration dur, Amenities amenities)
   return available_rooms;
 }
 
+///////////
+// Guest //
+///////////
+std::string Hotel::record_guest(std::string_view email)
+{
+  return Guest::record(email, src);
+}
+
+/////////////////
+// Reservation //
+/////////////////
 std::string Hotel::reserve(const std::string& guest_id,
                            const Room& r,
                            Date d,

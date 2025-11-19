@@ -66,6 +66,14 @@ TEST_CASE("Hotel", "[Hotel]") {
       REQUIRE(hotel.find_available_on(date, Days{3}, {MiniBar, Wifi}).empty());
     }
   }
+
+  SECTION("record_guest") {
+    std::string guest_1{"juan.camaney@aol.com"};
+    std::string guest_2{"john.bedney@yahoo.com"};
+    REQUIRE(hotel.record_guest(guest_1) == guest_1);
+    REQUIRE(hotel.record_guest(guest_2) == guest_2);
+  }
+
   SECTION("reserve") {
     auto room = hotel.room("101");
     std::string guest{"juan.camaney@aol.com"};
