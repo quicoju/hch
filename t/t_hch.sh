@@ -140,3 +140,8 @@ details:.
     Base: 201.98
     Capacity: 0
     Wifi: 10"
+
+run_test "record-guest" \
+"record-guest --email=john.bedney@yahoo.com" \
+"--
+guest_id: john.bedney@yahoo.com"

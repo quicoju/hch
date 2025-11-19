@@ -93,6 +93,12 @@ private:
     std::cout << std::endl;
   }
 
+  void reply_with(std::string_view k, std::string_view v)
+  {
+    std::map<std::string_view, std::string_view> data{{k, v}};
+    reply_with(data);
+  }
+
   /*
     extract the first value with the form "name=value" from the tokens
    */
@@ -170,6 +176,7 @@ private:
     {"list-reservations", &Hch::list_reservations},
     {"list-amenities", &Hch::list_amenities},
     {"list-rate", &Hch::list_rate},
+    {"record-guest", &Hch::record_guest},
     {"reserve", &Hch::reserve},
     {"cancel-reservation", &Hch::cancel_reservation},
     {"show-reservation", &Hch::show_reservation},
@@ -227,6 +234,14 @@ private:
     std::cout
       << formatter.output(hotel.rate_report_for(room, date, duration))
       << std::endl;
+  }
+
+  void record_guest(const Tokens& tokens)
+  {
+    auto email = value_for("--email", tokens);
+    if (!email) throw std::invalid_argument{
+        "Command usage: record-guest --email=EMAIL"};
+    reply_with("guest_id", hotel.record_guest(*email));
   }
 
   void reserve(const Tokens& tokens)
