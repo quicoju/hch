@@ -253,6 +253,15 @@ TEST_CASE("Guest") {
   SECTION("Constructor") {
     REQUIRE(Guest{id, &src}.id == id);
   }
+  SECTION("record") {
+    SECTION("Existing") {
+      REQUIRE(Guest::record(id, &src) == id);
+    }
+    SECTION("New") {
+      std::string id2{"john.bedney@yahoo.com"};
+      REQUIRE(Guest::record(id2, &src) == id2);
+    }
+  }
   SECTION("find_by_id") {
     REQUIRE(Guest::find_by_id(id, &src).id == id);
     REQUIRE_THROWS_AS(Guest::find_by_id("me@gmail.com", &src), std::runtime_error);

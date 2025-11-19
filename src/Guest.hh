@@ -10,8 +10,10 @@
 // NOTE: On the other hand, using this identifier might violate
 // the user's privacy, that's why this is a temporary solution
 struct Guest {
-  Guest(const std::string& id, void* src) : id{id}, src{src}
+  Guest(std::string_view id, void* src) : id{id}, src{src}
   {};
+
+  static std::string record(std::string_view email, void* src);
 
   static Guest find_by_id(const std::string& id, void* src);
 
