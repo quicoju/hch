@@ -23,7 +23,7 @@ Guest::record(std::string_view email, void* src)
 }
 
 Guest
-Guest::find_by_id(const std::string& id, void* src)
+Guest::find_by_id(std::string_view id, void* src)
 {
   const auto& guests = static_cast<HotelData*>(src)->guests;
   for (const auto& g: guests)

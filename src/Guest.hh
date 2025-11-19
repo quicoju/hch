@@ -15,7 +15,7 @@ struct Guest {
 
   static std::string record(std::string_view email, void* src);
 
-  static Guest find_by_id(const std::string& id, void* src);
+  static Guest find_by_id(std::string_view id, void* src);
 
   // state
   // =====
