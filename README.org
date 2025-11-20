@@ -76,20 +76,51 @@ target instead:
   make mockhotel
 #+end_src
 
-Now it should be possible to execute the =hch= command:
+Now it should be possible to execute the =hch=:
 
-#+begin_src text
-$ ./hch
-hch> set-room 102
-hch[room 102]> list-amenities
-  - Balcony
-  - Wifi
-hch[room 102]> list-rate
- - Base: 58.99
- - Capacity: 0
- - Balcony: 15
- - Wifi: 5
- - Total: 78.99
-hch[room 102]> unset-room
-hch> quit
-#+end_src
+1. As a single command
+
+   #+begin_src text
+   ./hch list-rate --room=102
+    ---
+    date: 2025-11-20
+    days: 1
+    total: 78.99
+    details:
+        Balcony: 15
+        Base: 58.99
+        Capacity: 0
+        Wifi: 5
+   #+end_src
+
+2. As a REPL
+
+   #+begin_src text
+   $ ./hch --repl
+   hch> set-room 101
+   hch[room 101]> record-guest --email=john.bedney@mail.com
+   ---
+   guest_id: john.bedney@mail.com
+
+   hch[room 101]> reserve --guest=john.bedney@mail.com --during=2026-02-05+3d
+   ---
+   Reservation: W-0001
+
+   hch[room 101]> unset-room
+   hch> help
+   Available commands:
+     - cancel-reservation
+     - checkin
+     - checkout
+     - exit
+     - help
+     - list-amenities
+     - list-rate
+     - list-reservations
+     - quit
+     - record-guest
+     - reserve
+     - set-room
+     - show-reservation
+     - unset-room
+   #+end_src
