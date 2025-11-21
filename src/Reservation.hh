@@ -77,7 +77,6 @@ struct Reservation {
   static Reservations
   find_by_room(const std::string& room_id, void* src);
 
-
   /**
    * @brief Find the reservations associated to a guest
    *
@@ -88,6 +87,28 @@ struct Reservation {
    */
   static Reservations
   find_by_guest(std::string_view guest_id, void* src);
+
+  /**
+   * @brief Find reservations by an "expected" check-in date
+   *
+   * @param starting "Date" or expected check-in "Date" of the reservation
+   * @param the source that holds the hotel information
+   *
+   * @return The "Reservations" that match the given starting date
+   */
+  static Reservations
+  find_by_starting_date(const Date&, void* src);
+
+  /**
+   * @brief Find reservations by an "expected" check-out date
+   *
+   * @param ending "Date" or expected check-out "Date" of the reservation
+   * @param the source that holds the hotel information
+   *
+   * @return The "Reservations" that match the given ending date
+   */
+  static Reservations
+  find_by_ending_date(const Date&, void* src);
 
   // state
   // =====

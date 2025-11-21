@@ -98,3 +98,17 @@ Reservation::find_by_guest(std::string_view id, void* src)
   auto p = [id](const auto& r){ return r.guest_id == id; };
   return find_by_predicate(p, src);
 }
+
+Reservations
+Reservation::find_by_starting_date(const Date& date, void* src)
+{
+  auto p = [date](const auto& r){ return r.period.begin() == date; };
+  return find_by_predicate(p, src);
+}
+
+Reservations
+Reservation::find_by_ending_date(const Date& date, void* src)
+{
+  auto p = [date](const auto& r){ return r.period.end() == date; };
+  return find_by_predicate(p, src);
+}

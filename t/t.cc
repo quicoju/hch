@@ -68,8 +68,8 @@ TEST_CASE("Hotel", "[Hotel]") {
   }
 
   SECTION("record_guest") {
-    std::string guest_1{"juan.camaney@aol.com"};
-    std::string guest_2{"john.bedney@yahoo.com"};
+    std::string guest_1{"juan.camaney@aol.com"};  // existing
+    std::string guest_2{"john.bedney@yahoo.com"}; // non-existing
     REQUIRE(hotel.record_guest(guest_1) == guest_1);
     REQUIRE(hotel.record_guest(guest_2) == guest_2);
   }
@@ -312,6 +312,24 @@ TEST_CASE("Reservation") {
     }
     SECTION("Case: not found"){
       REQUIRE_FALSE(Reservation::find_by_guest("me@gmail.com", &src).size());
+    }
+  }
+  SECTION("find_by_starting_date") {
+    SECTION("Case: found") {
+      auto got = Reservation::find_by_starting_date({2024,12,31}, &src);
+      REQUIRE(got.front().id == "A-003");
+    }
+    SECTION("Case: not found") {
+      REQUIRE(Reservation::find_by_starting_date({2025,12,12}, &src).empty());
+    }
+  }
+  SECTION("find_by_ending_date") {
+    SECTION("Case: found") {
+      auto got = Reservation::find_by_ending_date({2025,01,04}, &src);
+      REQUIRE(got.front().id == "A-003");
+    }
+    SECTION("Case: not found") {
+      REQUIRE(Reservation::find_by_ending_date({2024,12,12}, &src).empty());
     }
   }
   SECTION("reserve") {
