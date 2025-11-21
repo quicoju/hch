@@ -70,6 +70,28 @@ UPDATE Reservations
   checkout_at = stamp;
 }
 
+// TODO: instead of using this function, try to use a
+// proper constructor
+static Reservations
+reservations_from(SQLite::Statement& stmt, void* src)
+{
+  Reservations reservations{};
+  while (stmt.next()) {
+    Reservation r {
+      stmt.get<std::string>(0),
+      stmt.get<std::string>(1),
+      stmt.get<std::string>(2),
+      { from_string(stmt.get<std::string>(3)), Days{stmt.get<int>(4)} },
+      stmt.get<std::string>(7),
+      src,
+    };
+    r.checkin_at = stmt.get<std::optional<DateTime>>(5);
+    r.checkout_at = stmt.get<std::optional<DateTime>>(6);
+    reservations.push_back(std::move(r));
+  }
+  return reservations;
+}
+
 Reservation
 Reservation::find_by_id(std::string_view id, void* src)
 {
@@ -84,52 +106,26 @@ SELECT reservation_id, g.email, ro.name, begin_date, duration_days,
 )");
     stmt.bind(id);
 
-    if (!stmt.next())
+    auto reservations = reservations_from(stmt, src);
+    if (reservations.empty())
       throw std::invalid_argument{std::format("Reservation {} doesn't exist", id)};
-
-    Reservation r{
-      stmt.get<std::string>(0),
-      stmt.get<std::string>(1),
-      stmt.get<std::string>(2),
-      { from_string(stmt.get<std::string>(3)), Days{stmt.get<int>(4)} },
-      stmt.get<std::string>(7),
-      src,
-    };
-    r.checkin_at = stmt.get<std::optional<DateTime>>(5);
-    r.checkout_at = stmt.get<std::optional<DateTime>>(6);
-    return r;
+    return reservations.front();
 }
 
 Reservations
 find_by_column(std::string_view cond, std::string_view id, void* src)
 {
   auto* db = static_cast<SQLite*>(src);
-  std::stringstream query;
-  query << R"(
+  auto query = std::format(R"(
 SELECT reservation_id, email, rooms.name, begin_date, duration_days,
        checkin_at, checkout_at, notes
   FROM reservations re
   LEFT JOIN guests ON guests.id = guest_id
   LEFT JOIN rooms  ON rooms.id = room_id
- WHERE )" << cond << " = ?";
-  auto stmt = db->prepare(query.str());
+ WHERE {} = ?)", cond);
+  auto stmt = db->prepare(query);
   stmt.bind(id);
-
-  Reservations reservations{};
-  while (stmt.next()) {
-    Reservation r {
-      stmt.get<std::string>(0),
-      stmt.get<std::string>(1),
-      stmt.get<std::string>(2),
-      Period{ from_string(stmt.get<std::string>(3)), Days{stmt.get<int>(4)} },
-      stmt.get<std::string>(7),
-      src
-    };
-    r.checkin_at = stmt.get<std::optional<DateTime>>(5);
-    r.checkout_at = stmt.get<std::optional<DateTime>>(6);
-    reservations.push_back(std::move(r));
-  }
-  return reservations;
+  return reservations_from(stmt, src);
 }
 
 Reservations
@@ -142,4 +138,36 @@ Reservations
 Reservation::find_by_guest(std::string_view id, void* src)
 {
   return find_by_column("guests.email", id, src);
+}
+
+Reservations
+Reservation::find_by_starting_date(const Date& date, void* src)
+{
+  auto* db = static_cast<SQLite*>(src);
+  auto stmt = db->prepare(R"(
+SELECT reservation_id, g.email, ro.name, begin_date, duration_days,
+       checkin_at, checkout_at, notes
+  FROM reservations re
+  LEFT JOIN guests  g ON g.id = guest_id
+  LEFT JOIN rooms  ro ON ro.id = room_id
+ WHERE begin_date = ?
+)");
+  stmt.bind(_dstr(date));
+  return reservations_from(stmt, src);
+}
+
+Reservations
+Reservation::find_by_ending_date(const Date& date, void* src)
+{
+  auto* db = static_cast<SQLite*>(src);
+  auto stmt = db->prepare(R"(
+SELECT reservation_id, g.email, ro.name, begin_date, duration_days,
+       checkin_at, checkout_at, notes
+  FROM reservations re
+  LEFT JOIN guests  g ON g.id = guest_id
+  LEFT JOIN rooms  ro ON ro.id = room_id
+ WHERE date(begin_date, '+' || duration_days || ' days') = ?
+)");
+  stmt.bind(_dstr(date));
+  return reservations_from(stmt, src);
 }
