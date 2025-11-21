@@ -92,28 +92,8 @@ reservations_from(SQLite::Statement& stmt, void* src)
   return reservations;
 }
 
-Reservation
-Reservation::find_by_id(std::string_view id, void* src)
-{
-    auto* db = static_cast<SQLite*>(src);
-    auto stmt = db->prepare(R"(
-SELECT reservation_id, g.email, ro.name, begin_date, duration_days,
-       checkin_at, checkout_at, notes
-  FROM reservations re
-  LEFT JOIN guests  g ON g.id = guest_id
-  LEFT JOIN rooms  ro ON ro.id = room_id
- WHERE reservation_id = ?
-)");
-    stmt.bind(id);
-
-    auto reservations = reservations_from(stmt, src);
-    if (reservations.empty())
-      throw std::invalid_argument{std::format("Reservation {} doesn't exist", id)};
-    return reservations.front();
-}
-
 Reservations
-find_by_column(std::string_view cond, std::string_view id, void* src)
+find_by_condition(std::string_view cond, std::string_view value, void* src)
 {
   auto* db = static_cast<SQLite*>(src);
   auto query = std::format(R"(
@@ -124,50 +104,40 @@ SELECT reservation_id, email, rooms.name, begin_date, duration_days,
   LEFT JOIN rooms  ON rooms.id = room_id
  WHERE {} = ?)", cond);
   auto stmt = db->prepare(query);
-  stmt.bind(id);
+  stmt.bind(value);
   return reservations_from(stmt, src);
+}
+
+Reservation
+Reservation::find_by_id(std::string_view id, void* src)
+{
+  auto reservations = find_by_condition("reservation_id", id, src);
+  if (reservations.empty())
+    throw std::invalid_argument{std::format("Reservation {} doesn't exist", id)};
+  return reservations.front();
 }
 
 Reservations
 Reservation::find_by_room(const std::string& id, void* src)
 {
-  return find_by_column("rooms.name", id, src);
+  return find_by_condition("rooms.name", id, src);
 }
 
 Reservations
 Reservation::find_by_guest(std::string_view id, void* src)
 {
-  return find_by_column("guests.email", id, src);
+  return find_by_condition("guests.email", id, src);
 }
 
 Reservations
 Reservation::find_by_starting_date(const Date& date, void* src)
 {
-  auto* db = static_cast<SQLite*>(src);
-  auto stmt = db->prepare(R"(
-SELECT reservation_id, g.email, ro.name, begin_date, duration_days,
-       checkin_at, checkout_at, notes
-  FROM reservations re
-  LEFT JOIN guests  g ON g.id = guest_id
-  LEFT JOIN rooms  ro ON ro.id = room_id
- WHERE begin_date = ?
-)");
-  stmt.bind(_dstr(date));
-  return reservations_from(stmt, src);
+  return find_by_condition("begin_date", _dstr(date), src);
 }
 
 Reservations
 Reservation::find_by_ending_date(const Date& date, void* src)
 {
-  auto* db = static_cast<SQLite*>(src);
-  auto stmt = db->prepare(R"(
-SELECT reservation_id, g.email, ro.name, begin_date, duration_days,
-       checkin_at, checkout_at, notes
-  FROM reservations re
-  LEFT JOIN guests  g ON g.id = guest_id
-  LEFT JOIN rooms  ro ON ro.id = room_id
- WHERE date(begin_date, '+' || duration_days || ' days') = ?
-)");
-  stmt.bind(_dstr(date));
-  return reservations_from(stmt, src);
+  auto c = "date(begin_date, '+'||duration_days||' days')";
+  return find_by_condition(c, _dstr(date), src);
 }
