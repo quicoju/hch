@@ -112,7 +112,7 @@ TEST_CASE("Hotel", "[Hotel]") {
     auto r = hotel.reservations_for(hotel.room("101")).front();
     REQUIRE(r.checkout_at == utc_stamp);
   }
-  SECTION("reservations_for") {
+  SECTION("find reservations") {
     SECTION("by ID") {
       auto r = hotel.reservation("A-001");
       REQUIRE(r.id == "A-001");
@@ -134,6 +134,14 @@ TEST_CASE("Hotel", "[Hotel]") {
       SECTION("Case: without reservations") {
         REQUIRE_FALSE(hotel.reservations_for("me@gmail.com").size());
       }
+    }
+    SECTION("by starting date") {
+      auto got = hotel.reservations_starting_on(Date{2024,12,31});
+      REQUIRE(got.front().id == "A-003");
+    }
+    SECTION("by ending date") {
+      auto got = hotel.reservations_ending_on({2025,01,04});
+      REQUIRE(got.front().id == "A-003");
     }
   }
   SECTION("room") {

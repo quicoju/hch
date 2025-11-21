@@ -57,7 +57,7 @@ struct Hotel {
   std::string record_guest(std::string_view email);
 
   //////////////////
-  // Reservationa //
+  // Reservations //
   //////////////////
 
   /**
@@ -124,6 +124,24 @@ struct Hotel {
    * @return The list of reservations
    */
   Reservations reservations_for(std::string_view guest_id);
+
+  /**
+   * @brief Find the reservations starting on a given date
+   *
+   * @param date of the "expected" check-in date, defaults to TODAY
+   *
+   * @return the list of the matching reservations
+   */
+  Reservations reservations_starting_on(const Date& d=Today);
+
+  /**
+   * @brief Find the reservations due on a given date
+   *
+   * @param date of the "expected" check-out date, defaults to TODAY
+   *
+   * @return the list of the matching reservations
+   */
+  Reservations reservations_ending_on(const Date& d=Today);
 
   /**
    * @brief Returns the room identified with ID

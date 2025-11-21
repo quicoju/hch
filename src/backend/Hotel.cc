@@ -93,6 +93,20 @@ Reservations Hotel::reservations_for(std::string_view id)
   return Reservation::find_by_guest(id, src);
 }
 
+Reservations Hotel::reservations_starting_on(const Date& date)
+{
+  return Reservation::find_by_starting_date(date, src);
+}
+
+Reservations Hotel::reservations_ending_on(const Date& date)
+{
+  return Reservation::find_by_ending_date(date, src);
+}
+
+//////////
+// Room //
+//////////
+
 Room Hotel::room(const std::string& id)
 {
   return Room::find_by_id(id, src);
