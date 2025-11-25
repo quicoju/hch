@@ -209,12 +209,24 @@ private:
 
   void list_reservations(const Tokens& tokens)
   {
-    const string usage{"list-reservations [--guest=ID | --room=ID]"};
-    auto guest = value_for("--guest", tokens);
-    auto reservations = guest
-      ? hotel.reservations_for(guest.value())
-      : hotel.reservations_for(ensure_room(usage, tokens));
+    const string usage{
+    "list-reservations "
+      "[--starting_on=DATE | --ending_on=DATE | --guest=ID | --room=ID]"
+    };
+    Reservations reservations{};
 
+    if (auto str = value_for("--starting_on", tokens)) {
+      reservations = hotel.reservations_starting_on(parse_date(*str).first);
+    }
+    else if (auto str = value_for("--ending_on", tokens)) {
+      reservations = hotel.reservations_ending_on(parse_date(*str).first);
+    }
+    else if (auto guest = value_for("--guest", tokens)) {
+      reservations = hotel.reservations_for(*guest);
+    }
+    else {
+      reservations = hotel.reservations_for(ensure_room(usage, tokens));
+    }
     std::cout << formatter.output(reservations, [this](const auto& r) {
       return formatter.output({r.id, _pstr(r.period)}, false);
     }) << std::endl;
