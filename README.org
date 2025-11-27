@@ -110,8 +110,8 @@ Now it should be possible to execute the =hch=:
 
    hch[room 101]> unset-room
    hch> help
-   Available commands:
    ---
+   Available commands:
    - cancel-reservation
    - checkin
    - checkout
