@@ -1,6 +1,6 @@
 CXX = c++
 
-CXXFLAGS = -Wall -g -std=c++2a \
+CXXFLAGS = -Wall -g -std=c++23 \
 	-I/usr/local/include \
 	-I./src \
     -I./src/views \

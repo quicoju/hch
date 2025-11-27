@@ -74,16 +74,16 @@ run_test "List reservations shows period" \
  reserve --guest=juan.camaney@aol.com --during=2024-12-01+3d
  list-reservations
  quit" \
-"- W-0001: \[2024-Dec-01/2024-Dec-03\]"
+'W-0001: "\[2024-Dec-01/2024-Dec-03\]"'
 
 run_test "List reservations by guest" \
 "reserve --guest=juan.camaney@aol.com --room=101 --during=2024-12-01+3d
  reserve --guest=juan.camaney@aol.com --room=102 --during=2024-12-01+3d
  list-reservations --guest=juan.camaney@aol.com
  quit" \
-"---
-- W-0001: \[2024-Dec-01/2024-Dec-03\]
-- W-0002: \[2024-Dec-01/2024-Dec-03\]"
+'---
+W-0001: "\[2024-Dec-01/2024-Dec-03\]"
+W-0002: "\[2024-Dec-01/2024-Dec-03\]"'
 
 run_test "List reservations by starting date" \
 "reserve --guest=juan.camaney@aol.com --room=101 --during=2024-12-01+3d
@@ -91,17 +91,17 @@ run_test "List reservations by starting date" \
  reserve --guest=juan.camaney@aol.com --room=102 --during=2024-11-01+5d
  list-reservations --starting_on=2024-12-01
  quit" \
-"---
-- W-0001: \[2024-Dec-01/2024-Dec-03\]
-- W-0002: \[2024-Dec-01/2024-Dec-03\]"
+'---
+W-0001: "\[2024-Dec-01/2024-Dec-03\]"
+W-0002: "\[2024-Dec-01/2024-Dec-03\]"'
 
 run_test "List reservations by ending date" \
 "reserve --guest=juan.camaney@aol.com --room=101 --during=2024-12-01+3d
  reserve --guest=juan.camaney@aol.com --room=102 --during=2024-11-01+5d
  list-reservations --ending_on=2024-11-06
  quit" \
-"---
-- W-0002: \[2024-Nov-01/2024-Nov-05\]"
+'---
+W-0002: "\[2024-Nov-01/2024-Nov-05\]"'
 
 run_test "List amenities" \
 "set-room 102
@@ -118,9 +118,9 @@ run_test "Cancel reservation" \
  cancel-reservation --id=W-0001
  list-reservations
  quit" \
-"Reservation: cancelled
+'Reservation: cancelled
 .*---
-- W-0002: \[2025-Jan-05/2025-Jan-09\]"
+W-0002: "\[2025-Jan-05/2025-Jan-09\]"'
 
 run_test "Check-in/out reservation" \
 "set-room 101
@@ -129,11 +129,11 @@ run_test "Check-in/out reservation" \
  checkout --id=W-0001
  list-reservations
  quit" \
-"Reservation: checked-in
+'Reservation: checked-in
 .*---
 Reservation: checked-out
 .*---
-- W-0001: \[2024-Dec-01/2024-Dec-03\]"
+W-0001: "\[2024-Dec-01/2024-Dec-03\]"'
 
 run_test "show-reservation" \
 "reserve --guest=juan.camaney@aol.com --room=101

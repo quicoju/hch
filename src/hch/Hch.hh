@@ -1,5 +1,6 @@
 #include <map>
 #include <optional>
+#include <ranges>
 #include <regex>
 #include <stdexcept>
 #include <string>
@@ -225,9 +226,10 @@ private:
     else {
       reservations = hotel.reservations_for(ensure_room(usage, tokens));
     }
-    std::cout << formatter.output(reservations, [this](const auto& r) {
-      return formatter.output({r.id, _pstr(r.period)}, false);
-    }) << std::endl;
+    reply_with(reservations
+      | std::views::transform([] (const auto& r) {
+        return std::make_pair(r.id, _pstr(r.period));})
+      | std::ranges::to<std::map>());
   }
 
   void list_amenities(const Tokens& tokens)

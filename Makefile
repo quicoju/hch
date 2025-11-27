@@ -1,6 +1,6 @@
 CXX = c++
 
-CXXFLAGS = -Wall -g2 -gline-tables-only -O0 -fno-omit-frame-pointer -std=c++2a \
+CXXFLAGS = -Wall -std=c++23 \
 	-I/usr/local/include \
 	-I./src \
     -I./src/views \
