@@ -48,12 +48,10 @@ struct Hch : Repl {
       if (command_table_.contains(command))
         (this->*command_table_.at(command))(tokens);
       else
-        std::cout
-          << formatter.output({"Error", "Unknown command "+ command})
-          << std::endl;
+        reply_with("Error", "Unknown command "+ command);
     }
     catch (const std::exception& e) {
-      std::cout << formatter.output({"Error", e.what()}) << std::endl;
+      reply_with("Error", e.what());
     }
   }
 
