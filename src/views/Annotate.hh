@@ -42,15 +42,14 @@ namespace annotate {
   {
     using namespace YAML;
     Emitter e;
-    e << Precision(10)
+    output << (e
+      << Precision(10)
       << BeginMap
       << Key << "date"    << Value << _dstr(r.date)
       << Key << "days"    << Value << r.duration.days()
       << Key << "total"   << Value << r.total
       << Key << "details" << Value << r.details
-      << EndMap;
-
-    output << e.c_str();
+      << EndMap).c_str();
   }
 
   /**
