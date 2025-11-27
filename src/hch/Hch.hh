@@ -248,7 +248,7 @@ private:
     auto email = value_for("--email", tokens);
     if (!email) throw std::invalid_argument{
         "Command usage: record-guest --email=EMAIL"};
-    reply_with("guest_id", hotel.record_guest(*email));
+    reply_with("Guest", hotel.record_guest(*email));
   }
 
   void reserve(const Tokens& tokens)
@@ -274,7 +274,7 @@ private:
     if (!reservation_opt) throw std::invalid_argument {
         "Command usage: cancel-reservation --id=RESERVATION-ID"};
     hotel.cancel(*reservation_opt);
-    reply_with("Reservation", "cancelled");
+    reply_with("Reservation cancelled");
   }
 
   void show_reservation(const Tokens& tokens)
@@ -291,7 +291,7 @@ private:
     if (!reservation_opt) throw std::invalid_argument {
       "Command usage: checkin --id=RESERVATION-ID"};
     hotel.checkin(*reservation_opt);
-    reply_with("Reservation", "checked-in");
+    reply_with("Reservation checked-in");
   }
 
   void checkout(const Tokens& tokens)
@@ -300,7 +300,7 @@ private:
     if (!reservation_opt) throw std::invalid_argument {
       "Command usage: checkout --id=RESERVATION-ID"};
     hotel.checkout(*reservation_opt);
-    reply_with("Reservation", "checked-out");
+    reply_with("Reservation checked-out");
   }
 
   void help(const Tokens& tokens)

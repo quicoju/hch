@@ -97,10 +97,12 @@ Now it should be possible to execute the =hch=:
 
    #+begin_src text
    $ ./hch --repl
+
    hch> set-room 101
+
    hch[room 101]> record-guest --email=john.bedney@mail.com
    ---
-   guest_id: john.bedney@mail.com
+   Guest: john.bedney@mail.com
 
    hch[room 101]> reserve --guest=john.bedney@mail.com --during=2026-02-05+3d
    ---
@@ -109,18 +111,19 @@ Now it should be possible to execute the =hch=:
    hch[room 101]> unset-room
    hch> help
    Available commands:
-     - cancel-reservation
-     - checkin
-     - checkout
-     - exit
-     - help
-     - list-amenities
-     - list-rate
-     - list-reservations
-     - quit
-     - record-guest
-     - reserve
-     - set-room
-     - show-reservation
-     - unset-room
+   ---
+   - cancel-reservation
+   - checkin
+   - checkout
+   - exit
+   - help
+   - list-amenities
+   - list-rate
+   - list-reservations
+   - quit
+   - record-guest
+   - reserve
+   - set-room
+   - show-reservation
+   - unset-room
    #+end_src

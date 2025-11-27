@@ -118,7 +118,7 @@ run_test "Cancel reservation" \
  cancel-reservation --id=W-0001
  list-reservations
  quit" \
-'Reservation: cancelled
+'Reservation cancelled
 .*---
 W-0002: "\[2025-Jan-05/2025-Jan-09\]"'
 
@@ -129,9 +129,9 @@ run_test "Check-in/out reservation" \
  checkout --id=W-0001
  list-reservations
  quit" \
-'Reservation: checked-in
+'Reservation checked-in
 .*---
-Reservation: checked-out
+Reservation checked-out
 .*---
 W-0001: "\[2024-Dec-01/2024-Dec-03\]"'
 
@@ -162,4 +162,4 @@ details:
 run_test "record-guest" \
 "record-guest --email=john.bedney@yahoo.com" \
 "--
-guest_id: john.bedney@yahoo.com"
+Guest: john.bedney@yahoo.com"
