@@ -266,7 +266,7 @@ private:
 
     // save the current rates in the reservation, it's needed in case
     // the room rates change, we need to honor the original prices
-    auto notes = formatter.output(hotel.rate_report_for(room, date, duration));
+    auto notes = annotate::as_string(hotel.rate_report_for(room, date, duration));
     auto id = hotel.reserve(*guest_opt, room, date, duration, notes);
     reply_with("Reservation", id);
   }
