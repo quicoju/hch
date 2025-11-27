@@ -226,10 +226,10 @@ private:
     else {
       reservations = hotel.reservations_for(ensure_room(usage, tokens));
     }
-    reply_with(reservations
-      | std::views::transform([] (const auto& r) {
-        return std::make_pair(r.id, _pstr(r.period));})
-      | std::ranges::to<std::map>());
+    std::map<std::string, std::string> summary;
+    for (const auto& r: reservations)
+      summary.insert({r.id, _pstr(r.period)});
+    reply_with(summary);
   }
 
   void list_amenities(const Tokens& tokens)
