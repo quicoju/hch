@@ -154,10 +154,10 @@ run_test "list rate" \
 date: 2025-11-02
 days: 2
 total: 211.98
-details:.
-    Base: 201.98
-    Capacity: 0
-    Wifi: 10"
+details:
+  Base: 201.98
+  Capacity: 0
+  Wifi: 10"
 
 run_test "record-guest" \
 "record-guest --email=john.bedney@yahoo.com" \

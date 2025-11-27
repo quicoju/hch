@@ -243,9 +243,7 @@ private:
     auto room = ensure_room("list-rate [--during=[DATE][+DAYS]]", tokens);
     auto date_str = value_for("--during", tokens).value_or("");
     auto [date, duration] = parse_date(date_str);
-    std::cout
-      << formatter.output(hotel.rate_report_for(room, date, duration))
-      << std::endl;
+    reply_with(hotel.rate_report_for(room, date, duration));
   }
 
   void record_guest(const Tokens& tokens)
