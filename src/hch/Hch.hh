@@ -270,7 +270,7 @@ private:
     // the room rates change, we need to honor the original prices
     auto notes = formatter.output(hotel.rate_report_for(room, date, duration));
     auto id = hotel.reserve(*guest_opt, room, date, duration, notes);
-    std::cout << formatter.output({"Reservation", id}) << std::endl;
+    reply_with("Reservation", id);
   }
 
   void cancel_reservation(const Tokens& tokens)
@@ -278,9 +278,8 @@ private:
     auto reservation_opt = value_for("--id", tokens);
     if (!reservation_opt) throw std::invalid_argument {
         "Command usage: cancel-reservation --id=RESERVATION-ID"};
-
     hotel.cancel(*reservation_opt);
-    std::cout << formatter.output({"Reservation", "cancelled"}) << std::endl;
+    reply_with("Reservation", "cancelled");
   }
 
   void show_reservation(const Tokens& tokens)
@@ -297,7 +296,7 @@ private:
     if (!reservation_opt) throw std::invalid_argument {
       "Command usage: checkin --id=RESERVATION-ID"};
     hotel.checkin(*reservation_opt);
-    std::cout << formatter.output({"Reservation", "checked-in"}) << std::endl;
+    reply_with("Reservation", "checked-in");
   }
 
   void checkout(const Tokens& tokens)
@@ -306,14 +305,13 @@ private:
     if (!reservation_opt) throw std::invalid_argument {
       "Command usage: checkout --id=RESERVATION-ID"};
     hotel.checkout(*reservation_opt);
-    std::cout << formatter.output({"Reservation", "checked-out"}) << std::endl;
+    reply_with("Reservation", "checked-out");
   }
 
   void help(const Tokens& tokens)
   {
     std::cout << "Available commands:\n";
-    for (const auto& [command, _]: command_table_)
-      std::cout << "  - "<< command << std::endl;
+    reply_with(supported_commands());
   }
 
   void quit(const Tokens& tokens)
