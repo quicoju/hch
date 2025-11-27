@@ -90,9 +90,10 @@ private:
     std::cout << std::endl;
   }
 
-  void reply_with(std::string_view k, std::string_view v)
+  template<typename T>
+  void reply_with(std::string_view k, T v)
   {
-    std::map<std::string_view, std::string_view> data{{k, v}};
+    std::map<std::string_view, T> data{{k, v}};
     reply_with(data);
   }
 
@@ -305,8 +306,7 @@ private:
 
   void help(const Tokens& tokens)
   {
-    std::cout << "Available commands:\n";
-    reply_with(supported_commands());
+    reply_with("Available commands", supported_commands());
   }
 
   void quit(const Tokens& tokens)
