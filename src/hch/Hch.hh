@@ -235,7 +235,7 @@ private:
   void list_amenities(const Tokens& tokens)
   {
     auto r = ensure_room("list-amenities", tokens);
-    std::cout << formatter.output(r.amenities()) << std::endl;
+    reply_with(r.amenities());
   }
 
   void list_rate(const Tokens& tokens)

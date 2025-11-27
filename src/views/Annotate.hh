@@ -88,4 +88,16 @@ namespace YAML {
       return node;
     }
   };
+
+  // TODO: see why yml-cpp is not serializing this automatically
+  template<>
+  struct convert<std::set<std::string>> {
+    static Node encode(const std::set<std::string>& s) {
+      Node node;
+      for (const auto& item : s)
+        node.push_back(item);
+      return node;
+    }
+  };
+
 }
