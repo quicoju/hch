@@ -9,7 +9,6 @@
 #include "Annotate.hh"
 #include "Hotel.hh"
 #include "Repl.hh"
-#include "Formatter.hh"
 
 #ifdef USE_sqlite
 #include "SQLite.hh"
@@ -22,7 +21,6 @@ using Backend = HotelData;
 struct Hch : Repl {
   Hch(int argc, char* argv[])
     : conf{ argc, argv }
-    , formatter{}
     , src{ get_source() }
     , hotel{ Hotel{&src} }
   { }
@@ -163,7 +161,6 @@ private:
 
   /* State */
   Config conf;
-  Formatter formatter;
   Backend src;
   Hotel hotel;
   string current_room;
