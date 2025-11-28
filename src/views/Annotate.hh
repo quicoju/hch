@@ -22,8 +22,6 @@
  */
 
 namespace annotate {
-  template<typename T>
-
   /**
    * @brief annotate data into an ostream object as YAML
    *
@@ -31,14 +29,16 @@ namespace annotate {
    *
    * @param the data that will be annotated
    */
-  void to(std::ostream& output, const T& data)
+  template<typename T>
+  inline void to(std::ostream& output, const T& data)
   {
     YAML::Node node;
     node = data;
     output << YAML::Dump(node);
   }
 
-  void to(std::ostream& output, const RateReport& r)
+  template<>
+  inline void to<RateReport>(std::ostream& output, const RateReport& r)
   {
     using namespace YAML;
     Emitter e;

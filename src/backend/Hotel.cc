@@ -1,6 +1,7 @@
 #include <algorithm>
 
 #include "Hotel.hh"
+#include "Annotate.hh"
 #include "Reservation.hh"
 
 bool Hotel::is_available_on(Date date, Duration dur, size_t n_rooms)
@@ -52,13 +53,17 @@ std::string Hotel::record_guest(std::string_view email)
 std::string Hotel::reserve(const std::string& guest_id,
                            const Room& r,
                            Date d,
-                           Duration dur,
-                           std::string_view notes)
+                           Duration dur)
 {
   if (!is_available_on(r, d, dur))
     throw std::runtime_error{"Room is already reserved for overlapping dates"};
 
-  return Reservation::reserve(guest_id, r.id, d, dur, notes, src);
+  // POLICY: save the current rates in the reservation. This is important if
+  // the rates change between the reservation time and the check-out time.
+  // We need to honor the original prices
+  auto report = rate_report_for(r, d, dur);
+  auto note = annotate::as_string(report);
+  return Reservation::reserve(guest_id, r.id, d, dur, note, src);
 }
 
 void Hotel::cancel(const std::string& id)

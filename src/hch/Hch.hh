@@ -261,11 +261,7 @@ private:
       throw std::invalid_argument {"Command usage: " + usage};
 
     auto [date, duration] = parse_date(value_for("--during", tokens).value_or(""));
-
-    // save the current rates in the reservation, it's needed in case
-    // the room rates change, we need to honor the original prices
-    auto notes = annotate::as_string(hotel.rate_report_for(room, date, duration));
-    auto id = hotel.reserve(*guest_opt, room, date, duration, notes);
+    auto id = hotel.reserve(*guest_opt, room, date, duration);
     reply_with("Reservation", id);
   }
 
