@@ -53,6 +53,13 @@ struct Reservation {
   void checkout(DateTime stamp=std::chrono::system_clock::now());
 
   /**
+   * @brief Annotate the reservation
+   *
+   * @param The note to be set on the reservation
+   */
+  void annotate(std::string_view note);
+
+  /**
    * @brief Find a reservation using its ID
    *
    * This method will throw an "invalid_argument" if the

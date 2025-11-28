@@ -34,24 +34,32 @@ void Reservation::cancel()
   reservations.remove_if([this](auto& r){ return r.id == id; });
 }
 
-void Reservation::checkin(DateTime stamp)
+// TODO: this method reveals the need of a better way to interact
+// with the backend. One idea is that this implementation inherits
+// from a base "BACKEND" class that implements the details of
+// interacting with the actual data
+inline auto
+_from_store(std::string_view id, void* src)
 {
   auto& reservations = static_cast<HotelData*>(src)->reservations;
-  auto it = std::ranges::find_if(reservations,
-    [this](const auto& r){ return r.id == id; });
+  return std::ranges::find_if(reservations,
+    [id](const auto& r){ return r.id == id; });
+}
 
+void Reservation::checkin(DateTime stamp)
+{
   // store the property in the object and in the data storage
-  it->checkin_at = checkin_at = stamp;
+  _from_store(id, src)->checkin_at = checkin_at = stamp;
 }
 
 void Reservation::checkout(DateTime stamp)
 {
-  auto& reservations = static_cast<HotelData*>(src)->reservations;
-  auto it = std::ranges::find_if(reservations,
-    [this](const auto& r){ return r.id == id; });
+  _from_store(id, src)->checkout_at = *checkout_at = stamp;
+}
 
-  // store the property in the object and in the daa storage
-  it->checkout_at = *checkout_at = stamp;
+void Reservation::annotate(std::string_view note)
+{
+  _from_store(id, src)->notes = notes = note;
 }
 
 Reservation
