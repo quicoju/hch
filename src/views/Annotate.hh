@@ -45,10 +45,13 @@ namespace annotate {
     output << (e
       << Precision(10)
       << BeginMap
-      << Key << "date"    << Value << _dstr(r.date)
-      << Key << "days"    << Value << r.duration.days()
-      << Key << "total"   << Value << r.total
-      << Key << "details" << Value << r.details
+      << Key << "Rates" << Value
+         << BeginMap
+         << Key << "date"    << Value << _dstr(r.date)
+         << Key << "days"    << Value << r.duration.days()
+         << Key << "total"   << Value << r.total
+         << Key << "details" << Value << r.details
+         << EndMap
       << EndMap).c_str();
   }
 
