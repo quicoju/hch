@@ -62,7 +62,7 @@ std::string Hotel::reserve(const std::string& guest_id,
   // the rates change between the reservation time and the check-out time.
   // We need to honor the original prices
   auto report = rate_report_for(r, d, dur);
-  auto note = annotate::as_string(report);
+  auto note = annotate::as_string(std::map{std::pair{"Rates", report}});
   return Reservation::reserve(guest_id, r.id, d, dur, note, src);
 }
 
