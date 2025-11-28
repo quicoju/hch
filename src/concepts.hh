@@ -13,6 +13,7 @@ using DateTime = std::chrono::system_clock::time_point;
 using Days = boost::gregorian::days;
 using Duration = boost::gregorian::date_duration;
 using Period = boost::gregorian::date_period;
+using string_view = std::string_view;
 
 static Date Today{ boost::gregorian::day_clock::local_day() };
 
