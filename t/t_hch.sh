@@ -146,6 +146,21 @@ room: 101
 checkin_at: ~
 checkout_at: ~"
 
+run_test "show-reservation-notes" \
+"reserve --guest=juan.camaney@aol.com --room=101 --during=2025-11-28+2d
+ show-reservation-notes --id=W-0001
+ quit" \
+"---
+Rates:
+  date: 2025-11-28
+  days: 2
+  total: 211.98
+  details:
+    Base: 201.98
+    Capacity: 0
+    Wifi: 10
+"
+
 run_test "list rate" \
 "set-room 101
  list-rate --during=2025-11-02+2d

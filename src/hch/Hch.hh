@@ -177,6 +177,7 @@ private:
     {"reserve", &Hch::reserve},
     {"cancel-reservation", &Hch::cancel_reservation},
     {"show-reservation", &Hch::show_reservation},
+    {"show-reservation-notes", &Hch::show_reservation_notes},
     {"checkin", &Hch::checkin},
     {"checkout", &Hch::checkout},
     {"help", &Hch::help},
@@ -280,6 +281,16 @@ private:
     if (!id) throw std::invalid_argument {
         "Command usage: show-reservation --id=RESERVATION-ID"};
     reply_with(hotel.reservation(*id));
+  }
+
+  void show_reservation_notes(const Tokens& tokens)
+  {
+    auto id = value_for("--id", tokens);
+    if (!id) throw std::invalid_argument {
+        "Command usage: show-reservation-notes --id=RESERVATION-ID"};
+    // TODO: maybe create a "reply_verbatim_with" function
+    // or maybe create a "Notes" type that is a YAML "node".
+    std::cout << "---\n" << hotel.reservation_notes(*id) << std::endl;
   }
 
   void checkin(const Tokens& tokens)
