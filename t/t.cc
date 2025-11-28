@@ -384,4 +384,9 @@ TEST_CASE("Reservation") {
     Reservation::find_by_id("A-001", &src).checkout(utc_stamp);
     REQUIRE(Reservation::find_by_id("A-001", &src).checkout_at == utc_stamp);
   }
+  SECTION("annotate") {
+    auto note = "My annotations";
+    Reservation::find_by_id("A-001", &src).annotate(note);
+    REQUIRE(Reservation::find_by_id("A-001", &src).notes == note);
+  }
 }
