@@ -37,24 +37,6 @@ namespace annotate {
     output << YAML::Dump(node);
   }
 
-  template<>
-  inline void to<RateReport>(std::ostream& output, const RateReport& r)
-  {
-    using namespace YAML;
-    Emitter e;
-    output << (e
-      << Precision(10)
-      << BeginMap
-      << Key << "Rates" << Value
-         << BeginMap
-         << Key << "date"    << Value << _dstr(r.date)
-         << Key << "days"    << Value << r.duration.days()
-         << Key << "total"   << Value << r.total
-         << Key << "details" << Value << r.details
-         << EndMap
-      << EndMap).c_str();
-  }
-
   /**
    * @brief turn data into a YAML string
    *
@@ -103,6 +85,22 @@ namespace YAML {
       node["checkin_at"] = r.checkin_at;
       node["checkout_at"] = r.checkout_at;
       return node;
+    }
+  };
+
+  template<>
+  struct convert<RateReport> {
+    static Node encode(const RateReport& r)
+    {
+      Emitter e;
+      e << Precision(10)
+        << BeginMap
+        << Key << "date"    << Value << _dstr(r.date)
+        << Key << "days"    << Value << r.duration.days()
+        << Key << "total"   << Value << r.total
+        << Key << "details" << Value << r.details
+        << EndMap;
+      return Load(e.c_str());
     }
   };
 
