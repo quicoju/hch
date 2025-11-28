@@ -51,6 +51,11 @@ namespace annotate {
     to(ss, data);
     return ss.str();
   }
+
+  inline YAML::Node read(std::string_view s)
+  {
+    return YAML::Load(s.data());
+  }
 }
 
 ////////////////////////////////////////////////////////////
