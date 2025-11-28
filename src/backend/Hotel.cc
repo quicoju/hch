@@ -113,6 +113,15 @@ std::string Hotel::reservation_notes(std::string_view id) const
   return Reservation::find_by_id(id, src).notes;
 }
 
+void
+Hotel::add_reservation_note(string_view id, string_view title, string_view content)
+{
+  auto reservation = Reservation::find_by_id(id, src);
+  auto notes = annotate::read(reservation.notes);
+  notes[title] = content;
+  reservation.annotate(annotate::as_string(notes));
+}
+
 //////////
 // Room //
 //////////

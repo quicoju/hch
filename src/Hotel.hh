@@ -6,7 +6,6 @@
 #include "RateCalculator.hh"
 #include "Reservation.hh"
 
-
 struct Hotel {
   Hotel(void* src) noexcept : src{src} {};
 
@@ -141,7 +140,7 @@ struct Hotel {
    */
   Reservations reservations_ending_on(const Date& d=Today);
 
-  /*
+  /**
    * @brief show all the notes associated to a reservation
    *
    * @param The Reservation identifier
@@ -149,6 +148,15 @@ struct Hotel {
    * @return a string with the Reservation notes
    */
   std::string reservation_notes(std::string_view id) const;
+
+  /**
+   * @brief add a new note to the reservation
+   *
+   * @param The identifier of the reservation
+   * @param The title of the note
+   * @param The content of the note
+   */
+  void add_reservation_note(string_view id, string_view title, string_view content);
 
   ///////////
   // Rooms //

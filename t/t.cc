@@ -148,9 +148,7 @@ TEST_CASE("Hotel", "[Hotel]") {
     auto room = hotel.room("101");
     auto guest = "juan.camaney@aol.com";
     auto id = hotel.reserve(guest, room, {2024,11,10});
-
-    SECTION("reservation_notes") {
-      REQUIRE(hotel.reservation_notes(id) ==
+    std::string default_note{
 R"(Rates:
   date: 2024-11-10
   days: 1
@@ -158,7 +156,14 @@ R"(Rates:
   details:
     Base: 100.99
     Capacity: 0
-    Wifi: 5)");
+    Wifi: 5)"
+    };
+    SECTION("reservation_notes") {
+      REQUIRE(hotel.reservation_notes(id) == default_note);
+    }
+    SECTION("add_reservation_note") {
+      hotel.add_reservation_note(id, "Title", "Content");
+      REQUIRE(hotel.reservation_notes(id) == default_note + "\nTitle: Content");
     }
   }
   SECTION("room") {
