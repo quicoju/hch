@@ -108,6 +108,11 @@ Reservations Hotel::reservations_ending_on(const Date& date)
   return Reservation::find_by_ending_date(date, src);
 }
 
+std::string Hotel::reservation_notes(std::string_view id) const
+{
+  return Reservation::find_by_id(id, src).notes;
+}
+
 //////////
 // Room //
 //////////

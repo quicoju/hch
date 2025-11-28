@@ -144,6 +144,23 @@ TEST_CASE("Hotel", "[Hotel]") {
       REQUIRE(got.front().id == "A-003");
     }
   }
+  SECTION("notes") {
+    auto room = hotel.room("101");
+    auto guest = "juan.camaney@aol.com";
+    auto id = hotel.reserve(guest, room, {2024,11,10});
+
+    SECTION("reservation_notes") {
+      REQUIRE(hotel.reservation_notes(id) ==
+R"(Rates:
+  date: 2024-11-10
+  days: 1
+  total: 105.99
+  details:
+    Base: 100.99
+    Capacity: 0
+    Wifi: 5)");
+    }
+  }
   SECTION("room") {
     SECTION("Case: existing") {
       REQUIRE(hotel.room("102").id == "102");

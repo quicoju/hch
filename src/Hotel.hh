@@ -96,7 +96,6 @@ struct Hotel {
    */
   void checkout(std::string_view id, std::optional<DateTime> utc_stamp=std::nullopt);
 
-
   /**
    * @brief Return a reservation matched by its identifier
    *
@@ -141,6 +140,19 @@ struct Hotel {
    * @return the list of the matching reservations
    */
   Reservations reservations_ending_on(const Date& d=Today);
+
+  /*
+   * @brief show all the notes associated to a reservation
+   *
+   * @param The Reservation identifier
+   *
+   * @return a string with the Reservation notes
+   */
+  std::string reservation_notes(std::string_view id) const;
+
+  ///////////
+  // Rooms //
+  ///////////
 
   /**
    * @brief Returns the room identified with ID
