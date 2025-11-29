@@ -191,7 +191,7 @@ struct Hotel {
    * @param Number of days for the rate to be calculated (defaults to 1)
    */
   const RateReport
-  rate_report_for(Room, Date date=Today, Duration dur=Days{1}) const;
+  rate_report_for(string_view room, Date date=Today, Duration dur=Days{1});
 
 
   // Note that can't be patched (see patch_reservation_notes)

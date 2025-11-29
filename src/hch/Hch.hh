@@ -240,7 +240,7 @@ private:
 
   void list_rate(const Tokens& tokens)
   {
-    auto room = hotel.room(ensure_room("list-rate [--during=[DATE][+DAYS]]", tokens));
+    auto room = ensure_room("list-rate [--during=[DATE][+DAYS]]", tokens);
     auto date_str = value_for("--during", tokens).value_or("");
     auto [date, duration] = parse_date(date_str);
     reply_with(hotel.rate_report_for(room, date, duration));
