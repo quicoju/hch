@@ -44,42 +44,31 @@ DELETE FROM Reservations
   stmt.execute(id);
 }
 
-void Reservation::checkin(DateTime stamp)
+template<typename T>
+static const T& _update(string_view name, string_view id, T& value, void* src)
 {
   auto* db = static_cast<SQLite*>(src);
-  auto stmt = db->prepare(R"(
+  auto stmt = db->prepare(std::format(R"(
 UPDATE Reservations
-   SET checkin_at = ?
- WHERE reservation_id = ?
-)");
-  // store the property in the object and in the data storage
-  stmt.execute(stamp, id);
-  checkin_at = stamp;
+   SET {} = ?
+ WHERE reservation_id = ?)", name));
+  stmt.execute(value, id);
+  return value;
+}
+
+void Reservation::checkin(DateTime stamp)
+{
+  checkin_at = _update("checkin_at", id, stamp, src);
 }
 
 void Reservation::checkout(DateTime stamp)
 {
-  auto* db = static_cast<SQLite*>(src);
-  auto stmt = db->prepare(R"(
-UPDATE Reservations
-   SET checkout_at = ?
- WHERE reservation_id = ?
-)");
-  // store the property in the object and in the data storage
-  stmt.execute(stamp, id);
-  checkout_at = stamp;
+  checkout_at = _update("checkout_at", id, stamp, src);
 }
 
-void Reservation::annotate(std::string_view notes_)
+void Reservation::annotate(std::string_view n)
 {
-  auto* db = static_cast<SQLite*>(src);
-  auto stmt = db->prepare(R"(
-UPDATE Reservations
-   SET notes = ?
-WHERE reservation_id = ?
-)");
-  stmt.execute(notes_, id);
-  notes = notes_;
+  notes = _update("notes", id, n, src);
 }
 
 // TODO: instead of using this function, try to use a
