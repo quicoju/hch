@@ -71,7 +71,7 @@ struct Reservation {
    * @return The matched "Reservation"
    */
   static Reservation
-  find_by_id(std::string_view id, void* src);
+  find_by_id(string_view id, void* src);
 
   /**
    * @brief Find the reservations associted to a room
@@ -82,7 +82,7 @@ struct Reservation {
    * @return The recorded "Reservations" for the given room
    */
   static Reservations
-  find_by_room(const std::string& room_id, void* src);
+  find_by_room(string_view room_id, void* src);
 
   /**
    * @brief Find the reservations associated to a guest
@@ -93,7 +93,7 @@ struct Reservation {
    * @return The "Reservations" for the given guest
    */
   static Reservations
-  find_by_guest(std::string_view guest_id, void* src);
+  find_by_guest(string_view guest_id, void* src);
 
   /**
    * @brief Find reservations by an "expected" check-in date

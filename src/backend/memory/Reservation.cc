@@ -96,14 +96,14 @@ find_by_predicate(std::function<bool(const ReservationData&)> p, void* src)
 }
 
 Reservations
-Reservation::find_by_room(const std::string& id, void* src)
+Reservation::find_by_room(string_view id, void* src)
 {
   auto p = [id](const auto& r){ return r.room_id == id; };
   return find_by_predicate(p, src);
 }
 
 Reservations
-Reservation::find_by_guest(std::string_view id, void* src)
+Reservation::find_by_guest(string_view id, void* src)
 {
   auto p = [id](const auto& r){ return r.guest_id == id; };
   return find_by_predicate(p, src);
