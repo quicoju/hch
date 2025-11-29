@@ -140,6 +140,11 @@ Rooms Hotel::rooms() const
   return Room::find_all(src);
 }
 
+const Amenities Hotel::room_amenities(string_view id)
+{
+  return room(id).amenities();
+}
+
 const RateReport
 Hotel::rate_report_for(string_view id, Date _, Duration dur)
 {

@@ -234,8 +234,8 @@ private:
 
   void list_amenities(const Tokens& tokens)
   {
-    auto r = hotel.room(ensure_room("list-amenities", tokens));
-    reply_with(r.amenities());
+    auto room = ensure_room("list-amenities", tokens);
+    reply_with(hotel.room_amenities(room));
   }
 
   void list_rate(const Tokens& tokens)

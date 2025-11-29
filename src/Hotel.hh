@@ -183,6 +183,16 @@ struct Hotel {
    */
   Rooms rooms() const;
 
+
+  /**
+   * @brief Provide a view of the room amenities
+   *
+   * @param The room identifier
+   *
+   * @return The room amenities
+   */
+  const Amenities room_amenities(string_view id);
+
   /**
    * @brief provide rate report associated to the room
    *
