@@ -54,7 +54,7 @@ void Reservation::checkin(DateTime stamp)
 
 void Reservation::checkout(DateTime stamp)
 {
-  _from_store(id, src)->checkout_at = *checkout_at = stamp;
+  _from_store(id, src)->checkout_at = checkout_at = stamp;
 }
 
 void Reservation::annotate(std::string_view note)
