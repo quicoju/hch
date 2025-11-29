@@ -5,11 +5,11 @@
 #include "concepts.hh"
 
 std::string
-Reservation::reserve(const std::string& guest_id,
-                     const std::string& room_id,
+Reservation::reserve(string_view guest_id,
+                     string_view room_id,
                      Date date,
                      Duration dur,
-                     std::string_view notes,
+                     string_view notes,
                      void* src)
 {
   auto& reservations = static_cast<HotelData*>(src)->reservations;

@@ -53,6 +53,10 @@ using Guests = std::vector<Guest>;
  * =======================
  */
 struct ReservationData{
+  ReservationData(
+    string_view id, string_view g, string_view r, Period p, string_view n="")
+    : id{id}, guest_id{g}, room_id{r}, period{p}, notes{n}
+  {}
   std::string id;       // client facing reservation id
   std::string guest_id;
   std::string room_id;

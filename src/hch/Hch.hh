@@ -257,7 +257,7 @@ private:
   void reserve(const Tokens& tokens)
   {
     string usage{"reserve --guest=ID [--during=[DATE][+DAYS]]"};
-    auto room = hotel.room(ensure_room(usage, tokens));
+    auto room = ensure_room(usage, tokens);
     auto guest_opt = value_for("--guest", tokens);
     if (!guest_opt)
       throw std::invalid_argument {"Command usage: " + usage};

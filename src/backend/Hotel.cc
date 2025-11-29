@@ -52,20 +52,20 @@ std::string Hotel::record_guest(std::string_view email)
 /////////////////
 string_view Hotel::RATES_NOTE = "Rates";
 
-std::string Hotel::reserve(const std::string& guest_id,
-                           const Room& r,
+std::string Hotel::reserve(string_view guest_id,
+                           string_view room_id,
                            Date d,
                            Duration dur)
 {
-  if (!is_available_on(r, d, dur))
+  if (!is_available_on(room(room_id), d, dur))
     throw std::runtime_error{"Room is already reserved for overlapping dates"};
 
   // POLICY: save the current rates in the reservation. This is important if
   // the rates change between the reservation time and the check-out time.
   // We need to honor the original prices
-  auto report = rate_report_for(r.id, d, dur);
+  auto report = rate_report_for(room_id, d, dur);
   auto note = annotate::as_string(std::map{std::pair{RATES_NOTE, report}});
-  return Reservation::reserve(guest_id, r.id, d, dur, note, src);
+  return Reservation::reserve(guest_id, room_id, d, dur, note, src);
 }
 
 void Hotel::cancel(const std::string& id)

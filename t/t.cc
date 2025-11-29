@@ -78,14 +78,14 @@ TEST_CASE("Hotel", "[Hotel]") {
     auto room = hotel.room("101");
     std::string guest{"juan.camaney@aol.com"};
     SECTION("Case: success") {
-      REQUIRE(hotel.reserve(guest, room, {2024,11,10}) == "W-0004");
+      REQUIRE(hotel.reserve(guest, "101", {2024,11,10}) == "W-0004");
       REQUIRE_FALSE(hotel.is_available_on(room, {2024,11,10}));
 
-      REQUIRE(hotel.reserve(guest, room, {2024,11,12}, Days{2}) == "W-0005");
+      REQUIRE(hotel.reserve(guest, "101", {2024,11,12}, Days{2}) == "W-0005");
       REQUIRE_FALSE(hotel.is_available_on(room, {2024,11,13}));
     }
     SECTION("Case: failed") {
-      REQUIRE_THROWS_AS(hotel.reserve(guest, room, {2024,12,20}), std::runtime_error);
+      REQUIRE_THROWS_AS(hotel.reserve(guest, "101", {2024,12,20}), std::runtime_error);
     }
   }
   SECTION("cancel") {
@@ -145,7 +145,7 @@ TEST_CASE("Hotel", "[Hotel]") {
   SECTION("notes") {
     auto room = hotel.room("101");
     auto guest = "juan.camaney@aol.com";
-    auto id = hotel.reserve(guest, room, {2024,11,10});
+    auto id = hotel.reserve(guest, "101", {2024,11,10});
     std::string default_note{
 R"(Rates:
   date: 2024-11-10

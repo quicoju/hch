@@ -4,11 +4,11 @@
 #include "concepts.hh"
 
 struct Reservation {
-  Reservation(std::string_view id,
-              const std::string& guest_id,
-              const std::string& room_id,
+  Reservation(string_view id,
+              string_view guest_id,
+              string_view room_id,
               const Period& period,
-              const std::string& notes,
+              string_view notes,
               void* src)
     : id{id}
     , guest_id{guest_id}
@@ -28,8 +28,8 @@ struct Reservation {
    *  @return a unique identifier of the reservation
    */
   static std::string
-  reserve(const std::string& guest_id,
-          const std::string& room_id,
+  reserve(string_view guest_id,
+          string_view room_id,
           Date date,
           Duration duration,
           std::string_view notes,
