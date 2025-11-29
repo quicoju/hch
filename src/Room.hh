@@ -30,7 +30,7 @@ struct Room {
    * @return The Room instance associated to the ID
    */
   static Room
-  find_by_id(const std::string& id, void* src);
+  find_by_id(string_view id, void* src);
 
   /**
    * @brief Find all rooms

@@ -11,14 +11,14 @@ const Amenities Room::amenities()
   return amenities_;
 }
 
-Room Room::find_by_id(const std::string& id, void* src)
+Room Room::find_by_id(string_view id, void* src)
 {
   auto& rooms_data = static_cast<HotelData*>(src)->rooms;
   for (auto& r: rooms_data) {
     if (r.id == id)
       return {r.id, r.capacity, &r};
   }
-  throw std::invalid_argument{std::string{"Room "} + id + " not found"};
+  throw std::invalid_argument{ std::format("Room {} not found", id) };
 }
 
 Rooms Room::find_all(void* src)

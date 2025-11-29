@@ -130,7 +130,7 @@ Hotel::patch_reservation_notes(string_view id, string_view title, string_view co
 // Room //
 //////////
 
-Room Hotel::room(const std::string& id)
+Room Hotel::room(string_view id)
 {
   return Room::find_by_id(id, src);
 }
