@@ -161,9 +161,13 @@ R"(Rates:
     SECTION("reservation_notes") {
       REQUIRE(hotel.reservation_notes(id) == default_note);
     }
-    SECTION("add_reservation_notes") {
+    SECTION("patch_reservation_notes") {
       hotel.patch_reservation_notes(id, "Title", "Content");
       REQUIRE(hotel.reservation_notes(id) == default_note + "\nTitle: Content");
+      REQUIRE_THROWS_AS(
+        hotel.patch_reservation_notes(id, "Rates", "new"),
+        std::invalid_argument
+      );
     }
   }
   SECTION("room") {

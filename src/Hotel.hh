@@ -157,6 +157,8 @@ struct Hotel {
    * One note can be edited by providing its title (key) and the
    * new content (value).
    *
+   * POLICY: The note titled `Hotel::RATES_NOTE` note cannot be modified.
+   *
    * @param The identifier of the reservation
    * @param The title of the note to patch
    * @param The new content of the note
@@ -190,6 +192,10 @@ struct Hotel {
    */
   const RateReport
   rate_report_for(Room, Date date=Today, Duration dur=Days{1}) const;
+
+
+  // Note that can't be patched (see patch_reservation_notes)
+  static string_view RATES_NOTE;
 
 private:
   void* src;

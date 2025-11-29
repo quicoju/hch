@@ -50,6 +50,8 @@ std::string Hotel::record_guest(std::string_view email)
 /////////////////
 // Reservation //
 /////////////////
+string_view Hotel::RATES_NOTE = "Rates";
+
 std::string Hotel::reserve(const std::string& guest_id,
                            const Room& r,
                            Date d,
@@ -62,7 +64,7 @@ std::string Hotel::reserve(const std::string& guest_id,
   // the rates change between the reservation time and the check-out time.
   // We need to honor the original prices
   auto report = rate_report_for(r, d, dur);
-  auto note = annotate::as_string(std::map{std::pair{"Rates", report}});
+  auto note = annotate::as_string(std::map{std::pair{RATES_NOTE, report}});
   return Reservation::reserve(guest_id, r.id, d, dur, note, src);
 }
 
@@ -116,6 +118,8 @@ std::string Hotel::reservation_notes(std::string_view id) const
 void
 Hotel::patch_reservation_notes(string_view id, string_view title, string_view content)
 {
+  if (title == RATES_NOTE) throw std::invalid_argument{
+      std::format("The '{}' note can't be changed", RATES_NOTE)};
   auto reservation = Reservation::find_by_id(id, src);
   auto notes = annotate::read(reservation.notes);
   notes[title] = content;
