@@ -31,11 +31,33 @@ private:
   static Repl* current_repl;
 
   Tokens tokenize(const string &line) {
-    std::istringstream iss(line);
-    string token;
     Tokens tokens;
+    string token;
+    bool in_quotes = false;
+    char quote_char = '\0';
 
-    while (iss >> token)
+    for (auto c: line) {
+      if (!in_quotes && (c == '"' || c == '\'')) {
+        in_quotes = true;
+        quote_char = c;
+      }
+      else if (in_quotes && c == quote_char) {
+        in_quotes = false;
+      }
+      else if (!in_quotes && std::isspace(c)) {
+        if (token.size()) {
+          tokens.push_back(token);
+          token.clear();
+        }
+      }
+      else {
+        token += c;
+      }
+    }
+    // TODO: address the case when the quote isn't properly closed
+
+    // in case it's the last token
+    if (token.size())
       tokens.push_back(token);
 
     return tokens;
