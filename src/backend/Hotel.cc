@@ -90,14 +90,14 @@ Reservation Hotel::reservation(std::string_view id) const
   return Reservation::find_by_id(id, src);
 }
 
-Reservations Hotel::reservations_for(const Room& r)
+Reservations Hotel::room_reservations(string_view room_id)
 {
-  return Reservation::find_by_room(r.id, src);
+  return Reservation::find_by_room(room_id, src);
 }
 
-Reservations Hotel::reservations_for(std::string_view id)
+Reservations Hotel::guest_reservations(std::string_view guest_id)
 {
-  return Reservation::find_by_guest(id, src);
+  return Reservation::find_by_guest(guest_id, src);
 }
 
 Reservations Hotel::reservations_starting_on(const Date& date)

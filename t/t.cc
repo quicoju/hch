@@ -102,14 +102,14 @@ TEST_CASE("Hotel", "[Hotel]") {
     auto utc_stamp  = DateTime{ seconds{1763152245} }; // 2025-11-14 20:30:45 UTC
     hotel.checkin("A-001", utc_stamp);
 
-    auto r = hotel.reservations_for(hotel.room("101")).front();
+    auto r = hotel.room_reservations("101").front();
     REQUIRE(r.checkin_at == utc_stamp);
   }
   SECTION("checkout") {
     auto utc_stamp = DateTime{ seconds{1763238645} }; // 2025-11-15 20:30:45 UTC
     hotel.checkout("A-001", utc_stamp);
 
-    auto r = hotel.reservations_for(hotel.room("101")).front();
+    auto r = hotel.room_reservations("101").front();
     REQUIRE(r.checkout_at == utc_stamp);
   }
   SECTION("find reservations") {
@@ -119,20 +119,18 @@ TEST_CASE("Hotel", "[Hotel]") {
     }
     SECTION("by Room") {
       SECTION("Case: with reservations") {
-        auto room = hotel.room("101");
-        REQUIRE(hotel.reservations_for(room).size() == 1);
+        REQUIRE(hotel.room_reservations("101").size() == 1);
       }
       SECTION("Case: without reservations") {
-        auto room = hotel.room("301");
-        REQUIRE_FALSE(hotel.reservations_for(room).size());
+        REQUIRE_FALSE(hotel.room_reservations("301").size());
       }
     }
     SECTION("by Guest") {
       SECTION("Case: with reservations") {
-        REQUIRE(hotel.reservations_for("juan.camaney@aol.com").size() == 3);
+        REQUIRE(hotel.guest_reservations("juan.camaney@aol.com").size() == 3);
       }
       SECTION("Case: without reservations") {
-        REQUIRE_FALSE(hotel.reservations_for("me@gmail.com").size());
+        REQUIRE_FALSE(hotel.guest_reservations("me@gmail.com").size());
       }
     }
     SECTION("by starting date") {

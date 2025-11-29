@@ -102,16 +102,16 @@ struct Hotel {
    *
    * @return The matched Reservation
    */
-  Reservation reservation(std::string_view id) const;
+  Reservation reservation(string_view id) const;
 
   /**
    * @brief Find the reservations for a room
    *
-   * @param The Room to look the reservations for
+   * @param The room identifier to look the reservations for
    *
    * @return The list of reservations
    */
-  Reservations reservations_for(const Room&);
+  Reservations room_reservations(string_view room);
 
   /**
    * @brief Find the reservations for a guest
@@ -120,7 +120,7 @@ struct Hotel {
    *
    * @return The list of reservations
    */
-  Reservations reservations_for(std::string_view guest_id);
+  Reservations guest_reservations(string_view guest);
 
   /**
    * @brief Find the reservations starting on a given date

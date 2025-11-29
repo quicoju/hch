@@ -111,17 +111,17 @@ private:
     return {};
   }
 
-  Room ensure_room(const std::string& usage, const Tokens& tokens)
+  string ensure_room(const std::string& usage, const Tokens& tokens)
   {
     string room_id{current_room};
 
     if (room_id.empty())
       room_id = value_for("--room", tokens).value_or("");
 
-    try { return hotel.room(room_id); }
-    catch(const std::invalid_argument& e) {
+    if (room_id.empty())
       throw std::invalid_argument{"Command usage: " + usage + " --room=ROOM"};
-    }
+
+    return room_id;
   }
 
   std::pair<Date, Duration> parse_date(const string &s)
@@ -221,10 +221,10 @@ private:
       reservations = hotel.reservations_ending_on(parse_date(*str).first);
     }
     else if (auto guest = value_for("--guest", tokens)) {
-      reservations = hotel.reservations_for(*guest);
+      reservations = hotel.guest_reservations(*guest);
     }
     else {
-      reservations = hotel.reservations_for(ensure_room(usage, tokens));
+      reservations = hotel.room_reservations(ensure_room(usage, tokens));
     }
     std::map<std::string, std::string> summary;
     for (const auto& r: reservations)
@@ -234,13 +234,13 @@ private:
 
   void list_amenities(const Tokens& tokens)
   {
-    auto r = ensure_room("list-amenities", tokens);
+    auto r = hotel.room(ensure_room("list-amenities", tokens));
     reply_with(r.amenities());
   }
 
   void list_rate(const Tokens& tokens)
   {
-    auto room = ensure_room("list-rate [--during=[DATE][+DAYS]]", tokens);
+    auto room = hotel.room(ensure_room("list-rate [--during=[DATE][+DAYS]]", tokens));
     auto date_str = value_for("--during", tokens).value_or("");
     auto [date, duration] = parse_date(date_str);
     reply_with(hotel.rate_report_for(room, date, duration));
@@ -257,7 +257,7 @@ private:
   void reserve(const Tokens& tokens)
   {
     string usage{"reserve --guest=ID [--during=[DATE][+DAYS]]"};
-    auto room = ensure_room(usage, tokens);
+    auto room = hotel.room(ensure_room(usage, tokens));
     auto guest_opt = value_for("--guest", tokens);
     if (!guest_opt)
       throw std::invalid_argument {"Command usage: " + usage};
