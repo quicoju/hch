@@ -57,7 +57,7 @@ UPDATE Reservations
 }
 // this macro takes care of updating the value
 // in the DB while also setting the object property
-# define _UPDATE_(prop, val) prop = _update(#prop, id, val, src)
+#define _UPDATE_(prop, val) prop = _update(#prop, id, val, src)
 
 void Reservation::checkin(DateTime stamp)
 {

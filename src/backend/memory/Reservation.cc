@@ -45,21 +45,23 @@ _from_store(std::string_view id, void* src)
   return std::ranges::find_if(reservations,
     [id](const auto& r){ return r.id == id; });
 }
+// this macro takes care of updating the value
+// in the store while also setting the object property
+#define _UPDATE_(prop, val) _from_store(id, src)->prop = prop = val
 
 void Reservation::checkin(DateTime stamp)
 {
-  // store the property in the object and in the data storage
-  _from_store(id, src)->checkin_at = checkin_at = stamp;
+  _UPDATE_(checkin_at, stamp);
 }
 
 void Reservation::checkout(DateTime stamp)
 {
-  _from_store(id, src)->checkout_at = checkout_at = stamp;
+  _UPDATE_(checkout_at, stamp);
 }
 
-void Reservation::annotate(std::string_view note)
+void Reservation::annotate(std::string_view n)
 {
-  _from_store(id, src)->notes = notes = note;
+  _UPDATE_(notes, n);
 }
 
 Reservation
