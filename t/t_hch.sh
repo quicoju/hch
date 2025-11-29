@@ -160,6 +160,22 @@ Rates:
     Capacity: 0
     Wifi: 10
 "
+run_test "add-reservation-notes" \
+"reserve --guest=juan.camaney@aol.com --room=101 --during=2025-11-28+2d
+ add-reservation-note --id=W-0001 --title=Discount --content='10% promo'
+ show-reservation-notes --id=W-0001
+ quit" \
+"---
+Rates:
+  date: 2025-11-28
+  days: 2
+  total: 211.98
+  details:
+    Base: 201.98
+    Capacity: 0
+    Wifi: 10
+Discount: 10% promo
+"
 
 run_test "list rate" \
 "set-room 101
