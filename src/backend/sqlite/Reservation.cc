@@ -70,6 +70,18 @@ UPDATE Reservations
   checkout_at = stamp;
 }
 
+void Reservation::annotate(std::string_view notes_)
+{
+  auto* db = static_cast<SQLite*>(src);
+  auto stmt = db->prepare(R"(
+UPDATE Reservations
+   SET notes = ?
+WHERE reservation_id = ?
+)");
+  stmt.execute(notes_, id);
+  notes = notes_;
+}
+
 // TODO: instead of using this function, try to use a
 // proper constructor
 static Reservations
