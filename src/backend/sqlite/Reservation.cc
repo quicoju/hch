@@ -44,10 +44,6 @@ DELETE FROM Reservations
   stmt.execute(id);
 }
 
-// this macro takes care of updating the value
-// in the DB while also setting the object property
-# define _UPDATE_(prop, val) prop = _update(#prop, id, val, src)
-
 template<typename T>
 static const T& _update(string_view name, string_view id, T& value, void* src)
 {
@@ -59,6 +55,9 @@ UPDATE Reservations
   stmt.execute(value, id);
   return value;
 }
+// this macro takes care of updating the value
+// in the DB while also setting the object property
+# define _UPDATE_(prop, val) prop = _update(#prop, id, val, src)
 
 void Reservation::checkin(DateTime stamp)
 {
