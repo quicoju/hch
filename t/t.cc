@@ -161,8 +161,8 @@ R"(Rates:
     SECTION("reservation_notes") {
       REQUIRE(hotel.reservation_notes(id) == default_note);
     }
-    SECTION("add_reservation_note") {
-      hotel.add_reservation_note(id, "Title", "Content");
+    SECTION("add_reservation_notes") {
+      hotel.patch_reservation_notes(id, "Title", "Content");
       REQUIRE(hotel.reservation_notes(id) == default_note + "\nTitle: Content");
     }
   }

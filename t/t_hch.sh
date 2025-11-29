@@ -162,7 +162,7 @@ Rates:
 "
 run_test "add-reservation-notes" \
 "reserve --guest=juan.camaney@aol.com --room=101 --during=2025-11-28+2d
- add-reservation-note --id=W-0001 --title=Discount --content='10% promo'
+ patch-reservation-notes --id=W-0001 --title=Discount --content='10% promo'
  show-reservation-notes --id=W-0001
  quit" \
 "---

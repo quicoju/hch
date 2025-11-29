@@ -150,13 +150,18 @@ struct Hotel {
   std::string reservation_notes(std::string_view id) const;
 
   /**
-   * @brief add a new note to the reservation
+   * @brief modify the reservation notes by "title""
+   *
+   * The notes are organized as title/content (key/value) pairs,
+   * each pair is a note.
+   * One note can be edited by providing its title (key) and the
+   * new content (value).
    *
    * @param The identifier of the reservation
-   * @param The title of the note
-   * @param The content of the note
+   * @param The title of the note to patch
+   * @param The new content of the note
    */
-  void add_reservation_note(string_view id, string_view title, string_view content);
+  void patch_reservation_notes(string_view id, string_view title, string_view content);
 
   ///////////
   // Rooms //

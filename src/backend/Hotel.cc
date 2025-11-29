@@ -114,7 +114,7 @@ std::string Hotel::reservation_notes(std::string_view id) const
 }
 
 void
-Hotel::add_reservation_note(string_view id, string_view title, string_view content)
+Hotel::patch_reservation_notes(string_view id, string_view title, string_view content)
 {
   auto reservation = Reservation::find_by_id(id, src);
   auto notes = annotate::read(reservation.notes);

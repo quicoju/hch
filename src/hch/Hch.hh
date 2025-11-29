@@ -178,7 +178,7 @@ private:
     {"cancel-reservation", &Hch::cancel_reservation},
     {"show-reservation", &Hch::show_reservation},
     {"show-reservation-notes", &Hch::show_reservation_notes},
-    {"add-reservation-note", &Hch::add_reservation_note},
+    {"patch-reservation-notes", &Hch::patch_reservation_notes},
     {"checkin", &Hch::checkin},
     {"checkout", &Hch::checkout},
     {"help", &Hch::help},
@@ -294,18 +294,18 @@ private:
     std::cout << "---\n" << hotel.reservation_notes(*id) << std::endl;
   }
 
-  void add_reservation_note(const Tokens& tokens)
+  void patch_reservation_notes(const Tokens& tokens)
   {
     const string usage {
-      "add-reservation-note --id=RESERVATION --title=TITLE [--content=CONTENT]"};
+      "patch-reservation-notes --id=RESERVATION --title=TITLE [--content=CONTENT]"};
     auto id = value_for("--id", tokens);
     auto title = value_for("--title", tokens);
     auto content = value_for("--content", tokens).value_or("");
 
     if (!id || !title) throw std::invalid_argument {
         "Command usage: " + usage };
-    hotel.add_reservation_note(*id, *title, content);
-    reply_with("Note added");
+    hotel.patch_reservation_notes(*id, *title, content);
+    reply_with("Notes updated");
   }
 
   void checkin(const Tokens& tokens)
