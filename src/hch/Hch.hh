@@ -10,14 +10,6 @@
 #include "Hotel.hh"
 #include "Repl.hh"
 
-#ifdef USE_sqlite
-#include "SQLite.hh"
-using Backend = SQLite;
-#else
-#include "HotelData.hh"
-using Backend = HotelData;
-#endif
-
 struct Hch : Repl {
   Hch(int argc, char* argv[])
     : conf{ argc, argv }
