@@ -43,9 +43,7 @@
 namespace Rate {
   Calculator::Calculator(Backend* src)
   {
-    const auto& rates = static_cast<HotelData*>(src)->rates;
-
-    for (const auto& rate : rates) {
+    for (const auto& rate : src->rates) {
       switch (rate.type) {
       case Type::Base:
         if (rate.key.empty()) default_base_rate_ = rate.value;

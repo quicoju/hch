@@ -12,7 +12,7 @@ Reservation::reserve(string_view guest_id,
                      string_view notes,
                      Backend* src)
 {
-  auto& reservations = static_cast<HotelData*>(src)->reservations;
+  auto& reservations = src->reservations;
 
   // TODO: create a type that can be injected
   // or user provided. Each business might have their
@@ -30,8 +30,7 @@ void Reservation::cancel()
   // TODO: This method shows the need of a new "status" field
   // in the reservation. Deleting the reservation without leaving
   // a track isn't a good idea
-  auto& reservations = static_cast<HotelData*>(src)->reservations;
-  reservations.remove_if([this](auto& r){ return r.id == id; });
+  src->reservations.remove_if([this](auto& r){ return r.id == id; });
 }
 
 // TODO: this method reveals the need of a better way to interact
@@ -41,8 +40,7 @@ void Reservation::cancel()
 inline auto
 _from_store(std::string_view id, Backend* src)
 {
-  auto& reservations = static_cast<HotelData*>(src)->reservations;
-  return std::ranges::find_if(reservations,
+  return std::ranges::find_if(src->reservations,
     [id](const auto& r){ return r.id == id; });
 }
 // this macro takes care of updating the value
@@ -67,8 +65,7 @@ void Reservation::annotate(std::string_view n)
 Reservation
 Reservation::find_by_id(std::string_view id, Backend* src)
 {
-  const auto& reservations = static_cast<HotelData*>(src)->reservations;
-  for (const auto& r: reservations) {
+  for (const auto& r: src->reservations) {
     if (r.id == id) {
       Reservation rsv {id, r.guest_id, r.room_id, r.period, r.notes, src};
       rsv.checkin_at = r.checkin_at;
@@ -83,8 +80,7 @@ static Reservations
 find_by_predicate(std::function<bool(const ReservationData&)> p, Backend* src)
 {
   Reservations reservations{};
-  const auto& all_reservations = static_cast<HotelData*>(src)->reservations;
-  for (const auto& r: all_reservations) {
+  for (const auto& r: src->reservations) {
     if (p(r)) {
       Reservation rsv{r.id, r.guest_id, r.room_id, r.period, r.notes, src};
       rsv.checkin_at = r.checkin_at;

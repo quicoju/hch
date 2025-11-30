@@ -13,8 +13,7 @@ const Amenities Room::amenities()
 
 Room Room::find_by_id(string_view id, Backend* src)
 {
-  auto& rooms_data = static_cast<HotelData*>(src)->rooms;
-  for (auto& r: rooms_data) {
+  for (auto& r: src->rooms) {
     if (r.id == id)
       return {r.id, r.capacity, &r};
   }
@@ -24,10 +23,8 @@ Room Room::find_by_id(string_view id, Backend* src)
 Rooms Room::find_all(Backend* src)
 {
   Rooms rooms{};
-  auto& rooms_data = static_cast<HotelData*>(src)->rooms;
+  for (auto& r: src->rooms)
+    rooms.emplace_back(r.id, r.capacity, &r); // TODO:maybe hotel data
 
-  for (auto& r: rooms_data) {
-    rooms.emplace_back(r.id, r.capacity, &r); // TODO:maybe room data
-  }
   return rooms;
 }

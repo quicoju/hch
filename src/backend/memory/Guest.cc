@@ -1,13 +1,11 @@
 #include <exception>
 
 #include "Guest.hh"
-#include "HotelData.hh"
-
 
 std::string
 Guest::record(std::string_view email, Backend* src)
 {
-  auto& guests = static_cast<HotelData*>(src)->guests;
+  auto& guests = src->guests;
   auto it = std::ranges::find_if(guests,
       [&](const auto& g) { return g.id == email; });
 
@@ -25,8 +23,7 @@ Guest::record(std::string_view email, Backend* src)
 Guest
 Guest::find_by_id(std::string_view id, Backend* src)
 {
-  const auto& guests = static_cast<HotelData*>(src)->guests;
-  for (const auto& g: guests)
+  for (const auto& g: src->guests)
     if (g.id == id) return Guest{g.id, src};
   throw std::runtime_error{std::format("Guest {} not found", id)};
 }
