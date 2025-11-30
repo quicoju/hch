@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include "config.h"
 
 // TODO: This class requires a unique identifier for the guests.
 // The different backends might want to keep internal identifiers
@@ -10,17 +11,17 @@
 // NOTE: On the other hand, using this identifier might violate
 // the user's privacy, that's why this is a temporary solution
 struct Guest {
-  Guest(std::string_view id, void* src) : id{id}, src{src}
+  Guest(std::string_view id, Backend* src) : id{id}, src{src}
   {};
 
-  static std::string record(std::string_view email, void* src);
+  static std::string record(std::string_view email, Backend* src);
 
-  static Guest find_by_id(std::string_view id, void* src);
+  static Guest find_by_id(std::string_view id, Backend* src);
 
   // state
   // =====
   const std::string id;
 
 private:
-  void* src;
+  Backend* src;
 };

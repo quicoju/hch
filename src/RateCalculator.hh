@@ -35,7 +35,7 @@
  */
 namespace Rate {
   struct Calculator {
-    Calculator(void*);
+    Calculator(Backend*);
 
     double rate_for(Room& room, const Date& _, const Duration& duration) const
     {

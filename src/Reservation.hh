@@ -9,7 +9,7 @@ struct Reservation {
               string_view room_id,
               const Period& period,
               string_view notes,
-              void* src)
+              Backend* src)
     : id{id}
     , guest_id{guest_id}
     , room_id{room_id}
@@ -33,7 +33,7 @@ struct Reservation {
           Date date,
           Duration duration,
           std::string_view notes,
-          void* src);
+          Backend* src);
 
 
   /**
@@ -71,7 +71,7 @@ struct Reservation {
    * @return The matched "Reservation"
    */
   static Reservation
-  find_by_id(string_view id, void* src);
+  find_by_id(string_view id, Backend* src);
 
   /**
    * @brief Find the reservations associted to a room
@@ -82,7 +82,7 @@ struct Reservation {
    * @return The recorded "Reservations" for the given room
    */
   static Reservations
-  find_by_room(string_view room_id, void* src);
+  find_by_room(string_view room_id, Backend* src);
 
   /**
    * @brief Find the reservations associated to a guest
@@ -93,7 +93,7 @@ struct Reservation {
    * @return The "Reservations" for the given guest
    */
   static Reservations
-  find_by_guest(string_view guest_id, void* src);
+  find_by_guest(string_view guest_id, Backend* src);
 
   /**
    * @brief Find reservations by an "expected" check-in date
@@ -104,7 +104,7 @@ struct Reservation {
    * @return The "Reservations" that match the given starting date
    */
   static Reservations
-  find_by_starting_date(const Date&, void* src);
+  find_by_starting_date(const Date&, Backend* src);
 
   /**
    * @brief Find reservations by an "expected" check-out date
@@ -115,7 +115,7 @@ struct Reservation {
    * @return The "Reservations" that match the given ending date
    */
   static Reservations
-  find_by_ending_date(const Date&, void* src);
+  find_by_ending_date(const Date&, Backend* src);
 
   // state
   // =====
@@ -128,5 +128,5 @@ struct Reservation {
   std::string notes;
 
 private:
-  void* src;
+  Backend* src;
 };

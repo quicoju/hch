@@ -10,7 +10,7 @@ Reservation::reserve(string_view guest_id,
                      Date date,
                      Duration dur,
                      string_view notes,
-                     void* src)
+                     Backend* src)
 {
   auto& reservations = static_cast<HotelData*>(src)->reservations;
 
@@ -39,7 +39,7 @@ void Reservation::cancel()
 // from a base "BACKEND" class that implements the details of
 // interacting with the actual data
 inline auto
-_from_store(std::string_view id, void* src)
+_from_store(std::string_view id, Backend* src)
 {
   auto& reservations = static_cast<HotelData*>(src)->reservations;
   return std::ranges::find_if(reservations,
@@ -65,7 +65,7 @@ void Reservation::annotate(std::string_view n)
 }
 
 Reservation
-Reservation::find_by_id(std::string_view id, void* src)
+Reservation::find_by_id(std::string_view id, Backend* src)
 {
   const auto& reservations = static_cast<HotelData*>(src)->reservations;
   for (const auto& r: reservations) {
@@ -80,7 +80,7 @@ Reservation::find_by_id(std::string_view id, void* src)
 }
 
 static Reservations
-find_by_predicate(std::function<bool(const ReservationData&)> p, void* src)
+find_by_predicate(std::function<bool(const ReservationData&)> p, Backend* src)
 {
   Reservations reservations{};
   const auto& all_reservations = static_cast<HotelData*>(src)->reservations;
@@ -96,28 +96,28 @@ find_by_predicate(std::function<bool(const ReservationData&)> p, void* src)
 }
 
 Reservations
-Reservation::find_by_room(string_view id, void* src)
+Reservation::find_by_room(string_view id, Backend* src)
 {
   auto p = [id](const auto& r){ return r.room_id == id; };
   return find_by_predicate(p, src);
 }
 
 Reservations
-Reservation::find_by_guest(string_view id, void* src)
+Reservation::find_by_guest(string_view id, Backend* src)
 {
   auto p = [id](const auto& r){ return r.guest_id == id; };
   return find_by_predicate(p, src);
 }
 
 Reservations
-Reservation::find_by_starting_date(const Date& date, void* src)
+Reservation::find_by_starting_date(const Date& date, Backend* src)
 {
   auto p = [date](const auto& r){ return r.period.begin() == date; };
   return find_by_predicate(p, src);
 }
 
 Reservations
-Reservation::find_by_ending_date(const Date& date, void* src)
+Reservation::find_by_ending_date(const Date& date, Backend* src)
 {
   auto p = [date](const auto& r){ return r.period.end() == date; };
   return find_by_predicate(p, src);

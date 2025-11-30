@@ -7,7 +7,7 @@
 #include "Reservation.hh"
 
 struct Hotel {
-  Hotel(void* src) noexcept : src{src} {};
+  Hotel(Backend* src) noexcept : src{src} {};
 
   /**
    * @brief Returns true only if there are N_ROOMS available on
@@ -208,5 +208,5 @@ struct Hotel {
   static string_view RATES_NOTE;
 
 private:
-  void* src;
+  Backend* src;
 };

@@ -41,7 +41,7 @@
  */
 
 namespace Rate {
-  Calculator::Calculator(void* src)
+  Calculator::Calculator(Backend* src)
   {
     const auto& rates = static_cast<HotelData*>(src)->rates;
 

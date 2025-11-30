@@ -11,7 +11,7 @@ const Amenities Room::amenities()
   return amenities_;
 }
 
-Room Room::find_by_id(string_view id, void* src)
+Room Room::find_by_id(string_view id, Backend* src)
 {
   auto& rooms_data = static_cast<HotelData*>(src)->rooms;
   for (auto& r: rooms_data) {
@@ -21,7 +21,7 @@ Room Room::find_by_id(string_view id, void* src)
   throw std::invalid_argument{ std::format("Room {} not found", id) };
 }
 
-Rooms Room::find_all(void* src)
+Rooms Room::find_all(Backend* src)
 {
   Rooms rooms{};
   auto& rooms_data = static_cast<HotelData*>(src)->rooms;

@@ -30,7 +30,7 @@ struct Room {
    * @return The Room instance associated to the ID
    */
   static Room
-  find_by_id(string_view id, void* src);
+  find_by_id(string_view id, Backend* src);
 
   /**
    * @brief Find all rooms
@@ -39,7 +39,7 @@ struct Room {
    *
    * @return Instances for all the rooms
    */
-  static Rooms find_all(void* src);
+  static Rooms find_all(Backend* src);
 
   /* Properties */
   /* ========== */

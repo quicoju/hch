@@ -5,7 +5,7 @@
 
 
 std::string
-Guest::record(std::string_view email, void* src)
+Guest::record(std::string_view email, Backend* src)
 {
   auto& guests = static_cast<HotelData*>(src)->guests;
   auto it = std::ranges::find_if(guests,
@@ -23,7 +23,7 @@ Guest::record(std::string_view email, void* src)
 }
 
 Guest
-Guest::find_by_id(std::string_view id, void* src)
+Guest::find_by_id(std::string_view id, Backend* src)
 {
   const auto& guests = static_cast<HotelData*>(src)->guests;
   for (const auto& g: guests)
