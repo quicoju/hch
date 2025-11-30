@@ -10,9 +10,8 @@ Reservation::reserve(string_view guest_id,
                      Date date,
                      Duration dur,
                      string_view notes,
-                     void* src)
+                     Backend* db)
 {
-  auto* db = static_cast<SQLite*>(src);
   auto stmt = db->prepare(R"(
 SELECT IFNULL(MAX(id), 0)
   FROM reservations
@@ -36,8 +35,7 @@ VALUES (?, ?,
 
 void Reservation::cancel()
 {
-  auto* db = static_cast<SQLite*>(src);
-  auto stmt = db->prepare(R"(
+  auto stmt = src->prepare(R"(
 DELETE FROM Reservations
  WHERE reservation_id = ?
 )");
@@ -45,9 +43,8 @@ DELETE FROM Reservations
 }
 
 template<typename T>
-static const T& _update(string_view name, string_view id, T& value, void* src)
+static const T& _update(string_view name, string_view id, T& value, Backend* db)
 {
-  auto* db = static_cast<SQLite*>(src);
   auto stmt = db->prepare(std::format(R"(
 UPDATE Reservations
    SET {} = ?
@@ -77,7 +74,7 @@ void Reservation::annotate(std::string_view n)
 // TODO: instead of using this function, try to use a
 // proper constructor
 static Reservations
-reservations_from(SQLite::Statement& stmt, void* src)
+reservations_from(SQLite::Statement& stmt, Backend* src)
 {
   Reservations reservations{};
   while (stmt.next()) {
@@ -97,9 +94,8 @@ reservations_from(SQLite::Statement& stmt, void* src)
 }
 
 Reservations
-find_by_condition(std::string_view cond, std::string_view value, void* src)
+find_by_condition(std::string_view cond, std::string_view value, Backend* db)
 {
-  auto* db = static_cast<SQLite*>(src);
   auto query = std::format(R"(
 SELECT reservation_id, email, rooms.name, begin_date, duration_days,
        checkin_at, checkout_at, notes
@@ -109,39 +105,39 @@ SELECT reservation_id, email, rooms.name, begin_date, duration_days,
  WHERE {} = ?)", cond);
   auto stmt = db->prepare(query);
   stmt.bind(value);
-  return reservations_from(stmt, src);
+  return reservations_from(stmt, db);
 }
 
 Reservation
-Reservation::find_by_id(std::string_view id, void* src)
+Reservation::find_by_id(std::string_view id, Backend* db)
 {
-  auto reservations = find_by_condition("reservation_id", id, src);
+  auto reservations = find_by_condition("reservation_id", id, db);
   if (reservations.empty())
     throw std::invalid_argument{std::format("Reservation {} doesn't exist", id)};
   return reservations.front();
 }
 
 Reservations
-Reservation::find_by_room(string_view id, void* src)
+Reservation::find_by_room(string_view id, Backend* db)
 {
-  return find_by_condition("rooms.name", id, src);
+  return find_by_condition("rooms.name", id, db);
 }
 
 Reservations
-Reservation::find_by_guest(string_view id, void* src)
+Reservation::find_by_guest(string_view id, Backend* db)
 {
-  return find_by_condition("guests.email", id, src);
+  return find_by_condition("guests.email", id, db);
 }
 
 Reservations
-Reservation::find_by_starting_date(const Date& date, void* src)
+Reservation::find_by_starting_date(const Date& date, Backend* db)
 {
-  return find_by_condition("begin_date", _dstr(date), src);
+  return find_by_condition("begin_date", _dstr(date), db);
 }
 
 Reservations
-Reservation::find_by_ending_date(const Date& date, void* src)
+Reservation::find_by_ending_date(const Date& date, Backend* db)
 {
   auto c = "date(begin_date, '+'||duration_days||' days')";
-  return find_by_condition(c, _dstr(date), src);
+  return find_by_condition(c, _dstr(date), db);
 }

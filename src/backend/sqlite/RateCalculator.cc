@@ -3,10 +3,9 @@
 
 namespace Rate {
 
-  Calculator::Calculator(void* src)
+  Calculator::Calculator(Backend* db)
   {
-    auto& db = *static_cast<SQLite*>(src);
-    auto stmt = db.prepare(R"(
+    auto stmt = db->prepare(R"(
 SELECT rt.name, r.key_name, r.value
   FROM rates r
   JOIN rate_types rt ON r.type_id = rt.id
