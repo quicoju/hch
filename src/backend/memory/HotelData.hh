@@ -3,7 +3,29 @@
 #include <list>
 #include <vector>
 
-#include "Hotel.hh"
+// ========================================================== //
+// TODO: The definitions enclosed in this box come from the   //
+// "concepts.hh" it's an attempt to decouple the project      //
+// types from the backend. In theory these definitions should //
+// not be coupled. Think about a way of how to minimize this  //
+// duplication without coupling the concepts.                 //
+//                                                            //
+#include <set>                                                //
+#include <boost/date_time/gregorian/gregorian.hpp>            //
+                                                              //
+using Period = boost::gregorian::date_period;                 //
+using Days = boost::gregorian::days;                          //
+using DateTime = std::chrono::system_clock::time_point;       //
+                                                              //
+using string_view = std::string_view;                         //
+                                                              //
+using Amenity = std::string;                                  //
+using Amenities = std::set<Amenity>;                          //
+static inline Amenity AirConditioning_ = "AirConditioning";   //
+static inline Amenity Balcony_ = "Balcony";                   //
+static inline Amenity Wifi_ = "Wifi";                         //
+static inline Amenity MiniBar_ = "MiniBar";                   //
+// ========================================================== //
 
 /* Rate information
  * ================
@@ -47,7 +69,7 @@ using GuestsData = std::vector<GuestData>;
 // we want to access to multiple guests at one;
 // except for a generic searching of guests, but
 // this is not to be implemented soon.
-using Guests = std::vector<Guest>;
+//using Guests = std::vector<Guest>;
 
 /* Reservation information
  * =======================
@@ -85,12 +107,12 @@ struct HotelData {
   // type and make it very simple to build the backend
   // specific source without using generic programming
     rooms = {
-      {"101", 1, {Wifi}},
-      {"102", 1, {Balcony, Wifi},},
-      {"103", 1, {MiniBar, Wifi},},
-      {"201", 1, {AirConditioning, Balcony},},
-      {"202", 1, {Wifi},},
-      {"203", 1, {MiniBar},}
+      {"101", 1, {Wifi_}},
+      {"102", 1, {Balcony_, Wifi_},},
+      {"103", 1, {MiniBar_, Wifi_},},
+      {"201", 1, {AirConditioning_, Balcony_},},
+      {"202", 1, {Wifi_},},
+      {"203", 1, {MiniBar_},}
     };
     rates = {
       {Rate::Type::Base,     ""       , 58.99}, // default nightly rate

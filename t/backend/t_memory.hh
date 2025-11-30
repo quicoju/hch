@@ -7,12 +7,12 @@ void prepare_tests(){}
 HotelData build_src() {
   return {
     { // rooms
-      {"101", 1, {Wifi}},
-      {"102", 1, {Wifi}},
-      {"103", 3, {Balcony, Wifi}},
-      {"201", 1, {Balcony, AirConditioning}},
-      {"202", 1, {Wifi}},
-      {"203", 1, {MiniBar}},
+      {"101", 1, {Wifi_}},
+      {"102", 1, {Wifi_}},
+      {"103", 3, {Balcony_, Wifi_}},
+      {"201", 1, {Balcony_, AirConditioning_}},
+      {"202", 1, {Wifi_}},
+      {"203", 1, {MiniBar_}},
       {"301", 1, {}},
       {"302", 3, {}},
     },
