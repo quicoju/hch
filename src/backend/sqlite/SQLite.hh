@@ -74,8 +74,8 @@ using DateTime = std::chrono::system_clock::time_point;
  */
 
 struct SQLite {
-  SQLite(const std::string& db_path) {
-    if (sqlite3_open(db_path.c_str(), &db_) != SQLITE_OK) {
+  SQLite(std::string_view db_path) {
+    if (sqlite3_open(db_path.data(), &db_) != SQLITE_OK) {
       std::string error = sqlite3_errmsg(db_);
       sqlite3_close(db_);
       throw std::runtime_error{"Cannot open database: " + error};
