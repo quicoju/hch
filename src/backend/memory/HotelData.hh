@@ -95,17 +95,15 @@ struct ReservationData{
 using ReservationsData = std::list<ReservationData>;
 
 struct HotelData {
-  HotelData(string_view _)
+  HotelData(string_view _="")
     : rooms{}
     , reservations{}
     , rates{}
     , guests{} {
   // This constructor and data were made to feed
   // hch's src default hotel, it takes a string
-  // as an argument to mirror the sqlite backend
-  // constructor, this helps to define a "Backend"
-  // type and make it very simple to build the backend
-  // specific source without using generic programming
+  // as an argument to mirror other backends that may
+  // require a connection string.
     rooms = {
       {"101", 1, {Wifi_}},
       {"102", 1, {Wifi_}},
@@ -129,14 +127,6 @@ struct HotelData {
       {Rate::Type::Amenity,  "Balcony", 15.00}, // per night
     };
   }
-
-  // This constructor is relevant for testing (see t_memory.hh)
-  HotelData(RoomsData r,
-            ReservationsData rsv={},
-            Rate::Table rates={},
-            GuestsData guests={})
-    : rooms{r}, reservations{rsv}, rates{rates}, guests{guests}
-  {}
 
   // Properties
   RoomsData rooms;
