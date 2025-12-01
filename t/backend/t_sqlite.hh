@@ -1,7 +1,5 @@
 #pragma once
 
-#include <utility>
-
 #include "SQLite.hh"
 
 inline auto conn_str(){ return "db/unit_test.db"; }

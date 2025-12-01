@@ -1,6 +1,5 @@
 #include <map>
 #include <optional>
-#include <ranges>
 #include <regex>
 #include <stdexcept>
 #include <string>
@@ -61,7 +60,7 @@ private:
         string arg{argv[i]};
         if (arg.find("--db=") == 0)
           db_path = arg.substr(5);
-        else if (arg.find("--repl") == 0)
+        else if (arg == "--repl")
           use_repl = true;
         // keep the command line arguments
         cli_argv.push_back(std::move(arg));
@@ -82,9 +81,9 @@ private:
   }
 
   template<typename T>
-  void reply_with(std::string_view k, T v)
+  void reply_with(string_view k, T v)
   {
-    std::map<std::string_view, T> data{{k, v}};
+    std::map<string_view, T> data{{k, v}};
     reply_with(data);
   }
 
@@ -102,7 +101,7 @@ private:
     return {};
   }
 
-  string ensure_room(const std::string& usage, const Tokens& tokens)
+  string ensure_room(const string& usage, const Tokens& tokens)
   {
     string room_id{current_room};
 
@@ -211,7 +210,7 @@ private:
     else {
       reservations = hotel.room_reservations(ensure_room(usage, tokens));
     }
-    std::map<std::string, std::string> summary;
+    std::map<string, string> summary;
     for (const auto& r: reservations)
       summary.insert({r.id, _pstr(r.period)});
     reply_with(summary);
