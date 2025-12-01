@@ -7,7 +7,7 @@
 #include "Reservation.hh"
 
 struct Hotel {
-  Hotel(Backend* src) noexcept : src{src} {};
+  Hotel(string_view conn_str="");
 
   /**
    * @brief Returns true only if there are N_ROOMS available on
@@ -17,8 +17,7 @@ struct Hotel {
    * @param Check for availability starting on this date
    * @param Number of days that the rooms are required to be available
    */
-  bool is_available_on(Date, Duration dur=Days{1}, size_t n_rooms=1)
-    const;
+  bool is_available_on(Date, Duration dur=Days{1}, size_t n_rooms=1);
 
   /**
    * @brief Check if a ROOM is available on during the given DATE and DURATION
@@ -29,8 +28,7 @@ struct Hotel {
    *
    * @return true if is available, false otherwise
    */
-  bool is_available_on(Room, Date date=Today, Duration dur=Days{1})
-    const;
+  bool is_available_on(Room, Date date=Today, Duration dur=Days{1});
 
   /**
    * @brief Return all the available rooms for the given DATE and
@@ -39,8 +37,7 @@ struct Hotel {
    * @param Check for availability starting on this date
    * @param Number of days that the rooms are required to be available
    */
-  Rooms find_available_on(Date, Duration dur=Days{1}, Amenities amenities={})
-    const;
+  Rooms find_available_on(Date, Duration dur=Days{1}, Amenities amenities={});
 
   ////////////
   // Guests //
@@ -102,7 +99,7 @@ struct Hotel {
    *
    * @return The matched Reservation
    */
-  Reservation reservation(string_view id) const;
+  Reservation reservation(string_view id);
 
   /**
    * @brief Find the reservations for a room
@@ -147,7 +144,7 @@ struct Hotel {
    *
    * @return a string with the Reservation notes
    */
-  std::string reservation_notes(std::string_view id) const;
+  std::string reservation_notes(std::string_view id);
 
   /**
    * @brief modify the reservation notes by "title""
@@ -181,7 +178,7 @@ struct Hotel {
    * @brief Return all the rooms
    *
    */
-  Rooms rooms() const;
+  Rooms rooms();
 
 
   /**
@@ -208,5 +205,5 @@ struct Hotel {
   static string_view RATES_NOTE;
 
 private:
-  Backend* src;
+  Backend src;
 };

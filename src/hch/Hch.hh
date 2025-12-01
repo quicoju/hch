@@ -13,8 +13,7 @@
 struct Hch : Repl {
   Hch(int argc, char* argv[])
     : conf{ argc, argv }
-    , src{ get_source() }
-    , hotel{ Hotel{&src} }
+    , hotel{ Hotel{conf.db_path} }
   { }
 
   string prompt() const override
@@ -147,14 +146,8 @@ private:
     return {date, duration};
   }
 
-  Backend get_source()
-  {
-    return Backend{conf.db_path};
-  }
-
   /* State */
   Config conf;
-  Backend src;
   Hotel hotel;
   string current_room;
 
