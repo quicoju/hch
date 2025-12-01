@@ -95,7 +95,7 @@ struct ReservationData{
 using ReservationsData = std::list<ReservationData>;
 
 struct HotelData {
-  HotelData(std::string _)
+  HotelData(string_view _)
     : rooms{}
     , reservations{}
     , rates{}
@@ -108,12 +108,19 @@ struct HotelData {
   // specific source without using generic programming
     rooms = {
       {"101", 1, {Wifi_}},
-      {"102", 1, {Balcony_, Wifi_},},
-      {"103", 1, {MiniBar_, Wifi_},},
-      {"201", 1, {AirConditioning_, Balcony_},},
-      {"202", 1, {Wifi_},},
-      {"203", 1, {MiniBar_},}
+      {"102", 1, {Wifi_}},
+      {"103", 3, {Balcony_, Wifi_}},
+      {"201", 1, {Balcony_, AirConditioning_}},
+      {"202", 1, {Wifi_}},
+      {"203", 1, {MiniBar_}},
+      {"301", 1, {}},
+      {"302", 3, {}},
     };
+
+    guests = {
+      {"juan.camaney@aol.com"}
+    };
+
     rates = {
       {Rate::Type::Base,     ""       , 58.99}, // default nightly rate
       {Rate::Type::Base,     "101"    ,100.99}, // premium room rate

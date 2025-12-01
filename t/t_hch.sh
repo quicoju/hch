@@ -104,7 +104,7 @@ run_test "List reservations by ending date" \
 W-0002: "\[2024-Nov-01/2024-Nov-05\]"'
 
 run_test "List amenities" \
-"set-room 102
+"set-room 103
  list-amenities
  quit" \
 "---

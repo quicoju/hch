@@ -6,6 +6,9 @@
 
 #define APPROX(N) (Catch::Matchers::WithinAbs((N), 0.001))
 
+#include <boost/date_time/gregorian/gregorian.hpp>
+using Days = boost::gregorian::days;
+
 #ifdef USE_sqlite
 #include "t_sqlite.hh"
 #else
@@ -27,8 +30,12 @@ static GlobalSetup global_setup;
 #include "Hotel.hh"
 
 TEST_CASE("Hotel", "[Hotel]") {
-  auto src = build_src();
-  Hotel hotel{&src};
+  Hotel hotel{};
+
+  auto guest = "juan.camaney@aol.com";
+  hotel.reserve(guest, "101", {2024,12,19}, Days(3));
+  hotel.reserve(guest, "102", {2024,12,20});
+  hotel.reserve(guest, "103", {2024,12,31}, Days(4));
 
   SECTION("is_available_on") {
     REQUIRE(hotel.rooms().size() == 8);
@@ -91,7 +98,7 @@ TEST_CASE("Hotel", "[Hotel]") {
   SECTION("cancel") {
     auto room = hotel.room("101");
     SECTION("Case: success") {
-      hotel.cancel("A-001");
+      hotel.cancel("W-0001");
       REQUIRE(hotel.is_available_on(room, {2024,12,19}));
     }
     SECTION("Case: failed") {
@@ -100,22 +107,22 @@ TEST_CASE("Hotel", "[Hotel]") {
   }
   SECTION("checkin") {
     auto utc_stamp  = DateTime{ seconds{1763152245} }; // 2025-11-14 20:30:45 UTC
-    hotel.checkin("A-001", utc_stamp);
+    hotel.checkin("W-0001", utc_stamp);
 
     auto r = hotel.room_reservations("101").front();
     REQUIRE(r.checkin_at == utc_stamp);
   }
   SECTION("checkout") {
     auto utc_stamp = DateTime{ seconds{1763238645} }; // 2025-11-15 20:30:45 UTC
-    hotel.checkout("A-001", utc_stamp);
+    hotel.checkout("W-0001", utc_stamp);
 
     auto r = hotel.room_reservations("101").front();
     REQUIRE(r.checkout_at == utc_stamp);
   }
   SECTION("find reservations") {
     SECTION("by ID") {
-      auto r = hotel.reservation("A-001");
-      REQUIRE(r.id == "A-001");
+      auto r = hotel.reservation("W-0001");
+      REQUIRE(r.id == "W-0001");
     }
     SECTION("by Room") {
       SECTION("Case: with reservations") {
@@ -135,11 +142,11 @@ TEST_CASE("Hotel", "[Hotel]") {
     }
     SECTION("by starting date") {
       auto got = hotel.reservations_starting_on(Date{2024,12,31});
-      REQUIRE(got.front().id == "A-003");
+      REQUIRE(got.front().id == "W-0003");
     }
     SECTION("by ending date") {
       auto got = hotel.reservations_ending_on({2025,01,04});
-      REQUIRE(got.front().id == "A-003");
+      REQUIRE(got.front().id == "W-0003");
     }
   }
   SECTION("notes") {
@@ -185,14 +192,15 @@ R"(Rates:
 
 TEST_CASE("Room class", "[Room]") {
   auto src = build_src();
+  Hotel hotel{};
   SECTION("construction") {
-    auto room = Hotel{&src}.room("101");
+    auto room = hotel.room("101");
     REQUIRE(room.id == "101");
     REQUIRE(room.capacity == 1);
     REQUIRE(room.amenities() == Amenities{Wifi});
   }
   SECTION("has_amenities") {
-    auto room = Hotel{&src}.room("103");
+    auto room = hotel.room("103");
     SECTION("Case: true") {
       REQUIRE(room.has_amenities({}));
       REQUIRE(room.has_amenities({Balcony}));
@@ -227,7 +235,7 @@ TEST_CASE("Room class", "[Room]") {
 
 TEST_CASE("Rate::Calculator", "[Calculator]") {
   auto src = build_src();
-  Hotel hotel{&src};
+  Hotel hotel{};
   Rate::Calculator calc(&src);
   auto standard_room = hotel.room("103");
   auto premium_room = hotel.room("101"); // with Wifi
