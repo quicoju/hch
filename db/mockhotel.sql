@@ -11,15 +11,17 @@ INSERT OR IGNORE INTO rooms (id, name, capacity)
 VALUES
   (1, '101', 1),
   (2, '102', 1),
-  (3, '103', 1),
+  (3, '103', 3),
   (4, '201', 1),
   (5, '202', 1),
-  (6, '203', 1);
+  (6, '203', 1),
+  (7, '301', 1),
+  (8, '302', 3);
 
 INSERT OR IGNORE INTO rooms_amenities (room_id, amenity_name)
 VALUES
   (1, 'Wifi'),
-  (2, 'Wifi'),    (2,'Balcony'),
+  (2, 'Wifi'),
   (3, 'Wifi'),    (3,'Balcony'),
   (4, 'Balcony'), (4,'AirConditioning'),
   (5, 'Wifi'),

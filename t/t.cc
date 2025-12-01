@@ -30,7 +30,8 @@ static GlobalSetup global_setup;
 #include "Hotel.hh"
 
 TEST_CASE("Hotel", "[Hotel]") {
-  Hotel hotel{};
+  build_src();
+  Hotel hotel{conn_str()};
 
   auto guest = "juan.camaney@aol.com";
   hotel.reserve(guest, "101", {2024,12,19}, Days(3));
@@ -192,7 +193,7 @@ R"(Rates:
 
 TEST_CASE("Room class", "[Room]") {
   auto src = build_src();
-  Hotel hotel{};
+  Hotel hotel{conn_str()};
   SECTION("construction") {
     auto room = hotel.room("101");
     REQUIRE(room.id == "101");
@@ -235,7 +236,7 @@ TEST_CASE("Room class", "[Room]") {
 
 TEST_CASE("Rate::Calculator", "[Calculator]") {
   auto src = build_src();
-  Hotel hotel{};
+  Hotel hotel{conn_str()};
   Rate::Calculator calc(&src);
   auto standard_room = hotel.room("103");
   auto premium_room = hotel.room("101"); // with Wifi
@@ -321,7 +322,7 @@ TEST_CASE("Guest") {
  */
 #include "Reservation.hh"
 TEST_CASE("Reservation") {
-  auto src = build_src();
+  auto src = build_src_with_reservations();
   SECTION("find_by_id") {
     SECTION("Case: found") {
       auto got = Reservation::find_by_id("A-001", &src);
