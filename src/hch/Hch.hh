@@ -209,15 +209,14 @@ private:
   void list_reservations(const Tokens& tokens)
   {
     const string usage{
-    "list-reservations "
-      "[--starting_on=DATE | --ending_on=DATE | --guest=ID | --room=ID]"
+    "list-reservations --starting-on=DATE | --ending-on=DATE | --guest=ID | --room=ID"
     };
     Reservations reservations{};
 
-    if (auto str = value_for("--starting_on", tokens)) {
+    if (auto str = value_for("--starting-on", tokens)) {
       reservations = hotel.reservations_starting_on(parse_date(*str).first);
     }
-    else if (auto str = value_for("--ending_on", tokens)) {
+    else if (auto str = value_for("--ending-on", tokens)) {
       reservations = hotel.reservations_ending_on(parse_date(*str).first);
     }
     else if (auto guest = value_for("--guest", tokens)) {
