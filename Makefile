@@ -59,7 +59,7 @@ hch$(PY_SUFFIX): libhch.a $(PY_BINDINGS)
 	$(CXX) $(CXXFLAGS) -shared $(PY_INCLUDE) $(PY_BINDINGS) $(LDFLAGS) -L. -lhch -o $@
 
 # A clean target to remove the built files
-.PHONY: clean cleandb bindings
+.PHONY: clean cleandb bindings test_py
 
 test: HotelTests hch
 	@echo
@@ -79,6 +79,11 @@ cleandb:
 	rm -f db/hotel.db 2>/dev/null
 
 bindings: hch$(PY_SUFFIX)
+
+test_py: bindings
+	@echo "PYTHON BINDINGS"
+	@echo "---------------"
+	python3 t/t.py
 
 clean:
 	rm -f *.o HotelTests hch db/*.db *.a *so
