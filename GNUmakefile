@@ -37,13 +37,13 @@ libhch.a: $(OBJS)
 
 main.o: src/hch/*.hh src/views/*.hh
 hch: libhch.a main.o
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -o $@ main.o $(LDFLAGS)
 
 t.o: src/*.hh t/backend/*hh
 
 # The rule to build the test executable
 HotelTests: libhch.a t.o
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS) -lCatch2Main -lCatch2
+	$(CXX) $(CXXFLAGS) -o $@ t.o $(LDFLAGS) -lCatch2Main -lCatch2
 
 db/hotel.db: db/schema.sql
 	sqlite3 db/hotel.db ".read $^"
