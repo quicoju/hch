@@ -1,6 +1,6 @@
 CXX = c++
 
-CXXFLAGS = -Wall -std=c++23 \
+CXXFLAGS = -Wall -std=c++23 -fPIC \
 	-I/usr/local/include \
 	-I./src \
     -I./src/views \
@@ -49,8 +49,17 @@ HotelTests: libhch.a t.o
 db/hotel.db: db/schema.sql
 	sqlite3 db/hotel.db ".read $>"
 
+# build the Python bindings (by "so" name)
+# use the PHONY "bindings" target instead)
+PY_SUFFIX != python3-config --extension-suffix
+PY_INCLUDE != python3 -m pybind11 --includes
+PY_BINDINGS = src/bindings/py_bindings.cc
+
+hch$(PY_SUFFIX): libhch.a $(PY_BINDINGS)
+	$(CXX) $(CXXFLAGS) -shared $(PY_INCLUDE) $(PY_BINDINGS) $(LDFLAGS) -L. -lhch -o $@
+
 # A clean target to remove the built files
-.PHONY: clean cleandb
+.PHONY: clean cleandb bindings
 
 test: HotelTests hch
 	@echo
@@ -69,8 +78,10 @@ mockhotel: database
 cleandb:
 	rm -f db/hotel.db 2>/dev/null
 
+bindings: hch$(PY_SUFFIX)
+
 clean:
-	rm -f *.o HotelTests hch db/*.db
+	rm -f *.o HotelTests hch db/*.db *.a *so
 
 help:
 	@echo "Available backends: memory, sqlite"
