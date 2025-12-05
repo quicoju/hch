@@ -6,10 +6,11 @@ CXXFLAGS = -Wall -std=c++23 \
     -I./src/views \
 	-I./t/backend
 
-LDFLAGS = -L/usr/local/lib \
+LDFLAGS = -L/usr/local/lib -L. \
 	-lboost_date_time \
 	-lreadline \
-    -lyaml-cpp
+    -lyaml-cpp \
+	-lhch
 
 # Possible backends are:
 # - memory
@@ -36,13 +37,13 @@ libhch.a: $(OBJS)
 	ar rcs $@ $>
 
 main.o: src/hch/*.hh src/views/*.hh
-hch: $(OBJS) main.o
+hch: libhch.a main.o
 	$(CXX) $(CXXFLAGS) -o $@ $> $(LDFLAGS)
 
 t.o: src/*.hh t/backend/*hh
 
 # The rule to build the test executable
-HotelTests: $(OBJS) t.o
+HotelTests: libhch.a t.o
 	$(CXX) $(CXXFLAGS) -o $@ $> $(LDFLAGS) -lCatch2Main -lCatch2
 
 db/hotel.db: db/schema.sql
