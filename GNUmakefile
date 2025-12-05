@@ -31,6 +31,9 @@ OBJS = Guest.o Hotel.o RateCalculator.o Reservation.o Room.o Room_common.o
 %.o: %.cc src/concepts.hh GNUmakefile
 	$(CXX) $(CXXFLAGS) -c $<
 
+libhch.a: $(OBJS)
+	ar rcs $@ $^
+
 main.o: src/hch/*.hh src/views/*.hh
 hch: $(OBJS) main.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
