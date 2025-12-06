@@ -27,6 +27,7 @@ jobs:
           libreadline-dev \
           libboost-all-dev \
           libyaml-cpp-dev \
+          python3-pybind11 \
           g++ \
           sqlite3
 
