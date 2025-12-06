@@ -48,17 +48,16 @@ HotelTests: libhch.a t.o
 db/hotel.db: db/schema.sql
 	sqlite3 db/hotel.db ".read $^"
 
-# build the Python bindings (by "so" name)
-# use the PHONY "bindings" target instead)
-PY_SUFFIX != python3-config --extension-suffix
-PY_INCLUDE != python3 -m pybind11 --includes
-PY_BINDINGS = src/bindings/py_bindings.cc
-
-hch$(PY_SUFFIX): libhch.a $(PY_BINDINGS)
-	$(CXX) $(CXXFLAGS) -shared $(PY_INCLUDE) $(PY_BINDINGS) $(LDFLAGS) -L. -lhch -o $@
+# The bindings and test_py targets are included
+# from the relevant makefile.
+# MAKECMDGOALS contains all the goals selected
+# by the user in the command line
+ifneq (,$(filter bindings test_py,$(MAKECMDGOALS)))
+include src/bindings/Makefile.inc
+endif
 
 # A clean target to remove the built files
-.PHONY: clean cleandb bindings test_py
+.PHONY: clean cleandb
 
 test: HotelTests hch
 	@echo
@@ -76,13 +75,6 @@ mockhotel: database
 
 cleandb:
 	rm -f db/hotel.db 2>/dev/null
-
-bindings: hch$(PY_SUFFIX)
-
-test_py: bindings
-	@echo "PYTHON BINDINGS"
-	@echo "---------------"
-	python3 t/t.py
 
 clean:
 	rm -f *.o HotelTests hch db/*.db *.a *.so
