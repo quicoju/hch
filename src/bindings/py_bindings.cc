@@ -16,4 +16,14 @@ PYBIND11_MODULE(hch, m) {
   py::class_<Date>(m, "Date")
     .def(py::init<int, int, int>())
     .def("__str__", [](const Date& d) { return _dstr(d); });
+
+  py::class_<Days>(m, "Days") // ...duration
+    .def(py::init<long>())
+    .def("__int__", [](const Days& d) { return d.days(); });
+
+  py::class_<Period>(m, "Period")
+    .def(py::init<Date, Days>())
+    .def_property_readonly("begin", &Period::begin)
+    .def_property_readonly("end", &Period::end)
+    .def("__str__", [](const Period& p) { return _pstr(p); });
 }
