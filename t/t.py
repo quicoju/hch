@@ -11,31 +11,27 @@ sys.path.insert(0, '.')
 
 try:
     import hch
-    print("ok - Import the hotel module", end="")
+    print("ok - Import the hotel module")
 except ImportError as e:
     print(f" ...not ok: {e}")
     sys.exit(1)
 
 def test_bindings():
-    msg = ""
+    def ok(assertion, msg):
+        assert assertion, f"no ok - {msg}"
+        print(f"ok - {msg}")
+
     try:
         # Test the "concepts"
         # ===================
-        msg = "Create a `Date'"
         date = hch.Date(2024, 1, 15)
-        assert f"{date}" == "2024-01-15", f"not ok - {msg}"
-        print(f"ok - {msg}")
+        ok(f"{date}" == "2024-01-15", "Create a `Date'")
 
-        msg = "Create `Days'"
         duration = hch.Days(5);
-        # TODO: there should not be need to int() it
-        assert int(duration) == 5, f"not ok - {msg}"
-        print(f"ok - {msg}")
+        ok(int(duration) == 5, "Create `Days'")
 
-        msg = "Create a `Period'"
         period = hch.Period(date, duration)
-        assert f"{period}" == "[2024-Jan-15/2024-Jan-19]", f"not ok - {msg}"
-        print(f"ok - {msg}")
+        ok(f"{period}" == "[2024-Jan-15/2024-Jan-19]", "Create a `Period'")
 
     except Exception as e:
         print(f" ...not ok: {e}")
