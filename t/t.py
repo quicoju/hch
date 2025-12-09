@@ -50,7 +50,10 @@ def test_bindings():
         exit(1);
 
 if __name__ == "__main__":
-    conn = "db/bindings.db"
-    os.system(f'sqlite3 {conn} ".read db/schema.sql"')
-    os.system(f'sqlite3 {conn} ".read db/mockhotel.sql"')
+    conn = ""
+    if (BACKEND == 'sqlite'):
+        conn = "db/bindings.db"
+        os.system(f'sqlite3 {conn} ".read db/schema.sql"')
+        os.system(f'sqlite3 {conn} ".read db/mockhotel.sql"')
+
     test_bindings()
