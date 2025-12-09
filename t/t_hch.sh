@@ -24,16 +24,15 @@ run_test() {
     local expected="$@"
     local expected_=$(echo -n "$@" | tr '\n' '@')
 
-    echo -n "Test $test_name ..."
     prepare_test
     local got=$(echo -e "$input" | $TEST_CMD 2>&1)
     local got_=$(echo -n "$got" | tr '\n' '@')
 
     if echo "$got_" | grep -q -- "$expected_"; then
-        echo "ok"
+        echo "ok - $test_name"
         return 0
     else
-        echo "FAIL"
+        echo "not ok - $test_name"
         echo
         echo "* EXPECTED:"
         echo "$expected"
