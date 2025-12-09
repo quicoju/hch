@@ -42,4 +42,12 @@ PYBIND11_MODULE(hch, m) {
     .def_readonly("checkin_at", &Reservation::checkin_at)
     .def_readonly("checkout_at", &Reservation::checkout_at)
     .def("__str__", [](const Reservation& r){ return r.id; });
+
+  // Hotel
+  // =====
+  py::class_<Hotel>(m, "Hotel")
+    .def(py::init<std::string>(), py::arg("conn_str") = "")
+    .def("reserve", &Hotel::reserve,
+         py::arg("guest"), py::arg("room"),
+         py::arg("date") = Today, py::arg("duration") = Days{1});
 }

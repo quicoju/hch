@@ -33,6 +33,18 @@ def test_bindings():
         period = hch.Period(date, duration)
         ok(f"{period}" == "[2024-Jan-15/2024-Jan-19]", "Create a `Period'")
 
+        # Hotel
+        # =====
+        hotel = hch.Hotel(conn_str=""); # in-memory connection
+        reservation = hotel.reserve("juan.camaney@aol.com", "101")
+        ok(reservation == "W-0001", "hotel.reserve")
+
+        # Reservation
+        # ===========
+
+        # "Room"
+        # ======
+
     except Exception as e:
         print(f" ...not ok: {e}")
 
