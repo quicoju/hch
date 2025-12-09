@@ -34,5 +34,12 @@ PYBIND11_MODULE(hch, m) {
     .def_readonly("capacity", &Room::capacity)
     .def("__str__", [](const Room& r){ return r.id; });
 
-
+  // Reservation
+  // ===========
+  py::class_<Reservation>(m, "Reservation")
+    .def_readonly("id", &Reservation::id)
+    .def_readonly("period", &Reservation::period)
+    .def_readonly("checkin_at", &Reservation::checkin_at)
+    .def_readonly("checkout_at", &Reservation::checkout_at)
+    .def("__str__", [](const Reservation& r){ return r.id; });
 }
