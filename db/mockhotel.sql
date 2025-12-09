@@ -1,3 +1,7 @@
+-- Remove existing reservations
+-- ============================
+DELETE FROM Reservations;
+
 -- Rooms
 -- =====
 INSERT OR IGNORE INTO amenities(name)
