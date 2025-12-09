@@ -10,7 +10,7 @@ print(f"The backend is *{BACKEND}*")
 sys.path.insert(0, '.')
 
 try:
-    import hch
+    from hch import Hotel, Date, Days, Period
     print("ok - Import the hotel module")
 except ImportError as e:
     print(f" ...not ok: {e}")
@@ -24,18 +24,18 @@ def test_bindings():
     try:
         # Test the "concepts"
         # ===================
-        date = hch.Date(2024, 1, 15)
+        date = Date(2024, 1, 15)
         ok(f"{date}" == "2024-01-15", "Create a `Date'")
 
-        duration = hch.Days(5);
+        duration = Days(5);
         ok(int(duration) == 5, "Create `Days'")
 
-        period = hch.Period(date, duration)
+        period = Period(date, duration)
         ok(f"{period}" == "[2024-Jan-15/2024-Jan-19]", "Create a `Period'")
 
         # Hotel
         # =====
-        hotel = hch.Hotel(conn_str=""); # in-memory connection
+        hotel = Hotel(conn_str=""); # in-memory connection
         reservation = hotel.reserve("juan.camaney@aol.com", "101")
         ok(reservation == "W-0001", "hotel.reserve")
 
