@@ -35,7 +35,7 @@ def test_bindings():
 
         # Hotel
         # =====
-        hotel = Hotel(conn_str=""); # in-memory connection
+        hotel = Hotel(conn_str=conn);
         reservation = hotel.reserve("juan.camaney@aol.com", "101")
         ok(reservation == "W-0001", "hotel.reserve")
 
@@ -47,6 +47,10 @@ def test_bindings():
 
     except Exception as e:
         print(f" ...not ok: {e}")
+        exit(1);
 
 if __name__ == "__main__":
+    conn = "db/bindings.db"
+    os.system(f'sqlite3 {conn} ".read db/schema.sql"')
+    os.system(f'sqlite3 {conn} ".read db/mockhotel.sql"')
     test_bindings()
