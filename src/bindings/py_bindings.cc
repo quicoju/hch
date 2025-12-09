@@ -2,6 +2,8 @@
 #include <pybind11/stl.h>
 #include <pybind11/chrono.h>
 
+// TODO: it may be a good idea to include the
+// concepts.hh instead of relying on "Hotel.hh"
 #include "Hotel.hh"
 
 namespace py = pybind11;
@@ -11,19 +13,26 @@ PYBIND11_MODULE(hch, m) {
 
   // bindings the relevant "concepts"
   // ================================
-  // TODO: it may be a good idea to include the
-  // concepts.hh instead of relying on "Hotel.hh"
   py::class_<Date>(m, "Date")
     .def(py::init<int, int, int>())
-    .def("__str__", [](const Date& d) { return _dstr(d); });
+    .def("__str__", [](const Date& d){ return _dstr(d); });
 
   py::class_<Days>(m, "Days") // ...duration
     .def(py::init<long>())
-    .def("__int__", [](const Days& d) { return d.days(); });
+    .def("__int__", [](const Days& d){ return d.days(); });
 
   py::class_<Period>(m, "Period")
     .def(py::init<Date, Days>())
     .def_property_readonly("begin", &Period::begin)
     .def_property_readonly("end", &Period::end)
-    .def("__str__", [](const Period& p) { return _pstr(p); });
+    .def("__str__", [](const Period& p){ return _pstr(p); });
+
+  // Room
+  // ====
+  py::class_<Room>(m, "Room")
+    .def_readonly("name", &Room::id)
+    .def_readonly("capacity", &Room::capacity)
+    .def("__str__", [](const Room& r){ return r.id; });
+
+
 }
