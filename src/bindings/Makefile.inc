@@ -1,7 +1,9 @@
-# NOTE: This file isn't aimed to be executed directly.
-# This is file is assumed to be included by the main
-# Makefile when at wither the "bindings" or "test_py"
-# targets are requested by the user
+# NOTE
+# ====
+# This is file expects to be included by the top-level Makefile,
+# and not to be loaded directly using "make".
+# It extends the top-level Makefile by providing the "bindings" and the
+# "test_py" targets.
 
 PY_SUFFIX != python3-config --extension-suffix
 PY_INCLUDE != python3 -m pybind11 --includes
@@ -19,4 +21,4 @@ test_py: $(PY_TARGET)
 	@echo "---------------------"
 	python3 t/t.py
 
-.PHONY: bindings
+.PHONY: bindings test_py
