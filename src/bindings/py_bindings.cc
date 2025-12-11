@@ -47,8 +47,10 @@ PYBIND11_MODULE(Hch, m) {
   // =====
   py::class_<Hotel>(m, "Hotel")
     .def(py::init<std::string>(), py::arg("conn_str") = "")
+    .def("record_guest", &Hotel::record_guest)
     .def("reserve", &Hotel::reserve,
          py::arg("guest"), py::arg("room"),
          py::arg("date") = Today, py::arg("duration") = Days{1})
-    .def("record_guest", &Hotel::record_guest);
+    .def("reservation", &Hotel::reservation);
+
 }

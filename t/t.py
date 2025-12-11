@@ -36,14 +36,22 @@ def test_bindings():
         # Hotel
         # =====
         hotel = Hotel(conn_str=conn);
-        reservation = hotel.reserve("juan.camaney@aol.com", "101")
-        ok(reservation == "W-0001", "hotel.reserve")
 
         email = "john.bedney@mail.com"
         ok(hotel.record_guest(email) == email, "hotel.record_guest")
 
+        rsv_id = hotel.reserve(email, "101", date)
+        ok(rsv_id == "W-0001", "hotel.reserve")
+
         # Reservation
         # ===========
+        reservation = hotel.reservation(rsv_id)
+        ok(reservation.id == rsv_id, "reservation.id")
+        ok(f"{reservation}" == rsv_id, "reservation.__str__()")
+        ok(str(reservation.period) == "[2024-Jan-15/2024-Jan-15]", "reservation.period")
+        ok(reservation.checkin_at == None, "reservation.checkin_at")
+        ok(reservation.checkout_at == None, "reservation.checkout_at")
+
 
         # "Room"
         # ======
