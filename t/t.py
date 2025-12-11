@@ -39,6 +39,9 @@ def test_bindings():
         reservation = hotel.reserve("juan.camaney@aol.com", "101")
         ok(reservation == "W-0001", "hotel.reserve")
 
+        email = "john.bedney@mail.com"
+        ok(hotel.record_guest(email) == email, "hotel.record_guest")
+
         # Reservation
         # ===========
 
