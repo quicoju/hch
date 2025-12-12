@@ -57,6 +57,7 @@ PYBIND11_MODULE(Hch, m) {
     .def("reservations_starting_on", &Hotel::reservations_starting_on)
     .def("reservations_ending_on", &Hotel::reservations_ending_on)
     .def("reservation_notes", &Hotel::reservation_notes)
-    .def("patch_reservation_notes", &Hotel::patch_reservation_notes);
-
+    .def("patch_reservation_notes", &Hotel::patch_reservation_notes)
+    .def("room", &Hotel::room)
+    .def("room_amenities", &Hotel::room_amenities);
 }

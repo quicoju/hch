@@ -77,6 +77,8 @@ def test_bindings():
     Wifi: 5
 Discount: 5%''', "hotel.patch_reservation_notes")
 
+        amenities = hotel.room_amenities("201")
+        ok(amenities == {'AirConditioning', 'Balcony'}, "hotel.room_amenities")
 
         # Reservation
         # ===========
@@ -87,9 +89,12 @@ Discount: 5%''', "hotel.patch_reservation_notes")
         ok(reservation.checkin_at == None, "reservation.checkin_at")
         ok(reservation.checkout_at == None, "reservation.checkout_at")
 
-
         # "Room"
         # ======
+        room = hotel.room("101")
+        ok(str(room) == "101", "hotel.room")
+        ok(room.name == "101", "room.name")
+        ok(room.capacity == 1, "room.capacity")
 
     except Exception as e:
         print(f" ...not ok: {e}")
