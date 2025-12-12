@@ -43,6 +43,14 @@ PYBIND11_MODULE(Hch, m) {
     .def_readonly("checkout_at", &Reservation::checkout_at)
     .def("__str__", [](const Reservation& r){ return r.id; });
 
+  // RateReport
+  // ==========
+  py::class_<RateReport>(m, "RateReport")
+    .def_readonly("date", &RateReport::date)
+    .def_readonly("duration", &RateReport::duration)
+    .def_readonly("total", &RateReport::total)
+    .def_readonly("details", &RateReport::details);
+
   // Hotel
   // =====
   py::class_<Hotel>(m, "Hotel")
@@ -59,5 +67,7 @@ PYBIND11_MODULE(Hch, m) {
     .def("reservation_notes", &Hotel::reservation_notes)
     .def("patch_reservation_notes", &Hotel::patch_reservation_notes)
     .def("room", &Hotel::room)
-    .def("room_amenities", &Hotel::room_amenities);
+    .def("room_amenities", &Hotel::room_amenities)
+    .def("rate_report_for", &Hotel::rate_report_for, py::arg("room"),
+         py::arg("date") = Today, py::arg("duration") = Days{1});
 }

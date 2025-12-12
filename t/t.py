@@ -80,6 +80,17 @@ Discount: 5%''', "hotel.patch_reservation_notes")
         amenities = hotel.room_amenities("201")
         ok(amenities == {'AirConditioning', 'Balcony'}, "hotel.room_amenities")
 
+        report = hotel.rate_report_for("101", Date(2025,12,12))
+        ok(str(report.date) == "2025-12-12", "hotel.rate_report_for")
+        ok(int(report.duration) == 1, "report.duration")
+        ok(report.total == 105.99, "report.total")
+        ok(report.details == {
+            'Base': 100.99,
+            'Capacity': 0.0,
+            'Wifi': 5.0,
+        }, "report.details")
+
+
         # Reservation
         # ===========
         reservation = hotel.reservation(rsv_id)
