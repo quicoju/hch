@@ -51,6 +51,8 @@ PYBIND11_MODULE(Hch, m) {
     .def("reserve", &Hotel::reserve,
          py::arg("guest"), py::arg("room"),
          py::arg("date") = Today, py::arg("duration") = Days{1})
-    .def("reservation", &Hotel::reservation);
+    .def("reservation", &Hotel::reservation)
+    .def("room_reservations", &Hotel::room_reservations)
+    .def("guest_reservations", &Hotel::guest_reservations);
 
 }

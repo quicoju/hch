@@ -43,6 +43,12 @@ def test_bindings():
         rsv_id = hotel.reserve(email, "101", date)
         ok(rsv_id == "W-0001", "hotel.reserve")
 
+        reservations = hotel.room_reservations("101");
+        ok(reservations.pop().id == "W-0001", "hotel.room_reservations")
+
+        reservations = hotel.guest_reservations(email)
+        ok(reservations.pop().id == "W-0001", "hotel.guest_reservations")
+
         # Reservation
         # ===========
         reservation = hotel.reservation(rsv_id)
