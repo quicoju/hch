@@ -49,6 +49,12 @@ def test_bindings():
         reservations = hotel.guest_reservations(email)
         ok(reservations.pop().id == "W-0001", "hotel.guest_reservations")
 
+        reservations = hotel.reservations_starting_on(Date(2024, 1, 15))
+        ok(reservations.pop().id == "W-0001", "hotel.reservations_starting_on")
+
+        reservations = hotel.reservations_ending_on(Date(2024, 1, 16))
+        ok(reservations.pop().id == "W-0001", "hotel.reservations_ending_on")
+
         # Reservation
         # ===========
         reservation = hotel.reservation(rsv_id)

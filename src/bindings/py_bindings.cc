@@ -53,6 +53,8 @@ PYBIND11_MODULE(Hch, m) {
          py::arg("date") = Today, py::arg("duration") = Days{1})
     .def("reservation", &Hotel::reservation)
     .def("room_reservations", &Hotel::room_reservations)
-    .def("guest_reservations", &Hotel::guest_reservations);
+    .def("guest_reservations", &Hotel::guest_reservations)
+    .def("reservations_starting_on", &Hotel::reservations_starting_on)
+    .def("reservations_ending_on", &Hotel::reservations_ending_on);
 
 }
