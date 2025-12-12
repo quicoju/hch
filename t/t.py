@@ -53,7 +53,30 @@ def test_bindings():
         ok(reservations.pop().id == "W-0001", "hotel.reservations_starting_on")
 
         reservations = hotel.reservations_ending_on(Date(2024, 1, 16))
-        ok(reservations.pop().id == "W-0001", "hotel.reservations_ending_on")
+        ok(reservations[0].id == "W-0001", "hotel.reservations_ending_on")
+
+        ok(hotel.reservation_notes(f"{reservations[0]}") ==
+'''Rates:
+  date: 2024-01-15
+  days: 1
+  total: 105.99
+  details:
+    Base: 100.99
+    Capacity: 0
+    Wifi: 5''', "hotel.reservation_notes")
+
+        hotel.patch_reservation_notes(reservations[0].id, "Discount", "5%")
+        ok(hotel.reservation_notes(f"{reservations[0]}") ==
+'''Rates:
+  date: 2024-01-15
+  days: 1
+  total: 105.99
+  details:
+    Base: 100.99
+    Capacity: 0
+    Wifi: 5
+Discount: 5%''', "hotel.patch_reservation_notes")
+
 
         # Reservation
         # ===========
