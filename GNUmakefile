@@ -19,15 +19,28 @@ BACKEND ?= memory
 BACKEND_DIR = src/backend/$(BACKEND)
 CXXFLAGS += -I$(BACKEND_DIR)
 
-VPATH = src src/backend src/hch $(BACKEND_DIR) t
-
 # Backend-specific flags
 ifeq ($(BACKEND),sqlite)
-LDFLAGS += -lsqlite3
 CXXFLAGS += -DUSE_$(BACKEND)
+LDFLAGS += -lsqlite3
+endif
+
+# Possible log formatters:
+# - fmt
+# - std (fallback)
+LOG_FMT ?= std
+
+# Log formatter
+ifeq ($(LOG_FMT),fmt)
+CXXFLAGS += -DSPDLOG_FMT_EXTERNAL
+LDFLAGS += -lfmt
+else
+CXXFLAGS += -DSPDLOG_USE_STD_FORMAT
 endif
 
 OBJS = Guest.o Hotel.o RateCalculator.o Reservation.o Room.o Room_common.o
+
+VPATH = src src/backend src/hch $(BACKEND_DIR) t
 
 %.o: %.cc src/concepts.hh GNUmakefile
 	$(CXX) $(CXXFLAGS) -c $<
