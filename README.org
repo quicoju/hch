@@ -1,27 +1,31 @@
 * hch - Hotel Check-in Helper
 
 ** About
-This tool (WIP) assists hotel business with the task of handling room reservations.
+This library (WIP) provides the logic for creating software to automate the task
+of managing reservations in a hotel business.
 
 ** Dependencies
 This software requires a Unix based OS to build and run, currently it's being developed
 and tested under Gentoo GNU/Linux and OpenBSD.
 
-The following dependencies are required:
+*** Required
   + A c++20 compiler (GCC or LLVM)
   + [[https://www.boost.org/][Boost]]
   + The GNU [[https://tiswww.cwru.edu/php/chet/readline/rltop.html][Readline]]
-  + The [[https://sqlite.org/cintro.html][sqlite C/C++ interface]] (for the "sqlite" backend)
-  + The [[https://sqlite.org/cli.html][sqlite3]] cli (for testing the "sqlite" backend)
-  + The [[https://github.com/catchorg/Catch2][Catch2]] test framework (for running the unit tests)
+  + The [[https://sqlite.org/cintro.html][sqlite C/C++ interface]] ("sqlite" backend)
   + [[https://github.com/jbeder/yaml-cpp][yaml-cpp]] which is a YAML parser and emitter in C++
+
+*** Optional
+  + The [[https://github.com/catchorg/Catch2][Catch2]] test framework (for running unit tests)
+  + The [[https://sqlite.org/cli.html][sqlite3]] cli (running integration tests for the "sqlite" backend)
+  + [[https://pybind11.readthedocs.io/en/stable/][pybind11]] for building the Python bindings
 
 ** Build
 The project contains 2 different "Makefiles", one for BSDMake =Makefile= and
 one for GNUMake =GNUmakefile=.
 
-This software supports two different backends:
-  + memory: handles only in-memory data, and everything is flushed after exit
+This software supports two different back-ends for storing information:
+  + memory: for volatile data, everything is flushed after the process terminates
   + sqlite: handles data persistence using sqlite
 
 The "memory" backend is the default, since it's very convenient for development.
@@ -47,11 +51,28 @@ To clean the compiled code and test data, use the ~clean~ target.
 *Note:* Take into account that changing the "BACKEND" requires you to ~clean~ and
 rebuild the whole project.
 
+*** Python bindings
+
+This library provides symbol bindings for creating clients using the Python
+language. To build the bindings use the ~bindings~ target.
+
+#+begin_src sh
+  make bindings
+#+end_src
+
+Check out the bindings [[file:t/t.py][test file]] to see an example on how to use the bindings.
+
 ** Test
 In order to run the tests, use the make's ~test~ target.
 #+begin_src sh
   make clean test                  # in-memory backend
   make BACKEND=sqlite clean test
+#+end_src
+
+To run the tests for the Python bindings use the ~test_py~ target.
+#+begin_src sh
+  make test_py                      # in-memory
+  make BACKEND=sqlite clean test_py
 #+end_src
 
 ** Run
