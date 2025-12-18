@@ -28,6 +28,7 @@ jobs:
           libboost-all-dev \
           libyaml-cpp-dev \
           python3-pybind11 \
+          libspdlog-dev \
           g++ \
           sqlite3
 
