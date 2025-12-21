@@ -23,7 +23,7 @@ Hotel::Hotel(string_view conn_str)
       }
       catch (const spdlog::spdlog_ex&) {
         logger->set_level(spdlog::level::info);
-        Log::warn("Invalid \"HCH_LOG_LEVEL\", ignoring");
+        Log::warn(logger, "Invalid \"HCH_LOG_LEVEL\", ignoring");
       }
     }
     else {
