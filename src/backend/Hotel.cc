@@ -1,12 +1,38 @@
 #include <algorithm>
+#include <memory>
+
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/basic_file_sink.h>
 
 #include "Hotel.hh"
 #include "Annotate.hh"
 #include "Reservation.hh"
 
+
 Hotel::Hotel(string_view conn_str)
   : src{ Backend{conn_str} }
-{}
+{
+  if (auto log_file = std::getenv("HCH_LOG_FILE")) {
+    auto sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(log_file);
+
+    logger = std::make_shared<spdlog::logger>("hch", sink);
+
+    if (auto level = std::getenv("HCH_LOG_LEVEL")) {
+      try {
+        logger->set_level(spdlog::level::from_str(level));
+      }
+      catch (const spdlog::spdlog_ex&) {
+        logger->set_level(spdlog::level::info);
+        logger->warn("Invalid \"HCH_LOG_LEVEL\", ignoring");
+      }
+    }
+    else {
+      logger->set_level(spdlog::level::info);
+    }
+  }
+
+  if (logger) logger->debug("Creating a Hotel instance");
+}
 
 bool Hotel::is_available_on(Date date, Duration dur, size_t n_rooms)
 {
