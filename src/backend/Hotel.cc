@@ -23,15 +23,14 @@ Hotel::Hotel(string_view conn_str)
       }
       catch (const spdlog::spdlog_ex&) {
         logger->set_level(spdlog::level::info);
-        logger->warn("Invalid \"HCH_LOG_LEVEL\", ignoring");
+        Log::warn("Invalid \"HCH_LOG_LEVEL\", ignoring");
       }
     }
     else {
       logger->set_level(spdlog::level::info);
     }
   }
-
-  if (logger) logger->debug("Creating a Hotel instance");
+  Log::debug(logger, "Creating a Hotel instance");
 }
 
 bool Hotel::is_available_on(Date date, Duration dur, size_t n_rooms)

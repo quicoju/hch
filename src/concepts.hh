@@ -6,7 +6,9 @@
 #include <set>
 #include <string>
 #include <vector>
+
 #include <boost/date_time/gregorian/gregorian.hpp>
+#include <spdlog/spdlog.h>
 
 #include "config.h"
 
@@ -49,4 +51,39 @@ struct RateReport {
   Duration duration;
   double total;
   RateDetails details;
+};
+
+
+// log utils
+// =========
+struct Log {
+  template<typename FmtStr, typename... Args>
+  static inline void
+  trace(std::shared_ptr<spdlog::logger>& l, FmtStr&& fmt, Args&&... args) {
+    if (l) l->trace(std::forward<FmtStr>(fmt), std::forward<Args>(args)...);
+  }
+
+  template<typename FmtStr, typename... Args>
+  static inline void
+  debug(std::shared_ptr<spdlog::logger>& l, FmtStr&& fmt, Args&&... args) {
+    if (l) l->debug(std::forward<FmtStr>(fmt), std::forward<Args>(args)...);
+  }
+
+  template<typename FmtStr, typename... Args>
+  static inline void
+  info(std::shared_ptr<spdlog::logger>& l, FmtStr&& fmt, Args&&... args) {
+    if (l) l->info(std::forward<FmtStr>(fmt), std::forward<Args>(args)...);
+  }
+
+  template<typename FmtStr, typename... Args>
+  static inline void
+  warn(std::shared_ptr<spdlog::logger>& l, FmtStr&& fmt, Args&&... args) {
+    if (l) l->warn(std::forward<FmtStr>(fmt), std::forward<Args>(args)...);
+  }
+
+  template<typename FmtStr, typename... Args>
+  static inline void
+  error(std::shared_ptr<spdlog::logger>& l, FmtStr&& fmt, Args&&... args) {
+    if (l) l->error(std::forward<FmtStr>(fmt), std::forward<Args>(args)...);
+  }
 };
