@@ -14,6 +14,7 @@ and tested under Gentoo GNU/Linux and OpenBSD.
   + The GNU [[https://tiswww.cwru.edu/php/chet/readline/rltop.html][Readline]]
   + The [[https://sqlite.org/cintro.html][sqlite C/C++ interface]] ("sqlite" backend)
   + [[https://github.com/jbeder/yaml-cpp][yaml-cpp]] which is a YAML parser and emitter in C++
+  + [[https://github.com/gabime/spdlog][spdlog]] for logging
 
 *** Optional
   + The [[https://github.com/catchorg/Catch2][Catch2]] test framework (for running unit tests)
@@ -148,3 +149,14 @@ Now it should be possible to execute the =hch=:
    - show-reservation
    - unset-room
    #+end_src
+
+*** Enable logging
+Setting the ~HCH_LOG_LEVEL~ environment variable to any of the following values,
+will enable the application logging:
++ debug
++ info
++ warning
++ error
+
+By default all the logging information is sent to =stdout=, but it can otherwise
+be sent to a given file by setting ~HCH_LOG_FILE~ environment variable.
