@@ -1,10 +1,6 @@
 #include <algorithm>
 #include <memory>
 
-#include <spdlog/spdlog.h>
-#include <spdlog/sinks/basic_file_sink.h>
-#include <spdlog/sinks/stdout_sinks.h>
-
 #include "Hotel.hh"
 #include "Annotate.hh"
 #include "Reservation.hh"
@@ -12,15 +8,9 @@
 
 Hotel::Hotel(string_view conn_str)
   : src{ Backend{conn_str} }
+  , logger{ Log::logger() }
 {
-    if (auto level = std::getenv("HCH_LOG_LEVEL")) {
-      auto file = std::getenv("HCH_LOG_FILE");
-      logger = file
-        ? spdlog::basic_logger_mt("hch", file)
-        : spdlog::stdout_logger_mt("hch");
-      logger->set_level(spdlog::level::from_str(level));
-    }
-  Log::debug(logger, "Creating a Hotel instance");
+  Log::debug(logger, "Starting up the Hotel...");
 }
 
 bool Hotel::is_available_on(Date date, Duration dur, size_t n_rooms)
