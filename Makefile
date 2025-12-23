@@ -38,6 +38,17 @@ LDFLAGS += -lfmt
 CXXFLAGS += -DSPDLOG_USE_STD_FORMAT
 .endif
 
+# Possible GUI backends
+# - Qt
+GUI ?= 0
+
+.if $(GUI) == Qt
+QT_CXXFLAGS != pkg-config --cflags Qt6Widgets Qt6Core
+QT_LDFLAGS != pkg-config --libs Qt6Widgets Qt6Core
+CXXFLAGS += $(QT_CXXFLAGS)
+LDFLAGS += $(QT_LDFLAGS)
+.endif
+
 OBJS = Guest.o Hotel.o RateCalculator.o Reservation.o Room.o Room_common.o
 
 .SUFFIXES: .o .cc .hh

@@ -38,6 +38,18 @@ else
 CXXFLAGS += -DSPDLOG_USE_STD_FORMAT
 endif
 
+# Possible GUI backends
+# - Qt
+GUI ?= 0
+
+ifeq ($(GUI), Qt)
+QT_CXXFLAGS := $(shell pkg-config --cflags Qt6Widgets Qt6Core)
+QT_LDFLAGS := $(pkg-config --libs Qt6Widgets Qt6Core)
+CXXFLAGS += $(QT_CXXFLAGS)
+LDFLAGS += $(QT_LDFLAGS)
+endif
+
+
 OBJS = Guest.o Hotel.o RateCalculator.o Reservation.o Room.o Room_common.o
 
 VPATH = src src/backend src/hch $(BACKEND_DIR) t
