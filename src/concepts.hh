@@ -67,7 +67,6 @@ struct Log {
   LEVEL(std::shared_ptr<spdlog::logger>& l, FmtStr&& fmt, Args&&... args) { \
     if (l) l->LEVEL(std::forward<FmtStr>(fmt), std::forward<Args>(args)...); \
   }
-  ADD_LOGGING_FUNCTION(trace);
   ADD_LOGGING_FUNCTION(debug);
   ADD_LOGGING_FUNCTION(info);
   ADD_LOGGING_FUNCTION(warn);
