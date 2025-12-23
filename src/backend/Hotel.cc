@@ -5,7 +5,6 @@
 #include "Annotate.hh"
 #include "Reservation.hh"
 
-
 Hotel::Hotel(string_view conn_str)
   : src{ Backend{conn_str} }
   , logger{ Log::logger() }

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <spdlog/spdlog.h>
-
 #include "concepts.hh"
 #include "Guest.hh"
 #include "Room.hh"
@@ -208,5 +206,5 @@ struct Hotel {
 
 private:
   Backend src;
-  std::shared_ptr<spdlog::logger> logger;
+  Logger logger;
 };

@@ -60,11 +60,13 @@ struct RateReport {
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_sinks.h>
 
+using Logger = std::shared_ptr<spdlog::logger>;
+
 struct Log {
 #define ADD_LOGGING_FUNCTION(LEVEL) \
   template<typename FmtStr, typename... Args> \
   static inline void \
-  LEVEL(std::shared_ptr<spdlog::logger>& l, FmtStr&& fmt, Args&&... args) { \
+  LEVEL(Logger& l, FmtStr&& fmt, Args&&... args) { \
     if (l) l->LEVEL(std::forward<FmtStr>(fmt), std::forward<Args>(args)...); \
   }
   ADD_LOGGING_FUNCTION(debug);
@@ -72,9 +74,9 @@ struct Log {
   ADD_LOGGING_FUNCTION(warn);
   ADD_LOGGING_FUNCTION(error);
 
-  static std::shared_ptr<spdlog::logger> logger()
+  static Logger logger()
   {
-    auto logger = std::shared_ptr<spdlog::logger>{};
+    auto logger = Logger{};
     if (auto level = std::getenv("HCH_LOG_LEVEL")) {
       auto file = std::getenv("HCH_LOG_FILE");
       logger = file
