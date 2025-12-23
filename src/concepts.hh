@@ -57,33 +57,15 @@ struct RateReport {
 // log utils
 // =========
 struct Log {
-  template<typename FmtStr, typename... Args>
-  static inline void
-  trace(std::shared_ptr<spdlog::logger>& l, FmtStr&& fmt, Args&&... args) {
-    if (l) l->trace(std::forward<FmtStr>(fmt), std::forward<Args>(args)...);
+#define ADD_LOGGING_FUNCTION(LEVEL) \
+  template<typename FmtStr, typename... Args> \
+  static inline void \
+  LEVEL(std::shared_ptr<spdlog::logger>& l, FmtStr&& fmt, Args&&... args) { \
+    if (l) l->LEVEL(std::forward<FmtStr>(fmt), std::forward<Args>(args)...); \
   }
-
-  template<typename FmtStr, typename... Args>
-  static inline void
-  debug(std::shared_ptr<spdlog::logger>& l, FmtStr&& fmt, Args&&... args) {
-    if (l) l->debug(std::forward<FmtStr>(fmt), std::forward<Args>(args)...);
-  }
-
-  template<typename FmtStr, typename... Args>
-  static inline void
-  info(std::shared_ptr<spdlog::logger>& l, FmtStr&& fmt, Args&&... args) {
-    if (l) l->info(std::forward<FmtStr>(fmt), std::forward<Args>(args)...);
-  }
-
-  template<typename FmtStr, typename... Args>
-  static inline void
-  warn(std::shared_ptr<spdlog::logger>& l, FmtStr&& fmt, Args&&... args) {
-    if (l) l->warn(std::forward<FmtStr>(fmt), std::forward<Args>(args)...);
-  }
-
-  template<typename FmtStr, typename... Args>
-  static inline void
-  error(std::shared_ptr<spdlog::logger>& l, FmtStr&& fmt, Args&&... args) {
-    if (l) l->error(std::forward<FmtStr>(fmt), std::forward<Args>(args)...);
-  }
+  ADD_LOGGING_FUNCTION(trace);
+  ADD_LOGGING_FUNCTION(debug);
+  ADD_LOGGING_FUNCTION(info);
+  ADD_LOGGING_FUNCTION(warn);
+  ADD_LOGGING_FUNCTION(error);
 };
