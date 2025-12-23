@@ -3,6 +3,7 @@
 
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/sinks/stdout_sinks.h>
 
 #include "Hotel.hh"
 #include "Annotate.hh"
@@ -12,24 +13,13 @@
 Hotel::Hotel(string_view conn_str)
   : src{ Backend{conn_str} }
 {
-  if (auto log_file = std::getenv("HCH_LOG_FILE")) {
-    auto sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(log_file);
-
-    logger = std::make_shared<spdlog::logger>("hch", sink);
-
     if (auto level = std::getenv("HCH_LOG_LEVEL")) {
-      try {
-        logger->set_level(spdlog::level::from_str(level));
-      }
-      catch (const spdlog::spdlog_ex&) {
-        logger->set_level(spdlog::level::info);
-        Log::warn(logger, "Invalid \"HCH_LOG_LEVEL\", ignoring");
-      }
+      auto file = std::getenv("HCH_LOG_FILE");
+      logger = file
+        ? spdlog::basic_logger_mt("hch", file)
+        : spdlog::stdout_logger_mt("hch");
+      logger->set_level(spdlog::level::from_str(level));
     }
-    else {
-      logger->set_level(spdlog::level::info);
-    }
-  }
   Log::debug(logger, "Creating a Hotel instance");
 }
 
