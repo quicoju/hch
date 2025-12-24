@@ -8,7 +8,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(Hch, m) {
+PYBIND11_MODULE(hch, m) {
   m.doc() = "hch - Python Bindings";
 
   // bindings the relevant "concepts"

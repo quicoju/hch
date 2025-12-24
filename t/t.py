@@ -10,7 +10,7 @@ print(f"The backend is *{BACKEND}*")
 sys.path.insert(0, '.')
 
 try:
-    from Hch import Hotel, Date, Days, Period
+    from hch import Hotel, Date, Days, Period
     print("ok - Import the hotel module")
 except ImportError as e:
     print(f" ...not ok: {e}")
