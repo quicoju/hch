@@ -21,6 +21,12 @@ def test_bindings():
         assert assertion, f"no ok - {msg}"
         print(f"ok - {msg}")
 
+    def throws_ok(f, expected_error, msg):
+        try:
+            f()
+        except BaseException as e:
+            ok(str(e) == expected_error, msg)
+
     try:
         # Test the "concepts"
         # ===================
@@ -90,9 +96,13 @@ Discount: 5%''', "hotel.patch_reservation_notes")
             'Wifi': 5.0,
         }, "report.details")
 
+        hotel.cancel(rsv_id)
+        throws_ok(lambda: hotel.reservation(rsv_id),
+                  f"Reservation {rsv_id} doesn't exist", "hotel.cancel")
 
         # Reservation
         # ===========
+        rsv_id = hotel.reserve(email, "101", date)
         reservation = hotel.reservation(rsv_id)
         ok(reservation.id == rsv_id, "reservation.id")
         ok(f"{reservation}" == rsv_id, "reservation.__str__()")
