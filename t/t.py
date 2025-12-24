@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import datetime as dt
+
 import sys
 import os
 
@@ -95,6 +97,16 @@ Discount: 5%''', "hotel.patch_reservation_notes")
             'Capacity': 0.0,
             'Wifi': 5.0,
         }, "report.details")
+
+        checkin_dt = dt.datetime.combine(dt.date(2024, 12, 15), dt.time(12, 30))
+        hotel.checkin(rsv_id, checkin_dt)
+        rsv = hotel.reservation(rsv_id)
+        ok(f"{rsv.checkin_at}" == "2024-12-15 12:30:00", "hotel.checkin")
+
+        checkout_dt = dt.datetime.combine(dt.date(2024, 12, 16), dt.time(11, 00))
+        hotel.checkout(rsv_id, checkout_dt)
+        rsv = hotel.reservation(rsv_id)
+        ok(f"{rsv.checkout_at}" == "2024-12-16 11:00:00", "hotel.checkout")
 
         hotel.cancel(rsv_id)
         throws_ok(lambda: hotel.reservation(rsv_id),
