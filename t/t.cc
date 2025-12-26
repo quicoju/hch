@@ -6,8 +6,7 @@
 
 #define APPROX(N) (Catch::Matchers::WithinAbs((N), 0.001))
 
-#include <boost/date_time/gregorian/gregorian.hpp>
-using Days = boost::gregorian::days;
+using Days = std::chrono::days;
 
 #ifdef USE_sqlite
 #include "t_sqlite.hh"
@@ -34,28 +33,28 @@ TEST_CASE("Hotel", "[Hotel]") {
   Hotel hotel{conn_str()};
 
   auto guest = "juan.camaney@aol.com";
-  hotel.reserve(guest, "101", {2024,12,19}, Days(3));
-  hotel.reserve(guest, "102", {2024,12,20});
-  hotel.reserve(guest, "103", {2024,12,31}, Days(4));
+  hotel.reserve(guest, "101", 2024y/12/19d, Days(3));
+  hotel.reserve(guest, "102", 2024y/12/20d);
+  hotel.reserve(guest, "103", 2024y/12/31d, Days(4));
 
   SECTION("is_available_on") {
     REQUIRE(hotel.rooms().size() == 8);
-    Date date{2025, 01, 02};
+    Date date = 2025y/01/02d;
     REQUIRE_FALSE(hotel.is_available_on(date, Days{2}, 30));
     REQUIRE(hotel.is_available_on(date, Days{2}, 2));
     REQUIRE(hotel.is_available_on(date));
   }
   SECTION("is_available_on (room)") {
     auto room = hotel.room("101");
-    Date date{2024, 12, 23};
-    REQUIRE(hotel.is_available_on(room, {2024, 12, 22}));
+    Date date = 2024y/12/23d;
+    REQUIRE(hotel.is_available_on(room, 2024y/12/22d));
     REQUIRE(hotel.is_available_on(room, date));
     REQUIRE(hotel.is_available_on(room, date, Days{2}));
-    REQUIRE(!hotel.is_available_on(room, {2024, 12, 19}));
-    REQUIRE(!hotel.is_available_on(room, {2024, 12, 21}, Days{3}));
+    REQUIRE(!hotel.is_available_on(room, 2024y/12/19d));
+    REQUIRE(!hotel.is_available_on(room, 2024y/12/21d, Days{3}));
   }
   SECTION("find_available_on") {
-    Date date{2024, 12, 19};
+    Date date = 2024y/12/19;
     SECTION("Case: available w/o amenity requirements") {
       auto available = hotel.find_available_on(date, Days{3});
       REQUIRE(available.size() == 6);
@@ -86,21 +85,21 @@ TEST_CASE("Hotel", "[Hotel]") {
     auto room = hotel.room("101");
     std::string guest{"juan.camaney@aol.com"};
     SECTION("Case: success") {
-      REQUIRE(hotel.reserve(guest, "101", {2024,11,10}) == "W-0004");
-      REQUIRE_FALSE(hotel.is_available_on(room, {2024,11,10}));
+      REQUIRE(hotel.reserve(guest, "101", 2024y/11/10d) == "W-0004");
+      REQUIRE_FALSE(hotel.is_available_on(room, 2024y/11/10d));
 
-      REQUIRE(hotel.reserve(guest, "101", {2024,11,12}, Days{2}) == "W-0005");
-      REQUIRE_FALSE(hotel.is_available_on(room, {2024,11,13}));
+      REQUIRE(hotel.reserve(guest, "101", 2024y/11/12d, Days{2}) == "W-0005");
+      REQUIRE_FALSE(hotel.is_available_on(room, 2024y/11/13d));
     }
     SECTION("Case: failed") {
-      REQUIRE_THROWS_AS(hotel.reserve(guest, "101", {2024,12,20}), std::runtime_error);
+      REQUIRE_THROWS_AS(hotel.reserve(guest, "101", 2024y/12/20d), std::runtime_error);
     }
   }
   SECTION("cancel") {
     auto room = hotel.room("101");
     SECTION("Case: success") {
       hotel.cancel("W-0001");
-      REQUIRE(hotel.is_available_on(room, {2024,12,19}));
+      REQUIRE(hotel.is_available_on(room, 2024y/12/19d));
     }
     SECTION("Case: failed") {
       REQUIRE_THROWS_AS(hotel.cancel("A-010"), std::invalid_argument);
@@ -142,18 +141,18 @@ TEST_CASE("Hotel", "[Hotel]") {
       }
     }
     SECTION("by starting date") {
-      auto got = hotel.reservations_starting_on(Date{2024,12,31});
+      auto got = hotel.reservations_starting_on(2024y/12/31d);
       REQUIRE(got.front().id == "W-0003");
     }
     SECTION("by ending date") {
-      auto got = hotel.reservations_ending_on({2025,01,04});
+      auto got = hotel.reservations_ending_on(2025y/01/04d);
       REQUIRE(got.front().id == "W-0003");
     }
   }
   SECTION("notes") {
     auto room = hotel.room("101");
     auto guest = "juan.camaney@aol.com";
-    auto id = hotel.reserve(guest, "101", {2024,11,10});
+    auto id = hotel.reserve(guest, "101", 2024y/11/10d);
     std::string default_note{
 R"(Rates:
   date: 2024-11-10
@@ -257,15 +256,15 @@ TEST_CASE("Rate::Calculator", "[Calculator]") {
   SECTION("rate_for") {
     SECTION("Case: standard room with default rate") {
       auto room = hotel.room("301");
-      auto rate = calc.rate_for(room, {2024, 12, 23}, Days{1});
+      auto rate = calc.rate_for(room, 2024y/12/23d, Days{1});
       REQUIRE_THAT(rate, APPROX(58.99)); // base rate only
     }
     SECTION("Case: premium room with specific rate") {
-      auto rate = calc.rate_for(premium_room, {2024, 12, 23}, Days{1});
+      auto rate = calc.rate_for(premium_room, 2024y/12/23d, Days{1});
       REQUIRE_THAT(rate, APPROX(100.99 + 5.00));
     }
     SECTION("Case: single room w/o amenities multiple nights") {
-      auto rate = calc.rate_for(single_room, {2024, 12, 23}, Days{3});
+      auto rate = calc.rate_for(single_room, 2024y/12/23d, Days{3});
       auto expected = (58.99) * 3;
       REQUIRE_THAT(rate, APPROX(expected));
     }
@@ -275,7 +274,7 @@ TEST_CASE("Rate::Calculator", "[Calculator]") {
       SECTION("Case: standard rate") {
         auto big_room = hotel.room("302"); // capacity 3
         auto expected = base_rate + capacity_surcharge;
-        auto rate = calc.rate_for(big_room, {2024, 12, 23}, Days{1});
+        auto rate = calc.rate_for(big_room, 2024y/12/23d, Days{1});
         REQUIRE_THAT(rate, APPROX(expected));
       }
       SECTION("Case: standard rate with amenities") {
@@ -284,7 +283,7 @@ TEST_CASE("Rate::Calculator", "[Calculator]") {
         expected += base_rate * 0.20 * 2; // additional capacity
         expected += 5.00 + 15.00;         // wifi + balcony
         expected *= 4;                    // 4 nights
-        auto rate = calc.rate_for(big_room, {2024, 12, 23}, Days{4});
+        auto rate = calc.rate_for(big_room, 2024y/12/23d, Days{4});
         REQUIRE_THAT(rate, APPROX(expected));
       }
     }
@@ -329,7 +328,7 @@ TEST_CASE("Reservation") {
       REQUIRE(got.id == "A-001");
       REQUIRE(got.guest_id == "juan.camaney@aol.com");
       REQUIRE(got.room_id == "101");
-      REQUIRE(got.period == Period{{2024,12,19},Days{3}});
+      REQUIRE(got.period == Period{2024y/12/19d, Days{3}});
     }
     SECTION("Case: not found") {
       REQUIRE_THROWS_AS(Reservation::find_by_id("A-103", &src), std::invalid_argument);
@@ -357,32 +356,32 @@ TEST_CASE("Reservation") {
   }
   SECTION("find_by_starting_date") {
     SECTION("Case: found") {
-      auto got = Reservation::find_by_starting_date({2024,12,31}, &src);
+      auto got = Reservation::find_by_starting_date(2024y/12/31d, &src);
       REQUIRE(got.front().id == "A-003");
     }
     SECTION("Case: not found") {
-      REQUIRE(Reservation::find_by_starting_date({2025,12,12}, &src).empty());
+      REQUIRE(Reservation::find_by_starting_date(2025y/12/12d, &src).empty());
     }
   }
   SECTION("find_by_ending_date") {
     SECTION("Case: found") {
-      auto got = Reservation::find_by_ending_date({2025,01,04}, &src);
+      auto got = Reservation::find_by_ending_date(2025y/01/04d, &src);
       REQUIRE(got.front().id == "A-003");
     }
     SECTION("Case: not found") {
-      REQUIRE(Reservation::find_by_ending_date({2024,12,12}, &src).empty());
+      REQUIRE(Reservation::find_by_ending_date(2024y/12/12d, &src).empty());
     }
   }
   SECTION("reserve") {
     std::string guest_id{ "juan.camaney@aol.com"};
-    auto id = Reservation::reserve(guest_id, "101", {2024,12,12}, Days{5}, "", &src);
+    auto id = Reservation::reserve(guest_id, "101", 2024y/12/12d, Days{5}, "", &src);
     // TODO: this test relies on an incremental counter
     // find a more determinitstic test for this
     REQUIRE(id == "W-0004");
 
     auto rsv = Reservation::find_by_id(id, &src);
     REQUIRE(rsv.room_id == "101");
-    REQUIRE(rsv.period == Period{{2024,12,12}, Days{5}});
+    REQUIRE(rsv.period == Period{2024y/12/12d, Days{5}});
   }
   SECTION("cancel") {
     Reservation::find_by_id("A-001", &src).cancel();
