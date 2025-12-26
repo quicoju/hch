@@ -2,35 +2,74 @@
 
 #include <chrono>
 #include <functional>
+#include <sstream>
 #include <map>
 #include <set>
 #include <string>
 #include <vector>
 
-#include <boost/date_time/gregorian/gregorian.hpp>
 #include <spdlog/spdlog.h>
 
 #include "config.h"
 
-using Date = boost::gregorian::date;
-using DateTime = std::chrono::system_clock::time_point;
-using Days = boost::gregorian::days;
-using Duration = boost::gregorian::date_duration;
-using Period = boost::gregorian::date_period;
 using string_view = std::string_view;
 
-static Date Today{ boost::gregorian::day_clock::local_day() };
+using Date = std::chrono::year_month_day;
+using DateTime = std::chrono::system_clock::time_point;
+using Days = std::chrono::days;
+using Duration = std::chrono::days;
 
-// period string
-static std::string (&_pstr)(const Period&)
-  = boost::gregorian::to_simple_string;
+struct Period {
+  using as_days = std::chrono::time_point<std::chrono::system_clock, Days>;
+
+  Period(Date s, Days d) : start_(s), duration_(d) { }
+
+  inline Date start() const { return start_; }
+  inline Days duration() const { return duration_; }
+  inline Date end() const { return Date{as_days{start()} + duration()}; }
+
+  bool intersects(const Period& other) const
+  {
+    return start() < other.end() && other.start() < end();
+  }
+
+  bool operator==(const Period& other) const
+  {
+    return start() == other.start() && duration() == other.duration();
+  }
+
+private:
+  Date start_;
+  Days duration_;
+};
+
+// TODO: FIX, Today can't be a constant. A long running process
+// might run more than a day and the constant will always return
+// the same value
+static Date Today{ std::chrono::floor<Days>(std::chrono::system_clock::now()) };
 
 // date string
-static std::string (&_dstr)(const Date&)
-  = boost::gregorian::to_iso_extended_string;
+static std::string _dstr(const Date& d)
+{
+  return std::format("{:04}-{:02}-{:02}",
+    int(d.year()), unsigned(d.month()), unsigned(d.day()));
+}
 
-static Date (&from_string)(const std::string&)
-  = boost::gregorian::from_string;
+// period string
+static std::string _pstr(const Period& p)
+{
+  return std::format("[{}/{}]", _dstr(p.start()), _dstr(p.end()));
+}
+
+// Parse date from string
+static Date from_string(const std::string& s) {
+  int year;
+  unsigned int month, day;
+  char separator;
+  std::istringstream ss{s};
+  ss >> year >> separator >> month >> separator >> day;
+  return std::chrono::year{year} / std::chrono::month{month} / std::chrono::day{day};
+}
 
 struct Room;
 using Rooms = std::vector<Room>;
