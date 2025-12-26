@@ -10,7 +10,6 @@ and tested under Gentoo GNU/Linux and OpenBSD.
 
 *** Required
   + A c++20 compiler (GCC or LLVM)
-  + [[https://www.boost.org/][Boost]]
   + The GNU [[https://tiswww.cwru.edu/php/chet/readline/rltop.html][Readline]]
   + The [[https://sqlite.org/cintro.html][sqlite C/C++ interface]] ("sqlite" backend)
   + [[https://github.com/jbeder/yaml-cpp][yaml-cpp]] which is a YAML parser and emitter in C++

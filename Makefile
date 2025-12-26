@@ -7,7 +7,6 @@ CXXFLAGS = -Wall -std=c++23 -fPIC \
 	-I./t/backend
 
 LDFLAGS = -L/usr/local/lib -L. \
-	-lboost_date_time \
 	-lreadline \
     -lyaml-cpp \
 	-lhch
