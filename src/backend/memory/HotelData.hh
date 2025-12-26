@@ -1,32 +1,19 @@
 #pragma once
 
 #include <list>
+#include <set>
 #include <vector>
 
-// ========================================================== //
-// TODO: The definitions enclosed in this box come from the   //
-// "concepts.hh" it's an attempt to decouple the project      //
-// types from the backend. In theory these definitions should //
-// not be coupled. Think about a way of how to minimize this  //
-// duplication without coupling the concepts.                 //
-//                                                            //
-#include <set>                                                //
-#include <chrono>
-#include <boost/date_time/gregorian/gregorian.hpp>            //
-                                                              //
-using Period = boost::gregorian::date_period;                 //
-using Days = boost::gregorian::days;                          //
-using DateTime = std::chrono::system_clock::time_point;       //
-                                                              //
-using string_view = std::string_view;                         //
-                                                              //
-using Amenity = std::string;                                  //
-using Amenities = std::set<Amenity>;                          //
-static inline Amenity AirConditioning_ = "AirConditioning";   //
-static inline Amenity Balcony_ = "Balcony";                   //
-static inline Amenity Wifi_ = "Wifi";                         //
-static inline Amenity MiniBar_ = "MiniBar";                   //
-// ========================================================== //
+using string_view = std::string_view;
+
+
+using Amenity = std::string;
+using Amenities = std::set<Amenity>;
+static inline Amenity AirConditioning_ = "AirConditioning";
+static inline Amenity Balcony_ = "Balcony";
+static inline Amenity Wifi_ = "Wifi";
+static inline Amenity MiniBar_ = "MiniBar";
+
 
 /* Rate information
  * ================
@@ -75,15 +62,20 @@ using GuestsData = std::vector<GuestData>;
 /* Reservation information
  * =======================
  */
+using Date = std::chrono::year_month_day;
+using DateTime = std::chrono::system_clock::time_point;
+using Duration = std::chrono::days;
+
 struct ReservationData{
   ReservationData(
-    string_view id, string_view g, string_view r, Period p, string_view n="")
-    : id{id}, guest_id{g}, room_id{r}, period{p}, notes{n}
+   string_view id, string_view g, string_view r, Date d, Duration dur, string_view n="")
+    : id{id}, guest_id{g}, room_id{r}, start{d}, dur{dur}, notes{n}
   {}
   std::string id;       // client facing reservation id
   std::string guest_id;
   std::string room_id;
-  Period period;
+  Date start;
+  Duration dur;
   // TODO: add a rate snapshot that captures
   // the rates at the time of the resrvation,
   // don't want to charge a different rate
