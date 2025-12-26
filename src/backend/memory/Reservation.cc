@@ -20,7 +20,7 @@ Reservation::reserve(string_view guest_id,
   auto next_id = reservations.size() + 1;
   std::string id = "W-000" + std::to_string(next_id);
   std::string n{notes};
-  reservations.emplace_back(id, guest_id, room_id, Period{date, dur}, n);
+  reservations.emplace_back(id, guest_id, room_id, date, dur, n);
 
   return id;
 }
@@ -67,7 +67,7 @@ Reservation::find_by_id(std::string_view id, Backend* src)
 {
   for (const auto& r: src->reservations) {
     if (r.id == id) {
-      Reservation rsv {id, r.guest_id, r.room_id, r.period, r.notes, src};
+      Reservation rsv {id, r.guest_id, r.room_id, {r.start, r.dur}, r.notes, src};
       rsv.checkin_at = r.checkin_at;
       rsv.checkout_at = r.checkout_at;
       return rsv;
@@ -82,7 +82,7 @@ find_by_predicate(std::function<bool(const ReservationData&)> p, Backend* src)
   Reservations reservations{};
   for (const auto& r: src->reservations) {
     if (p(r)) {
-      Reservation rsv{r.id, r.guest_id, r.room_id, r.period, r.notes, src};
+      Reservation rsv{r.id, r.guest_id, r.room_id, {r.start, r.dur}, r.notes, src};
       rsv.checkin_at = r.checkin_at;
       rsv.checkout_at = r.checkout_at;
       reservations.push_back(std::move(rsv));
@@ -108,13 +108,13 @@ Reservation::find_by_guest(string_view id, Backend* src)
 Reservations
 Reservation::find_by_starting_date(const Date& date, Backend* src)
 {
-  auto p = [date](const auto& r){ return r.period.begin() == date; };
+  auto p = [date](const auto& r){ return r.start == date; };
   return find_by_predicate(p, src);
 }
 
 Reservations
 Reservation::find_by_ending_date(const Date& date, Backend* src)
 {
-  auto p = [date](const auto& r){ return r.period.end() == date; };
+  auto p = [date](const auto& r){ return Period{r.start, r.dur}.end() == date; };
   return find_by_predicate(p, src);
 }
