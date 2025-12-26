@@ -73,7 +73,7 @@ run_test "List reservations shows period" \
  reserve --guest=juan.camaney@aol.com --during=2024-12-01+3d
  list-reservations
  quit" \
-'W-0001: "\[2024-Dec-01/2024-Dec-04\]"'
+'W-0001: "\[2024-12-01/2024-12-04\]"'
 
 run_test "List reservations by guest" \
 "reserve --guest=juan.camaney@aol.com --room=101 --during=2024-12-01+3d
@@ -81,8 +81,8 @@ run_test "List reservations by guest" \
  list-reservations --guest=juan.camaney@aol.com
  quit" \
 '---
-W-0001: "\[2024-Dec-01/2024-Dec-04\]"
-W-0002: "\[2024-Dec-01/2024-Dec-04\]"'
+W-0001: "\[2024-12-01/2024-12-04\]"
+W-0002: "\[2024-12-01/2024-12-04\]"'
 
 run_test "List reservations by starting date" \
 "reserve --guest=juan.camaney@aol.com --room=101 --during=2024-12-01+3d
@@ -91,8 +91,8 @@ run_test "List reservations by starting date" \
  list-reservations --starting-on=2024-12-01
  quit" \
 '---
-W-0001: "\[2024-Dec-01/2024-Dec-04\]"
-W-0002: "\[2024-Dec-01/2024-Dec-04\]"'
+W-0001: "\[2024-12-01/2024-12-04\]"
+W-0002: "\[2024-12-01/2024-12-04\]"'
 
 run_test "List reservations by ending date" \
 "reserve --guest=juan.camaney@aol.com --room=101 --during=2024-12-01+3d
@@ -100,7 +100,7 @@ run_test "List reservations by ending date" \
  list-reservations --ending-on=2024-11-06
  quit" \
 '---
-W-0002: "\[2024-Nov-01/2024-Nov-06\]"'
+W-0002: "\[2024-11-01/2024-11-06\]"'
 
 run_test "List amenities" \
 "set-room 103
@@ -119,7 +119,7 @@ run_test "Cancel reservation" \
  quit" \
 'Reservation cancelled
 .*---
-W-0002: "\[2025-Jan-05/2025-Jan-10\]"'
+W-0002: "\[2025-01-05/2025-01-10\]"'
 
 run_test "Check-in/out reservation" \
 "set-room 101
@@ -132,7 +132,7 @@ run_test "Check-in/out reservation" \
 .*---
 Reservation checked-out
 .*---
-W-0001: "\[2024-Dec-01/2024-Dec-04\]"'
+W-0001: "\[2024-12-01/2024-12-04\]"'
 
 run_test "show-reservation" \
 "reserve --guest=juan.camaney@aol.com --room=101
