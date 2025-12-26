@@ -29,7 +29,7 @@ VALUES (?, ?,
   (SELECT id FROM rooms  WHERE name = ?),
   ?, ?, ?)
 )");
-  stmt2.execute(next_id, id, guest_id, room_id, _dstr(date), dur.days(), notes);
+  stmt2.execute(next_id, id, guest_id, room_id, _dstr(date), dur.count(), notes);
   return id;
 }
 

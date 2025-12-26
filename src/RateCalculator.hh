@@ -50,14 +50,14 @@ namespace Rate {
       for (const auto& amenity : room.amenities())
         total += amenity_rate_for(amenity);
 
-      return total * duration.days(); // maybe consider the date season here
+      return total * duration.count(); // maybe consider the date season here
     }
 
     RateReport
     rate_report_for(Room& room, const Date& date, const Duration& dur) const
     {
       auto total = rate_for(room, date, dur);
-      auto days = dur.days();
+      auto days = dur.count();
 
       RateDetails details{
         {"Base", base_rate_for(room) * days},
