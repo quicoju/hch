@@ -139,7 +139,7 @@ private:
     if (!regex_match(s, match, re))
       throw std::invalid_argument{"Invalid date format"};
 
-    auto date = Date::from_string(match[1]);
+    Date date{match[1]};
     Duration duration{match[2].matched ? stoi(match[2]) : 1};
 
     return {date, duration};

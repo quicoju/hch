@@ -20,16 +20,21 @@ using Duration = std::chrono::days;
 
 struct Date : std::chrono::year_month_day
 {
-  Date() : std::chrono::year_month_day{} {}
+  Date()
+    : std::chrono::year_month_day{} {}
 
   Date(const std::chrono::year_month_day& d)
     : std::chrono::year_month_day{d} {}
+
+  Date(const std::string& s)
+    : std::chrono::year_month_day{ from_string(s) } {}
 
   std::string as_string() const
   {
     return std::format("{:04}-{:02}-{:02}",
        int(year()), unsigned(month()), unsigned(day()));
   }
+
   static Date from_string(const std::string& s)
   {
     int year;

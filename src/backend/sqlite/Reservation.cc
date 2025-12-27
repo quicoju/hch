@@ -82,7 +82,7 @@ reservations_from(SQLite::Statement& stmt, Backend* src)
       stmt.get<std::string>(0),
       stmt.get<std::string>(1),
       stmt.get<std::string>(2),
-      { Date::from_string(stmt.get<std::string>(3)), Days{stmt.get<int>(4)} },
+      { Date{stmt.get<std::string>(3)}, Days{stmt.get<int>(4)} },
       stmt.get<std::string>(7),
       src,
     };
