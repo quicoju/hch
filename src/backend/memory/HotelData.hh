@@ -62,19 +62,19 @@ using GuestsData = std::vector<GuestData>;
 /* Reservation information
  * =======================
  */
-using Date = std::chrono::year_month_day;
+using Date_ = std::chrono::year_month_day;
 using DateTime = std::chrono::system_clock::time_point;
 using Duration = std::chrono::days;
 
 struct ReservationData{
   ReservationData(
-   string_view id, string_view g, string_view r, Date d, Duration dur, string_view n="")
+   string_view id, string_view g, string_view r, Date_ d, Duration dur, string_view n="")
     : id{id}, guest_id{g}, room_id{r}, start{d}, dur{dur}, notes{n}
   {}
   std::string id;       // client facing reservation id
   std::string guest_id;
   std::string room_id;
-  Date start;
+  Date_ start;
   Duration dur;
   // TODO: add a rate snapshot that captures
   // the rates at the time of the resrvation,
