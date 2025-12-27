@@ -9,9 +9,8 @@
 // Conversion between "chrono::year_month_day" and "datetime.date"
 namespace pybind11::detail {
   template <>
-  struct type_caster<std::chrono::year_month_day> {
-  public:
-    PYBIND11_TYPE_CASTER(std::chrono::year_month_day, _("datetime.date"));
+  struct type_caster<Date> {
+    PYBIND11_TYPE_CASTER(Date, _("datetime.date"));
 
     bool load(handle src, bool)
     {
@@ -28,8 +27,7 @@ namespace pybind11::detail {
       return true;
     }
 
-    static handle
-    cast(const std::chrono::year_month_day& src, return_value_policy, handle)
+    static handle cast(const Date& src, return_value_policy, handle)
     {
       PyDateTime_IMPORT;
       return PyDate_FromDate(int(src.year()), unsigned(src.month()), unsigned(src.day()));
@@ -54,7 +52,7 @@ py::class_<Period>(m, "Period")
     .def("__str__", [](const Period& p){ return p.as_string(); })
     .def("__repr__", [](const Period& p) {
         return std::format("<Period start={} duration={} days>",
-                          _dstr(p.start()), p.duration().count());
+                           p.start().as_string(), p.duration().count());
     });
 
   // Room
@@ -89,7 +87,7 @@ py::class_<Period>(m, "Period")
     .def("reserve", &Hotel::reserve,
          py::arg("guest"),
          py::arg("room"),
-         py::arg("date") = Date{std::chrono::floor<Days>(std::chrono::system_clock::now())},
+         py::arg("date") = Date::today(),
          py::arg("duration") = Days{1})
     .def("cancel", &Hotel::cancel)
     .def("checkin", &Hotel::checkin)
@@ -105,6 +103,6 @@ py::class_<Period>(m, "Period")
     .def("room_amenities", &Hotel::room_amenities)
     .def("rate_report_for", &Hotel::rate_report_for,
          py::arg("room"),
-         py::arg("date") = Date{std::chrono::floor<Days>(std::chrono::system_clock::now())},
+         py::arg("date") = Date::today(),
          py::arg("duration") = Days{1});
 }
