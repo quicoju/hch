@@ -12,7 +12,7 @@ print(f"The backend is *{BACKEND}*")
 sys.path.insert(0, '.')
 
 try:
-    from hch import Hotel, Date, Days, Period
+    from hch import Hotel, Period
     print("ok - Import the hotel module")
 except ImportError as e:
     print(f" ...not ok: {e}")
@@ -32,14 +32,11 @@ def test_bindings():
     try:
         # Test the "concepts"
         # ===================
-        date = Date(2024, 1, 15)
-        ok(f"{date}" == "2024-01-15", "Create a `Date'")
-
-        duration = Days(5);
-        ok(int(duration) == 5, "Create `Days'")
+        date = dt.date(2024, 1, 15)
+        duration = dt.timedelta(days=5)
 
         period = Period(date, duration)
-        ok(f"{period}" == "[2024-Jan-15/2024-Jan-19]", "Create a `Period'")
+        ok(f"{period}" == "[2024-01-15/2024-01-20]", "Create a `Period'")
 
         # Hotel
         # =====
@@ -48,7 +45,7 @@ def test_bindings():
         email = "john.bedney@mail.com"
         ok(hotel.record_guest(email) == email, "hotel.record_guest")
 
-        rsv_id = hotel.reserve(email, "101", date)
+        rsv_id = hotel.reserve(email, "101", date, dt.timedelta(days=1))
         ok(rsv_id == "W-0001", "hotel.reserve")
 
         reservations = hotel.room_reservations("101");
@@ -57,10 +54,10 @@ def test_bindings():
         reservations = hotel.guest_reservations(email)
         ok(reservations.pop().id == "W-0001", "hotel.guest_reservations")
 
-        reservations = hotel.reservations_starting_on(Date(2024, 1, 15))
+        reservations = hotel.reservations_starting_on(dt.date(2024, 1, 15))
         ok(reservations.pop().id == "W-0001", "hotel.reservations_starting_on")
 
-        reservations = hotel.reservations_ending_on(Date(2024, 1, 16))
+        reservations = hotel.reservations_ending_on(dt.date(2024, 1, 16))
         ok(reservations[0].id == "W-0001", "hotel.reservations_ending_on")
 
         ok(hotel.reservation_notes(f"{reservations[0]}") ==
@@ -88,9 +85,9 @@ Discount: 5%''', "hotel.patch_reservation_notes")
         amenities = hotel.room_amenities("201")
         ok(amenities == {'AirConditioning', 'Balcony'}, "hotel.room_amenities")
 
-        report = hotel.rate_report_for("101", Date(2025,12,12))
+        report = hotel.rate_report_for("101", dt.date(2025,12,12), dt.timedelta(days=1))
         ok(str(report.date) == "2025-12-12", "hotel.rate_report_for")
-        ok(int(report.duration) == 1, "report.duration")
+        ok(int(report.duration.days) == 1, "report.duration")
         ok(report.total == 105.99, "report.total")
         ok(report.details == {
             'Base': 100.99,
@@ -114,11 +111,11 @@ Discount: 5%''', "hotel.patch_reservation_notes")
 
         # Reservation
         # ===========
-        rsv_id = hotel.reserve(email, "101", date)
+        rsv_id = hotel.reserve(email, "101", date, dt.timedelta(days=1))
         reservation = hotel.reservation(rsv_id)
         ok(reservation.id == rsv_id, "reservation.id")
         ok(f"{reservation}" == rsv_id, "reservation.__str__()")
-        ok(str(reservation.period) == "[2024-Jan-15/2024-Jan-15]", "reservation.period")
+        ok(str(reservation.period) == "[2024-01-15/2024-01-16]", "reservation.period")
         ok(reservation.checkin_at == None, "reservation.checkin_at")
         ok(reservation.checkout_at == None, "reservation.checkout_at")
 
