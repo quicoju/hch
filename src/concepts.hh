@@ -14,10 +14,27 @@
 
 using string_view = std::string_view;
 
+// Date utils
+// ==========
+/**
+ * @brief Type to keep date and time information
+ */
 using DateTime = std::chrono::system_clock::time_point;
-using Days = std::chrono::days;
+
+/**
+ * @brief Type for a duration measured in days
+ */
 using Duration = std::chrono::days;
 
+/**
+ * @brief Same as the "Duration" type but helps to make
+ * the code more readable
+ */
+using Days = std::chrono::days;
+
+/**
+ * @brief Type to represent a date w/o a time
+ */
 struct Date : std::chrono::year_month_day
 {
   Date()
@@ -26,15 +43,24 @@ struct Date : std::chrono::year_month_day
   Date(const std::chrono::year_month_day& d)
     : std::chrono::year_month_day{d} {}
 
+  /**
+   * @brief Build a Date from a string
+   * @param A date string with the format "YYYY-MM-DD"
+   */
   Date(const std::string& s)
     : std::chrono::year_month_day{ from_string(s) } {}
 
-  std::string as_string() const
+  /**
+   * @brief "Stringify" a date
+   * @return A date string with the format "YYYY-MM-DD"
+   */
+  inline std::string as_string() const
   {
     return std::format("{:04}-{:02}-{:02}",
        int(year()), unsigned(month()), unsigned(day()));
   }
 
+  // See the constructors for the documentation
   static Date from_string(const std::string& s)
   {
     int year;
@@ -45,32 +71,66 @@ struct Date : std::chrono::year_month_day
     return std::chrono::year{year} / std::chrono::month{month} / std::chrono::day{day};
   }
 
-  static Date today()
+  /**
+   * @brief Today's date
+   */
+  static inline Date today()
   {
     return Date{std::chrono::floor<Days>(std::chrono::system_clock::now())};
   }
 };
 
+/**
+ * @brief Type to represent a period of time with days "resolution".
+ * A "Period" is represented as a start "Date"" and a "Duration"
+ */
 struct Period {
+
+  /**
+   * @brief Convenience type to simplify the task of calculating the "end"
+   * date of a period
+   */
   using as_days = std::chrono::time_point<std::chrono::system_clock, Days>;
 
-  Period(Date s, Days d) : start_(s), duration_(d) { }
+  Period(Date s, Duration d) : start_(s), duration_(d) { }
 
+  /**
+   * @brief The "start" date of a period
+   */
   inline Date start() const { return start_; }
-  inline Days duration() const { return duration_; }
-  inline Date end() const { return Date{as_days{start()} + duration()}; }
 
+  /**
+   * @brief The duration in "Days" of the period
+   */
+  inline Days duration() const { return duration_; }
+
+  /**
+   * @brief The "end" date of a period
+   */
+  inline Date end() const { return Date{ as_days{start()} + duration() }; }
+
+  /**
+   * @brief Check if two periods intersect
+   * @return True if the two periods intersect
+   */
   bool intersects(const Period& other) const
   {
     return start() < other.end() && other.start() < end();
   }
 
+  /**
+   * @brief Check if two periods are the same
+   * @return True if the two periods are equal
+   */
   bool operator==(const Period& other) const
   {
     return start() == other.start() && duration() == other.duration();
   }
 
-  // period string
+  /**
+   * @brief String representation of a Period
+   * @return A Period represented as "[StartDate/EndDate]"
+   */
   std::string as_string() const
   {
     return std::format("[{}/{}]", start().as_string(), end().as_string());
@@ -78,7 +138,7 @@ struct Period {
 
 private:
   Date start_;
-  Days duration_;
+  Duration duration_;
 };
 
 struct Room;
