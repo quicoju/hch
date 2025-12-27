@@ -56,10 +56,6 @@ private:
   Days duration_;
 };
 
-// TODO: FIX, Today can't be a constant. A long running process
-// might run more than a day and the constant will always return
-// the same value
-static Date Today{ std::chrono::floor<Days>(std::chrono::system_clock::now()) };
 static Date today()
 {
   return std::chrono::floor<Days>(std::chrono::system_clock::now());
