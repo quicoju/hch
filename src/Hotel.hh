@@ -122,20 +122,20 @@ struct Hotel {
   /**
    * @brief Find the reservations starting on a given date
    *
-   * @param date of the "expected" check-in date, defaults to TODAY
+   * @param date of the "expected" check-in date
    *
    * @return the list of the matching reservations
    */
-  Reservations reservations_starting_on(const Date& d=Today);
+  Reservations reservations_starting_on(const Date&);
 
   /**
    * @brief Find the reservations due on a given date
    *
-   * @param date of the "expected" check-out date, defaults to TODAY
+   * @param date of the "expected" check-out date
    *
    * @return the list of the matching reservations
    */
-  Reservations reservations_ending_on(const Date& d=Today);
+  Reservations reservations_ending_on(const Date&);
 
   /**
    * @brief show all the notes associated to a reservation
