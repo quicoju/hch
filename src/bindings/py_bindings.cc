@@ -51,7 +51,7 @@ py::class_<Period>(m, "Period")
     .def_property_readonly("end", &Period::end)
     .def("intersects", &Period::intersects)
     .def("__eq__", &Period::operator==)
-    .def("__str__", [](const Period& p){ return _pstr(p); })
+    .def("__str__", [](const Period& p){ return p.as_string(); })
     .def("__repr__", [](const Period& p) {
         return std::format("<Period start={} duration={} days>",
                           _dstr(p.start()), p.duration().count());

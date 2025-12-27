@@ -211,7 +211,7 @@ private:
     }
     std::map<string, string> summary;
     for (const auto& r: reservations)
-      summary.insert({r.id, _pstr(r.period)});
+      summary.insert({r.id, r.period.as_string()});
     reply_with(summary);
   }
 

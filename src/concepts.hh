@@ -19,6 +19,13 @@ using DateTime = std::chrono::system_clock::time_point;
 using Days = std::chrono::days;
 using Duration = std::chrono::days;
 
+// date string
+static std::string _dstr(const Date& d)
+{
+  return std::format("{:04}-{:02}-{:02}",
+    int(d.year()), unsigned(d.month()), unsigned(d.day()));
+}
+
 struct Period {
   using as_days = std::chrono::time_point<std::chrono::system_clock, Days>;
 
@@ -38,6 +45,12 @@ struct Period {
     return start() == other.start() && duration() == other.duration();
   }
 
+  // period string
+  std::string as_string() const
+  {
+    return std::format("[{}/{}]", _dstr(start()), _dstr(end()));
+  }
+
 private:
   Date start_;
   Days duration_;
@@ -47,19 +60,6 @@ private:
 // might run more than a day and the constant will always return
 // the same value
 static Date Today{ std::chrono::floor<Days>(std::chrono::system_clock::now()) };
-
-// date string
-static std::string _dstr(const Date& d)
-{
-  return std::format("{:04}-{:02}-{:02}",
-    int(d.year()), unsigned(d.month()), unsigned(d.day()));
-}
-
-// period string
-static std::string _pstr(const Period& p)
-{
-  return std::format("[{}/{}]", _dstr(p.start()), _dstr(p.end()));
-}
 
 // Parse date from string
 static Date from_string(const std::string& s) {
