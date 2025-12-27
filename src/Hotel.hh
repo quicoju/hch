@@ -28,7 +28,7 @@ struct Hotel {
    *
    * @return true if is available, false otherwise
    */
-  bool is_available_on(Room, Date date=Today, Duration dur=Days{1});
+  bool is_available_on(Room, std::optional<Date> date=std::nullopt, Duration dur=Days{1});
 
   /**
    * @brief Return all the available rooms for the given DATE and
@@ -66,7 +66,7 @@ struct Hotel {
    */
   std::string reserve(string_view guest,
                       string_view room,
-                      Date date=Today,
+                      std::optional<Date> date=std::nullopt,
                       Duration dur=Days{1});
 
   /**
@@ -198,7 +198,9 @@ struct Hotel {
    * @param Number of days for the rate to be calculated (defaults to 1)
    */
   const RateReport
-  rate_report_for(string_view room, Date date=Today, Duration dur=Days{1});
+  rate_report_for(string_view room,
+                  std::optional<Date> date=std::nullopt,
+                  Duration dur=Days{1});
 
 
   // Note that can't be patched (see patch_reservation_notes)

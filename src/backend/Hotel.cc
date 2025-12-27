@@ -23,9 +23,9 @@ bool Hotel::is_available_on(Date date, Duration dur, size_t n_rooms)
   return false;
 }
 
-bool Hotel::is_available_on(Room room, Date date, Duration dur)
+bool Hotel::is_available_on(Room room, std::optional<Date> date, Duration dur)
 {
-  Period p{date, dur};
+  Period p{date.value_or(today()), dur};
   const auto& room_agenda = Reservation::find_by_room(room.id, &src);
   auto end = room_agenda.cend();
 
@@ -59,9 +59,10 @@ string_view Hotel::RATES_NOTE = "Rates";
 
 std::string Hotel::reserve(string_view guest_id,
                            string_view room_id,
-                           Date d,
+                           std::optional<Date> date,
                            Duration dur)
 {
+  auto d = date.value_or(today());
   if (!is_available_on(room(room_id), d, dur))
     throw std::runtime_error{"Room is already reserved for overlapping dates"};
 
@@ -151,8 +152,8 @@ const Amenities Hotel::room_amenities(string_view id)
 }
 
 const RateReport
-Hotel::rate_report_for(string_view id, Date _, Duration dur)
+Hotel::rate_report_for(string_view id, std::optional<Date> d, Duration dur)
 {
   auto r = room(id);
-  return Rate::Calculator{&src}.rate_report_for(r, _, dur);
+  return Rate::Calculator{&src}.rate_report_for(r, d.value_or(today()), dur);
 }
