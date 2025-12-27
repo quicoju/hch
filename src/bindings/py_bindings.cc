@@ -89,7 +89,7 @@ py::class_<Period>(m, "Period")
     .def("reserve", &Hotel::reserve,
          py::arg("guest"),
          py::arg("room"),
-         py::arg("date") = Today,
+         py::arg("date") = Date{std::chrono::floor<Days>(std::chrono::system_clock::now())},
          py::arg("duration") = Days{1})
     .def("cancel", &Hotel::cancel)
     .def("checkin", &Hotel::checkin)
@@ -105,6 +105,6 @@ py::class_<Period>(m, "Period")
     .def("room_amenities", &Hotel::room_amenities)
     .def("rate_report_for", &Hotel::rate_report_for,
          py::arg("room"),
-         py::arg("date") = Today,
+         py::arg("date") = Date{std::chrono::floor<Days>(std::chrono::system_clock::now())},
          py::arg("duration") = Days{1});
 }
