@@ -60,6 +60,10 @@ private:
 // might run more than a day and the constant will always return
 // the same value
 static Date Today{ std::chrono::floor<Days>(std::chrono::system_clock::now()) };
+static Date today()
+{
+  return std::chrono::floor<Days>(std::chrono::system_clock::now());
+}
 
 // Parse date from string
 static Date from_string(const std::string& s) {
