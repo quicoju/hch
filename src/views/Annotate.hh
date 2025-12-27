@@ -100,7 +100,7 @@ namespace YAML {
       Emitter e;
       e << Precision(10)
         << BeginMap
-        << Key << "date"    << Value << _dstr(r.date)
+        << Key << "date"    << Value << r.date.as_string()
         << Key << "days"    << Value << r.duration.count()
         << Key << "total"   << Value << r.total
         << Key << "details" << Value << r.details

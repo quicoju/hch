@@ -29,7 +29,7 @@ VALUES (?, ?,
   (SELECT id FROM rooms  WHERE name = ?),
   ?, ?, ?)
 )");
-  stmt2.execute(next_id, id, guest_id, room_id, _dstr(date), dur.count(), notes);
+  stmt2.execute(next_id, id, guest_id, room_id, date.as_string(), dur.count(), notes);
   return id;
 }
 
@@ -82,7 +82,7 @@ reservations_from(SQLite::Statement& stmt, Backend* src)
       stmt.get<std::string>(0),
       stmt.get<std::string>(1),
       stmt.get<std::string>(2),
-      { from_string(stmt.get<std::string>(3)), Days{stmt.get<int>(4)} },
+      { Date::from_string(stmt.get<std::string>(3)), Days{stmt.get<int>(4)} },
       stmt.get<std::string>(7),
       src,
     };
@@ -132,12 +132,12 @@ Reservation::find_by_guest(string_view id, Backend* db)
 Reservations
 Reservation::find_by_starting_date(const Date& date, Backend* db)
 {
-  return find_by_condition("begin_date", _dstr(date), db);
+  return find_by_condition("begin_date", date.as_string(), db);
 }
 
 Reservations
 Reservation::find_by_ending_date(const Date& date, Backend* db)
 {
   auto c = "date(begin_date, '+'||duration_days||' days')";
-  return find_by_condition(c, _dstr(date), db);
+  return find_by_condition(c, date.as_string(), db);
 }

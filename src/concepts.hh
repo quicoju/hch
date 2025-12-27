@@ -14,7 +14,6 @@
 
 using string_view = std::string_view;
 
-//using Date = std::chrono::year_month_day;
 using DateTime = std::chrono::system_clock::time_point;
 using Days = std::chrono::days;
 using Duration = std::chrono::days;

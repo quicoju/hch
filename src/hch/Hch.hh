@@ -119,7 +119,7 @@ private:
     using namespace std;
 
     // provide defaults
-    if (s.empty()) return {today(), Days{1}};
+    if (s.empty()) return {Date::today(), Days{1}};
 
     // if no date is provided but a duration, then make it
     // relative to today's date i.e. +3d
@@ -128,7 +128,7 @@ private:
       smatch match;
       if (!regex_match(s, match, re))
         throw std::invalid_argument{"Invalid duration format"};
-      return {today(), Days{stoi(match[1])}};
+      return {Date::today(), Days{stoi(match[1])}};
     }
 
     // Parse date string with optional duration, i.e.
@@ -139,7 +139,7 @@ private:
     if (!regex_match(s, match, re))
       throw std::invalid_argument{"Invalid date format"};
 
-    Date date{from_string(match[1])};
+    auto date = Date::from_string(match[1]);
     Duration duration{match[2].matched ? stoi(match[2]) : 1};
 
     return {date, duration};
