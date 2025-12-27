@@ -45,7 +45,7 @@ def test_bindings():
         email = "john.bedney@mail.com"
         ok(hotel.record_guest(email) == email, "hotel.record_guest")
 
-        rsv_id = hotel.reserve(email, "101", date, dt.timedelta(days=1))
+        rsv_id = hotel.reserve(email, "101", date)
         ok(rsv_id == "W-0001", "hotel.reserve")
 
         reservations = hotel.room_reservations("101");
@@ -85,7 +85,7 @@ Discount: 5%''', "hotel.patch_reservation_notes")
         amenities = hotel.room_amenities("201")
         ok(amenities == {'AirConditioning', 'Balcony'}, "hotel.room_amenities")
 
-        report = hotel.rate_report_for("101", dt.date(2025,12,12), dt.timedelta(days=1))
+        report = hotel.rate_report_for("101", dt.date(2025,12,12))
         ok(str(report.date) == "2025-12-12", "hotel.rate_report_for")
         ok(int(report.duration.days) == 1, "report.duration")
         ok(report.total == 105.99, "report.total")
@@ -111,13 +111,17 @@ Discount: 5%''', "hotel.patch_reservation_notes")
 
         # Reservation
         # ===========
-        rsv_id = hotel.reserve(email, "101", date, dt.timedelta(days=1))
+        rsv_id = hotel.reserve(email, "101", date)
         reservation = hotel.reservation(rsv_id)
         ok(reservation.id == rsv_id, "reservation.id")
         ok(f"{reservation}" == rsv_id, "reservation.__str__()")
         ok(str(reservation.period) == "[2024-01-15/2024-01-16]", "reservation.period")
         ok(reservation.checkin_at == None, "reservation.checkin_at")
         ok(reservation.checkout_at == None, "reservation.checkout_at")
+
+        # XXX: This test will fail if it's executed at night when the day changes
+        r = hotel.reservation(hotel.reserve(email, "102"))
+        ok(r.period.start == dt.datetime.now().date(), "reservation default date")
 
         # "Room"
         # ======

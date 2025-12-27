@@ -87,8 +87,10 @@ py::class_<Period>(m, "Period")
     .def(py::init<std::string>(), py::arg("conn_str") = "")
     .def("record_guest", &Hotel::record_guest)
     .def("reserve", &Hotel::reserve,
-         py::arg("guest"), py::arg("room"),
-         py::arg("date"), py::arg("duration"))
+         py::arg("guest"),
+         py::arg("room"),
+         py::arg("date") = Today,
+         py::arg("duration") = Days{1})
     .def("cancel", &Hotel::cancel)
     .def("checkin", &Hotel::checkin)
     .def("checkout", &Hotel::checkout)
@@ -101,6 +103,8 @@ py::class_<Period>(m, "Period")
     .def("patch_reservation_notes", &Hotel::patch_reservation_notes)
     .def("room", &Hotel::room)
     .def("room_amenities", &Hotel::room_amenities)
-    .def("rate_report_for", &Hotel::rate_report_for, py::arg("room"),
-         py::arg("date"), py::arg("duration"));
+    .def("rate_report_for", &Hotel::rate_report_for,
+         py::arg("room"),
+         py::arg("date") = Today,
+         py::arg("duration") = Days{1});
 }
