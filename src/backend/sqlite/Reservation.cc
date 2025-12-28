@@ -71,8 +71,6 @@ void Reservation::annotate(std::string_view n)
   _UPDATE_(notes, n);
 }
 
-// TODO: instead of using this function, try to use a
-// proper constructor
 static Reservations
 reservations_from(SQLite::Statement& stmt, Backend* src)
 {
