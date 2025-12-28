@@ -180,8 +180,6 @@ struct SQLite {
         return std::string{text};
       }
       else if constexpr (std::is_same_v<T, std::optional<DateTime>>) {
-        // TODO: generalize for columns that might contain NULL values.
-        // In such case, maybe it's best to return a `std::optional`
         if (sqlite3_column_type(stmt_, column) == SQLITE_NULL)
           return std::nullopt;
 
