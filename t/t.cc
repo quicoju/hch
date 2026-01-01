@@ -160,8 +160,8 @@ R"(Rates:
   total: 105.99
   details:
     Base: 100.99
-    Capacity: 0
-    Wifi: 5)"
+    Capacity: 0.00
+    Wifi: 5.00)"
     };
     SECTION("reservation_notes") {
       REQUIRE(hotel.reservation_notes(id) == default_note);

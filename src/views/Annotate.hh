@@ -98,13 +98,23 @@ namespace YAML {
     static Node encode(const RateReport& r)
     {
       Emitter e;
-      e << Precision(10)
-        << BeginMap
+
+      e << BeginMap
         << Key << "date"    << Value << r.date.as_string()
         << Key << "days"    << Value << r.duration.count()
-        << Key << "total"   << Value << r.total
-        << Key << "details" << Value << r.details
+        << Key << "total"   << Value << std::format("{:.2f}", r.total)
+        << Key << "details" << Value
+        << BeginMap;
+
+      // yaml-cpp doesn't provide a "fixed" manipulator so when
+      // a detail has a value without decimals, it'll format it
+      // as an integer, so format it manually instead
+      for (auto &[k, v]: r.details)
+        e << Key << k << Value << std::format("{:.2f}", v);
+
+      e << EndMap
         << EndMap;
+
       return Load(e.c_str());
     }
   };

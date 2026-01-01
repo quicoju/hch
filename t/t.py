@@ -67,8 +67,8 @@ def test_bindings():
   total: 105.99
   details:
     Base: 100.99
-    Capacity: 0
-    Wifi: 5''', "hotel.reservation_notes")
+    Capacity: 0.00
+    Wifi: 5.00''', "hotel.reservation_notes")
 
         hotel.patch_reservation_notes(reservations[0].id, "Discount", "5%")
         ok(hotel.reservation_notes(f"{reservations[0]}") ==
@@ -78,8 +78,8 @@ def test_bindings():
   total: 105.99
   details:
     Base: 100.99
-    Capacity: 0
-    Wifi: 5
+    Capacity: 0.00
+    Wifi: 5.00
 Discount: 5%''', "hotel.patch_reservation_notes")
 
         amenities = hotel.room_amenities("201")
@@ -91,8 +91,8 @@ Discount: 5%''', "hotel.patch_reservation_notes")
         ok(report.total == 105.99, "report.total")
         ok(report.details == {
             'Base': 100.99,
-            'Capacity': 0.0,
-            'Wifi': 5.0,
+            'Capacity': 0.00,
+            'Wifi': 5.00,
         }, "report.details")
 
         checkin_dt = dt.datetime.combine(dt.date(2024, 12, 15), dt.time(12, 30))

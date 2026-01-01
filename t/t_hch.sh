@@ -156,8 +156,8 @@ Rates:
   total: 211.98
   details:
     Base: 201.98
-    Capacity: 0
-    Wifi: 10
+    Capacity: 0.00
+    Wifi: 10.00
 "
 run_test "add-reservation-notes" \
 "reserve --guest=juan.camaney@aol.com --room=101 --during=2025-11-28+2d
@@ -171,8 +171,8 @@ Rates:
   total: 211.98
   details:
     Base: 201.98
-    Capacity: 0
-    Wifi: 10
+    Capacity: 0.00
+    Wifi: 10.00
 Discount: 10% promo
 "
 
@@ -186,8 +186,8 @@ days: 2
 total: 211.98
 details:
   Base: 201.98
-  Capacity: 0
-  Wifi: 10"
+  Capacity: 0.00
+  Wifi: 10.00"
 
 run_test "record-guest" \
 "record-guest --email=john.bedney@yahoo.com" \
