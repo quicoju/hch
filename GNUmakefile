@@ -43,7 +43,7 @@ GUI ?= 0
 
 ifeq ($(GUI), Qt)
 QT_CXXFLAGS := $(shell pkg-config --cflags Qt6Widgets Qt6Core)
-QT_LDFLAGS := $(pkg-config --libs Qt6Widgets Qt6Core)
+QT_LDFLAGS := $(shell pkg-config --libs Qt6Widgets Qt6Core)
 CXXFLAGS += $(QT_CXXFLAGS)
 LDFLAGS += $(QT_LDFLAGS)
 endif
