@@ -37,7 +37,7 @@ namespace Rate {
   struct Calculator {
     Calculator(Backend*);
 
-    double rate_for(Room& room, const Date& _, const Duration& duration) const
+    Amount rate_for(Room& room, const Date& _, const Duration& duration) const
     {
       // TODO: to keep it simple, for now don't pass dates and durations
       // to the rate accessors, but the buisiness might want to include
@@ -69,14 +69,14 @@ namespace Rate {
       return {date, dur, total, details};
     }
 
-    inline double
+    inline Amount
     base_rate_for(Room& r) const
     {
       return base_rates_.count(r.id)
         ? base_rates_.at(r.id) : default_base_rate_;
     }
 
-    inline double
+    inline Amount
     capacity_rate_for(Room& r) const
     {
       if (r.capacity <= 1) return 0;
@@ -86,7 +86,7 @@ namespace Rate {
       return base_rate_for(r) * cap_rate * (r.capacity - 1);
     }
 
-    inline double
+    inline Amount
     amenity_rate_for(const Amenity& name) const
     {
       return amenity_rates_.count(name)
@@ -96,10 +96,10 @@ namespace Rate {
   private:
     // Represent the rate table as maps so it's easier to find the
     // overrides, without having to traverse the table many times
-    std::map<std::string, double> base_rates_;     // room specific base rates
-    std::map<std::string, double> capacity_rates_; // room specific capacity rates
-    std::map<std::string, double> amenity_rates_;  // amenity specific price
-    double default_base_rate_ = 0.0;
-    double default_capacity_rate_ = 0.0;
+    std::map<std::string, Amount> base_rates_;     // room specific base rates
+    std::map<std::string, Amount> capacity_rates_; // room specific capacity rates
+    std::map<std::string, Amount> amenity_rates_;  // amenity specific price
+    Amount default_base_rate_ = 0.0;
+    Amount default_capacity_rate_ = 0.0;
   };
 }
