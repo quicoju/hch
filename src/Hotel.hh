@@ -13,22 +13,22 @@ struct Hotel {
    * @brief Returns true only if there are N_ROOMS available on
    * in the hotel for the given DATE and DURATION,
    *
-   * @param Check for availability on this number of rooms
    * @param Check for availability starting on this date
    * @param Number of days that the rooms are required to be available
+   * @param Check for availability on this number of rooms
    */
-  bool is_available_on(Date, Duration dur=Days{1}, size_t n_rooms=1);
+  bool is_available_on(Date, Days d=Days{1}, size_t n_rooms=1);
 
   /**
    * @brief Check if a ROOM is available on during the given DATE and DURATION
    *
    * @param The room to check availability for
    * @param Date to check for availability (defaults to Today)
-   * @param The duration in days to check for availability (defaults to one)
+   * @param The number of days to check for availability (defaults to one)
    *
    * @return true if is available, false otherwise
    */
-  bool is_available_on(Room, std::optional<Date> date=std::nullopt, Duration dur=Days{1});
+  bool is_available_on(Room, std::optional<Date> date=std::nullopt, Days d=Days{1});
 
   /**
    * @brief Return all the available rooms for the given DATE and
@@ -37,7 +37,7 @@ struct Hotel {
    * @param Check for availability starting on this date
    * @param Number of days that the rooms are required to be available
    */
-  Rooms find_available_on(Date, Duration dur=Days{1}, Amenities amenities={});
+  Rooms find_available_on(Date, Days d=Days{1}, Amenities amenities={});
 
   ////////////
   // Guests //
@@ -62,12 +62,12 @@ struct Hotel {
    * @param The Guest that is requresting the reservation
    * @param The Room to be reserved
    * @param Date when the room is to be reserved (defaults to Today)
-   * @param Duration in days that the room is to be reserved (defaults to one)
+   * @param Number of days that the room is to be reserved (defaults to one)
    */
   std::string reserve(string_view guest,
                       string_view room,
                       std::optional<Date> date=std::nullopt,
-                      Duration dur=Days{1});
+                      Days d=Days{1});
 
   /**
    * @brief Cancel a reservation by identifier
@@ -200,7 +200,7 @@ struct Hotel {
   const RateReport
   rate_report_for(string_view room,
                   std::optional<Date> date=std::nullopt,
-                  Duration dur=Days{1});
+                  Days d=Days{1});
 
 
   // Note that can't be patched (see patch_reservation_notes)

@@ -77,7 +77,7 @@ struct Date : std::chrono::year_month_day
 
 /**
  * @brief Type to represent a period of time with days "resolution".
- * A "Period" is represented as a start "Date"" and a "Duration"
+ * A "Period" is represented as a start "Date"" and a number of "Days"
  */
 struct Period {
 
@@ -87,7 +87,7 @@ struct Period {
    */
   using as_days = std::chrono::time_point<std::chrono::system_clock, Days>;
 
-  Period(Date s, Duration d) : start_(s), duration_(d) { }
+  Period(Date s, Days d) : start_(s), days_(d) { }
 
   /**
    * @brief The "start" date of a period
@@ -95,9 +95,9 @@ struct Period {
   inline Date start() const { return start_; }
 
   /**
-   * @brief The duration in "Days" of the period
+   * @brief The number of "Days"
    */
-  inline Days duration() const { return duration_; }
+  inline Days duration() const { return days_; }
 
   /**
    * @brief The "end" date of a period
@@ -133,7 +133,7 @@ struct Period {
 
 private:
   Date start_;
-  Duration duration_;
+  Days days_;
 };
 
 struct Room;
@@ -152,7 +152,7 @@ static inline Amenity MiniBar = "MiniBar";
 using RateDetails = std::map<std::string, Amount>;
 struct RateReport {
   Date date;
-  Duration duration;
+  Days duration;
   Amount total;
   RateDetails details;
 };

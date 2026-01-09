@@ -8,7 +8,7 @@ std::string
 Reservation::reserve(string_view guest_id,
                      string_view room_id,
                      Date date,
-                     Duration dur,
+                     Days days,
                      string_view notes,
                      Backend* db)
 {
@@ -29,7 +29,7 @@ VALUES (?, ?,
   (SELECT id FROM rooms  WHERE name = ?),
   ?, ?, ?)
 )");
-  stmt2.execute(next_id, id, guest_id, room_id, date.as_string(), dur.count(), notes);
+  stmt2.execute(next_id, id, guest_id, room_id, date.as_string(), days.count(), notes);
   return id;
 }
 

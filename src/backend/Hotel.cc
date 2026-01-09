@@ -12,10 +12,10 @@ Hotel::Hotel(string_view conn_str)
   Log::debug(logger, "Starting up the Hotel...");
 }
 
-bool Hotel::is_available_on(Date date, Duration dur, size_t n_rooms)
+bool Hotel::is_available_on(Date date, Days days, size_t n_rooms)
 {
   for (const auto& r: rooms()) {
-    if (is_available_on(r, date, dur)) {
+    if (is_available_on(r, date, days)) {
       --n_rooms;
       if (!n_rooms) return true;
     }
@@ -23,9 +23,9 @@ bool Hotel::is_available_on(Date date, Duration dur, size_t n_rooms)
   return false;
 }
 
-bool Hotel::is_available_on(Room room, std::optional<Date> date, Duration dur)
+bool Hotel::is_available_on(Room room, std::optional<Date> date, Days days)
 {
-  Period p{date.value_or(Date::today()), dur};
+  Period p{date.value_or(Date::today()), days};
   const auto& room_agenda = Reservation::find_by_room(room.id, &src);
   auto end = room_agenda.cend();
 
@@ -33,12 +33,12 @@ bool Hotel::is_available_on(Room room, std::optional<Date> date, Duration dur)
       [&p](const auto& rsv) { return p.intersects(rsv.period); });
 }
 
-Rooms Hotel::find_available_on(Date d, Duration dur, Amenities amenities)
+Rooms Hotel::find_available_on(Date d, Days days, Amenities amenities)
 {
   Rooms available_rooms{};
 
   for (auto& r: rooms()) {
-    if (is_available_on(r, d, dur) && r.has_amenities(amenities))
+    if (is_available_on(r, d, days) && r.has_amenities(amenities))
       available_rooms.emplace_back(r);
   }
   return available_rooms;
@@ -60,18 +60,18 @@ string_view Hotel::RATES_NOTE = "Rates";
 std::string Hotel::reserve(string_view guest_id,
                            string_view room_id,
                            std::optional<Date> date,
-                           Duration dur)
+                           Days days)
 {
   auto d = date.value_or(Date::today());
-  if (!is_available_on(room(room_id), d, dur))
+  if (!is_available_on(room(room_id), d, days))
     throw std::runtime_error{"Room is already reserved for overlapping dates"};
 
   // POLICY: save the current rates in the reservation. This is important if
   // the rates change between the reservation time and the check-out time.
   // We need to honor the original prices
-  auto report = rate_report_for(room_id, d, dur);
+  auto report = rate_report_for(room_id, d, days);
   auto note = annotate::as_string(std::map{std::pair{RATES_NOTE, report}});
-  return Reservation::reserve(guest_id, room_id, d, dur, note, &src);
+  return Reservation::reserve(guest_id, room_id, d, days, note, &src);
 }
 
 void Hotel::cancel(const std::string& id)
@@ -152,9 +152,9 @@ const Amenities Hotel::room_amenities(string_view id)
 }
 
 const RateReport
-Hotel::rate_report_for(string_view id, std::optional<Date> d, Duration dur)
+Hotel::rate_report_for(string_view id, std::optional<Date> d, Days days)
 {
   auto r = room(id);
   auto date = d.value_or(Date::today());
-  return Rate::Calculator{&src}.rate_report_for(r, date, dur);
+  return Rate::Calculator{&src}.rate_report_for(r, date, days);
 }

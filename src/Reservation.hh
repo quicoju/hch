@@ -31,7 +31,7 @@ struct Reservation {
   reserve(string_view guest_id,
           string_view room_id,
           Date date,
-          Duration duration,
+          Days days,
           std::string_view notes,
           Backend* src);
 

@@ -114,7 +114,7 @@ private:
     return room_id;
   }
 
-  std::pair<Date, Duration> parse_date(const string &s)
+  std::pair<Date, Days> parse_date(const string &s)
   {
     using namespace std;
 
@@ -140,9 +140,9 @@ private:
       throw std::invalid_argument{"Invalid date format"};
 
     Date date{match[1]};
-    Duration duration{match[2].matched ? stoi(match[2]) : 1};
+    Days days{match[2].matched ? stoi(match[2]) : 1};
 
-    return {date, duration};
+    return {date, days};
   }
 
   /* State */
