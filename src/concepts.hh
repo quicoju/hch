@@ -23,13 +23,7 @@ using Amount = double;
 using DateTime = std::chrono::system_clock::time_point;
 
 /**
- * @brief Type for a duration measured in days
- */
-using Duration = std::chrono::days;
-
-/**
- * @brief Same as the "Duration" type but helps to make
- * the code more readable
+ * @brief Representation the quantity of days
  */
 using Days = std::chrono::days;
 
