@@ -13,6 +13,7 @@
 #include "config.h"
 
 using string_view = std::string_view;
+using Currency = double;
 
 // Date utils
 // ==========
@@ -154,7 +155,7 @@ static inline Amenity Balcony = "Balcony";
 static inline Amenity Wifi = "Wifi";
 static inline Amenity MiniBar = "MiniBar";
 
-using RateDetails = std::map<std::string, double>;
+using RateDetails = std::map<std::string, Currency>;
 struct RateReport {
   Date date;
   Duration duration;
