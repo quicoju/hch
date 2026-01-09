@@ -13,7 +13,7 @@
 #include "config.h"
 
 using string_view = std::string_view;
-using Currency = double;
+using Amount = double;
 
 // Date utils
 // ==========
