@@ -87,7 +87,6 @@ struct Period {
    */
   using as_days = std::chrono::time_point<std::chrono::system_clock, Days>;
 
-  Period(Date s, Days d) : start_(s), days_(d) { }
   Period(Date s, size_t d) : start_(s), days_(Days{d}) { }
 
   /**
