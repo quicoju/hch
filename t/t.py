@@ -33,9 +33,7 @@ def test_bindings():
         # Test the "concepts"
         # ===================
         date = dt.date(2024, 1, 15)
-        duration = dt.timedelta(days=5)
-
-        period = Period(date, duration)
+        period = Period(date, days=5)
         ok(f"{period}" == "[2024-01-15/2024-01-20]", "Create a `Period'")
 
         # Hotel
@@ -87,7 +85,7 @@ Discount: 5%''', "hotel.patch_reservation_notes")
 
         report = hotel.rate_report_for("101", dt.date(2025,12,12))
         ok(str(report.date) == "2025-12-12", "hotel.rate_report_for")
-        ok(int(report.duration.days) == 1, "report.duration")
+        ok(int(report.days) == 1, "report.days")
         ok(report.total == 105.99, "report.total")
         ok(report.details == {
             'Base': 100.99,

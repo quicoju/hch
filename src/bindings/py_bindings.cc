@@ -43,16 +43,16 @@ PYBIND11_MODULE(hch, m) {
   // bindings the relevant "concepts"
   // ================================
 py::class_<Period>(m, "Period")
-    .def(py::init<Date, Days>())
+    .def(py::init<Date, size_t>(), py::arg("date"), py::arg("days"))
     .def_property_readonly("start", &Period::start)
-    .def_property_readonly("duration", &Period::duration)
+    .def_property_readonly("days", &Period::days)
     .def_property_readonly("end", &Period::end)
     .def("intersects", &Period::intersects)
     .def("__eq__", &Period::operator==)
     .def("__str__", [](const Period& p){ return p.as_string(); })
     .def("__repr__", [](const Period& p) {
         return std::format("<Period start={} duration={} days>",
-                           p.start().as_string(), p.duration().count());
+                           p.start().as_string(), p.days());
     });
 
   // Room
@@ -75,7 +75,7 @@ py::class_<Period>(m, "Period")
   // ==========
   py::class_<RateReport>(m, "RateReport")
     .def_readonly("date", &RateReport::date)
-    .def_readonly("duration", &RateReport::duration)
+    .def_readonly("days", &RateReport::days)
     .def_readonly("total", &RateReport::total)
     .def_readonly("details", &RateReport::details);
 
@@ -88,7 +88,7 @@ py::class_<Period>(m, "Period")
          py::arg("guest"),
          py::arg("room"),
          py::arg("date") = Date::today(),
-         py::arg("duration") = Days{1})
+         py::arg("duration") = 1)
     .def("cancel", &Hotel::cancel)
     .def("checkin", &Hotel::checkin)
     .def("checkout", &Hotel::checkout)
@@ -104,5 +104,5 @@ py::class_<Period>(m, "Period")
     .def("rate_report_for", &Hotel::rate_report_for,
          py::arg("room"),
          py::arg("date") = Date::today(),
-         py::arg("duration") = Days{1});
+         py::arg("duration") = 1);
 }
