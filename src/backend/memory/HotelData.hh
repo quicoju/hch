@@ -58,18 +58,17 @@ using GuestsData = std::vector<GuestData>;
  */
 using YMD = std::chrono::year_month_day;
 using DateTime = std::chrono::system_clock::time_point;
-using Days = std::chrono::days;
 
 struct ReservationData{
   ReservationData(
-   string_view id, string_view g, string_view r, YMD d, Days days, string_view n="")
+   string_view id, string_view g, string_view r, YMD d, size_t days, string_view n="")
     : id{id}, guest_id{g}, room_id{r}, start{d}, days{days}, notes{n}
   {}
   std::string id;       // client facing reservation id
   std::string guest_id;
   std::string room_id;
   YMD start;
-  Days days;
+  size_t days;
   std::string notes;
   std::optional<DateTime> checkin_at = std::nullopt;
   std::optional<DateTime> checkout_at = std::nullopt;

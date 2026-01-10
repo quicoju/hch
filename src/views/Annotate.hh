@@ -106,7 +106,7 @@ namespace YAML {
         details[k] = std::format("{:.2f}", v);
 
       report["date"] = r.date.as_string();
-      report["days"] = r.duration.count();
+      report["days"] = r.days;
       report["total"] = std::format("{:.2f}", r.total);
       report["details"] = details;
 

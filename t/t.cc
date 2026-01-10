@@ -33,15 +33,16 @@ TEST_CASE("Hotel", "[Hotel]") {
   Hotel hotel{conn_str()};
 
   auto guest = "juan.camaney@aol.com";
-  hotel.reserve(guest, "101", 2024y/12/19d, Days(3));
+  hotel.reserve(guest, "101", 2024y/12/19d, 3);
   hotel.reserve(guest, "102", 2024y/12/20d);
-  hotel.reserve(guest, "103", 2024y/12/31d, Days(4));
+  hotel.reserve(guest, "103", 2024y/12/31d, 4);
 
   SECTION("is_available_on") {
     REQUIRE(hotel.rooms().size() == 8);
     Date date = 2025y/01/02d;
-    REQUIRE_FALSE(hotel.is_available_on(date, Days{2}, 30));
-    REQUIRE(hotel.is_available_on(date, Days{2}, 2));
+    size_t days = 2;
+    REQUIRE_FALSE(hotel.is_available_on(date, days, 30));
+    REQUIRE(hotel.is_available_on(date, days, 2));
     REQUIRE(hotel.is_available_on(date));
   }
   SECTION("is_available_on (room)") {
@@ -49,20 +50,21 @@ TEST_CASE("Hotel", "[Hotel]") {
     Date date = 2024y/12/23d;
     REQUIRE(hotel.is_available_on(room, 2024y/12/22d));
     REQUIRE(hotel.is_available_on(room, date));
-    REQUIRE(hotel.is_available_on(room, date, Days{2}));
+    REQUIRE(hotel.is_available_on(room, date, 2));
     REQUIRE(!hotel.is_available_on(room, 2024y/12/19d));
-    REQUIRE(!hotel.is_available_on(room, 2024y/12/21d, Days{3}));
+    REQUIRE(!hotel.is_available_on(room, 2024y/12/21d, 3));
   }
   SECTION("find_available_on") {
     Date date = 2024y/12/19;
     SECTION("Case: available w/o amenity requirements") {
-      auto available = hotel.find_available_on(date, Days{3});
+      auto available = hotel.find_available_on(date, 3);
       REQUIRE(available.size() == 6);
       REQUIRE(available[0].id == "103");
     }
     SECTION("Case: available with amenity requirements") {
-      auto a = hotel.find_available_on(date, Days{3}, {Balcony});
-      auto b = hotel.find_available_on(date, Days{3}, {Wifi, Balcony});
+      size_t days = 3;
+      auto a = hotel.find_available_on(date, days, {Balcony});
+      auto b = hotel.find_available_on(date, days, {Wifi, Balcony});
       REQUIRE(a.size() == 2);
       REQUIRE(a[0].id == "103");
       REQUIRE(a[1].id == "201");
@@ -70,7 +72,7 @@ TEST_CASE("Hotel", "[Hotel]") {
       REQUIRE(b.front().id == "103");
     }
     SECTION("Case: unavailable with amenities") {
-      REQUIRE(hotel.find_available_on(date, Days{3}, {MiniBar, Wifi}).empty());
+      REQUIRE(hotel.find_available_on(date, 3, {MiniBar, Wifi}).empty());
     }
   }
 
@@ -88,7 +90,7 @@ TEST_CASE("Hotel", "[Hotel]") {
       REQUIRE(hotel.reserve(guest, "101", 2024y/11/10d) == "W-0004");
       REQUIRE_FALSE(hotel.is_available_on(room, 2024y/11/10d));
 
-      REQUIRE(hotel.reserve(guest, "101", 2024y/11/12d, Days{2}) == "W-0005");
+      REQUIRE(hotel.reserve(guest, "101", 2024y/11/12d, 2) == "W-0005");
       REQUIRE_FALSE(hotel.is_available_on(room, 2024y/11/13d));
     }
     SECTION("Case: failed") {
@@ -256,15 +258,15 @@ TEST_CASE("Rate::Calculator", "[Calculator]") {
   SECTION("rate_for") {
     SECTION("Case: standard room with default rate") {
       auto room = hotel.room("301");
-      auto rate = calc.rate_for(room, 2024y/12/23d, Days{1});
+      auto rate = calc.rate_for(room, 2024y/12/23d, 1);
       REQUIRE_THAT(rate, APPROX(58.99)); // base rate only
     }
     SECTION("Case: premium room with specific rate") {
-      auto rate = calc.rate_for(premium_room, 2024y/12/23d, Days{1});
+      auto rate = calc.rate_for(premium_room, 2024y/12/23d, 1);
       REQUIRE_THAT(rate, APPROX(100.99 + 5.00));
     }
     SECTION("Case: single room w/o amenities multiple nights") {
-      auto rate = calc.rate_for(single_room, 2024y/12/23d, Days{3});
+      auto rate = calc.rate_for(single_room, 2024y/12/23d, 3);
       auto expected = (58.99) * 3;
       REQUIRE_THAT(rate, APPROX(expected));
     }
@@ -274,7 +276,7 @@ TEST_CASE("Rate::Calculator", "[Calculator]") {
       SECTION("Case: standard rate") {
         auto big_room = hotel.room("302"); // capacity 3
         auto expected = base_rate + capacity_surcharge;
-        auto rate = calc.rate_for(big_room, 2024y/12/23d, Days{1});
+        auto rate = calc.rate_for(big_room, 2024y/12/23d, 1);
         REQUIRE_THAT(rate, APPROX(expected));
       }
       SECTION("Case: standard rate with amenities") {
@@ -283,7 +285,7 @@ TEST_CASE("Rate::Calculator", "[Calculator]") {
         expected += base_rate * 0.20 * 2; // additional capacity
         expected += 5.00 + 15.00;         // wifi + balcony
         expected *= 4;                    // 4 nights
-        auto rate = calc.rate_for(big_room, 2024y/12/23d, Days{4});
+        auto rate = calc.rate_for(big_room, 2024y/12/23d, 4);
         REQUIRE_THAT(rate, APPROX(expected));
       }
     }
@@ -328,7 +330,7 @@ TEST_CASE("Reservation") {
       REQUIRE(got.id == "A-001");
       REQUIRE(got.guest_id == "juan.camaney@aol.com");
       REQUIRE(got.room_id == "101");
-      REQUIRE(got.period == Period{2024y/12/19d, Days{3}});
+      REQUIRE(got.period == Period{2024y/12/19d, 3});
     }
     SECTION("Case: not found") {
       REQUIRE_THROWS_AS(Reservation::find_by_id("A-103", &src), std::invalid_argument);
@@ -374,14 +376,14 @@ TEST_CASE("Reservation") {
   }
   SECTION("reserve") {
     std::string guest_id{ "juan.camaney@aol.com"};
-    auto id = Reservation::reserve(guest_id, "101", 2024y/12/12d, Days{5}, "", &src);
+    auto id = Reservation::reserve(guest_id, "101", 2024y/12/12d, 5, "", &src);
     // TODO: this test relies on an incremental counter
     // find a more determinitstic test for this
     REQUIRE(id == "W-0004");
 
     auto rsv = Reservation::find_by_id(id, &src);
     REQUIRE(rsv.room_id == "101");
-    REQUIRE(rsv.period == Period{2024y/12/12d, Days{5}});
+    REQUIRE(rsv.period == Period{2024y/12/12d, 5});
   }
   SECTION("cancel") {
     Reservation::find_by_id("A-001", &src).cancel();

@@ -8,7 +8,7 @@ std::string
 Reservation::reserve(string_view guest_id,
                      string_view room_id,
                      Date date,
-                     Days days,
+                     size_t days,
                      string_view notes,
                      Backend* db)
 {
@@ -29,7 +29,7 @@ VALUES (?, ?,
   (SELECT id FROM rooms  WHERE name = ?),
   ?, ?, ?)
 )");
-  stmt2.execute(next_id, id, guest_id, room_id, date.as_string(), days.count(), notes);
+  stmt2.execute(next_id, id, guest_id, room_id, date.as_string(), days, notes);
   return id;
 }
 
@@ -80,7 +80,7 @@ reservations_from(SQLite::Statement& stmt, Backend* src)
       stmt.get<std::string>(0),
       stmt.get<std::string>(1),
       stmt.get<std::string>(2),
-      { Date{stmt.get<std::string>(3)}, Days{stmt.get<int>(4)} },
+      { Date{stmt.get<std::string>(3)}, stmt.get<size_t>(4) },
       stmt.get<std::string>(7),
       src,
     };

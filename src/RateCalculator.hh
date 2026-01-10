@@ -37,7 +37,7 @@ namespace Rate {
   struct Calculator {
     Calculator(Backend*);
 
-    Amount rate_for(Room& room, const Date& _, const Days& days) const
+    Amount rate_for(Room& room, const Date& _, size_t days) const
     {
       // TODO: to keep it simple, for now don't pass dates and number of
       // days to the rate accessors, but the buisiness might want to include
@@ -50,14 +50,13 @@ namespace Rate {
       for (const auto& amenity : room.amenities())
         total += amenity_rate_for(amenity);
 
-      return total * days.count(); // maybe consider the date season here
+      return total * days; // maybe consider the date season here
     }
 
     RateReport
-    rate_report_for(Room& room, const Date& date, const Days& d) const
+    rate_report_for(Room& room, const Date& date,  size_t days) const
     {
-      auto total = rate_for(room, date, d);
-      auto days = d.count();
+      auto total = rate_for(room, date, days);
 
       RateDetails details{
         {"Base", base_rate_for(room) * days},
@@ -66,7 +65,7 @@ namespace Rate {
       for (auto& amenity: room.amenities())
         details.emplace(amenity, amenity_rate_for(amenity) * days);
 
-      return {date, d, total, details};
+      return {date, days, total, details};
     }
 
     inline Amount

@@ -12,7 +12,7 @@ Hotel::Hotel(string_view conn_str)
   Log::debug(logger, "Starting up the Hotel...");
 }
 
-bool Hotel::is_available_on(Date date, Days days, size_t n_rooms)
+bool Hotel::is_available_on(Date date, size_t days, size_t n_rooms)
 {
   for (const auto& r: rooms()) {
     if (is_available_on(r, date, days)) {
@@ -23,7 +23,7 @@ bool Hotel::is_available_on(Date date, Days days, size_t n_rooms)
   return false;
 }
 
-bool Hotel::is_available_on(Room room, std::optional<Date> date, Days days)
+bool Hotel::is_available_on(Room room, std::optional<Date> date, size_t days)
 {
   Period p{date.value_or(Date::today()), days};
   const auto& room_agenda = Reservation::find_by_room(room.id, &src);
@@ -33,7 +33,7 @@ bool Hotel::is_available_on(Room room, std::optional<Date> date, Days days)
       [&p](const auto& rsv) { return p.intersects(rsv.period); });
 }
 
-Rooms Hotel::find_available_on(Date d, Days days, Amenities amenities)
+Rooms Hotel::find_available_on(Date d, size_t days, Amenities amenities)
 {
   Rooms available_rooms{};
 
@@ -60,7 +60,7 @@ string_view Hotel::RATES_NOTE = "Rates";
 std::string Hotel::reserve(string_view guest_id,
                            string_view room_id,
                            std::optional<Date> date,
-                           Days days)
+                           size_t days)
 {
   auto d = date.value_or(Date::today());
   if (!is_available_on(room(room_id), d, days))
@@ -152,7 +152,7 @@ const Amenities Hotel::room_amenities(string_view id)
 }
 
 const RateReport
-Hotel::rate_report_for(string_view id, std::optional<Date> d, Days days)
+Hotel::rate_report_for(string_view id, std::optional<Date> d, size_t days)
 {
   auto r = room(id);
   auto date = d.value_or(Date::today());

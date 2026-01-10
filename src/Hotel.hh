@@ -17,7 +17,7 @@ struct Hotel {
    * @param Number of days that the rooms are required to be available
    * @param Check for availability on this number of rooms
    */
-  bool is_available_on(Date, Days d=Days{1}, size_t n_rooms=1);
+  bool is_available_on(Date, size_t n_days=1, size_t n_rooms=1);
 
   /**
    * @brief Check if a ROOM is available on during the given DATE and DURATION
@@ -28,7 +28,7 @@ struct Hotel {
    *
    * @return true if is available, false otherwise
    */
-  bool is_available_on(Room, std::optional<Date> date=std::nullopt, Days d=Days{1});
+  bool is_available_on(Room, std::optional<Date> date=std::nullopt, size_t n_days=1);
 
   /**
    * @brief Return all the available rooms for the given DATE and
@@ -37,7 +37,7 @@ struct Hotel {
    * @param Check for availability starting on this date
    * @param Number of days that the rooms are required to be available
    */
-  Rooms find_available_on(Date, Days d=Days{1}, Amenities amenities={});
+  Rooms find_available_on(Date, size_t n_days=1, Amenities amenities={});
 
   ////////////
   // Guests //
@@ -67,7 +67,7 @@ struct Hotel {
   std::string reserve(string_view guest,
                       string_view room,
                       std::optional<Date> date=std::nullopt,
-                      Days d=Days{1});
+                      size_t n_days=1);
 
   /**
    * @brief Cancel a reservation by identifier
@@ -200,7 +200,7 @@ struct Hotel {
   const RateReport
   rate_report_for(string_view room,
                   std::optional<Date> date=std::nullopt,
-                  Days d=Days{1});
+                  size_t n_days=1);
 
 
   // Note that can't be patched (see patch_reservation_notes)

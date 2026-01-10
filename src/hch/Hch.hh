@@ -114,12 +114,12 @@ private:
     return room_id;
   }
 
-  std::pair<Date, Days> parse_date(const string &s)
+  std::pair<Date, size_t> parse_date(const string &s)
   {
     using namespace std;
 
     // provide defaults
-    if (s.empty()) return {Date::today(), Days{1}};
+    if (s.empty()) return {Date::today(), 1};
 
     // if no date is provided but a duration, then make it
     // relative to today's date i.e. +3d
@@ -128,10 +128,10 @@ private:
       smatch match;
       if (!regex_match(s, match, re))
         throw std::invalid_argument{"Invalid duration format"};
-      return {Date::today(), Days{stoi(match[1])}};
+      return {Date::today(), stoul(match[1])};
     }
 
-    // Parse date string with optional duration, i.e.
+    // Parse date string with optional number of days, i.e.
     // "2025-11-03" or "2025-11-03+3d"
     regex re(R"((\d{4}-\d{2}-\d{2})(?:\+(\d+)d)?)");
     smatch match;
@@ -140,7 +140,7 @@ private:
       throw std::invalid_argument{"Invalid date format"};
 
     Date date{match[1]};
-    Days days{match[2].matched ? stoi(match[2]) : 1};
+    size_t days{match[2].matched ? stoul(match[2]) : 1};
 
     return {date, days};
   }
@@ -225,8 +225,8 @@ private:
   {
     auto room = ensure_room("list-rate [--during=[DATE][+DAYS]]", tokens);
     auto date_str = value_for("--during", tokens).value_or("");
-    auto [date, duration] = parse_date(date_str);
-    reply_with(hotel.rate_report_for(room, date, duration));
+    auto [date, days] = parse_date(date_str);
+    reply_with(hotel.rate_report_for(room, date, days));
   }
 
   void record_guest(const Tokens& tokens)
@@ -245,8 +245,8 @@ private:
     if (!guest_opt)
       throw std::invalid_argument {"Command usage: " + usage};
 
-    auto [date, duration] = parse_date(value_for("--during", tokens).value_or(""));
-    auto id = hotel.reserve(*guest_opt, room, date, duration);
+    auto [date, days] = parse_date(value_for("--during", tokens).value_or(""));
+    auto id = hotel.reserve(*guest_opt, room, date, days);
     reply_with("Reservation", id);
   }
 
