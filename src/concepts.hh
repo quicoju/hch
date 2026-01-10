@@ -88,14 +88,20 @@ struct Period {
   using as_days = std::chrono::time_point<std::chrono::system_clock, Days>;
 
   Period(Date s, Days d) : start_(s), days_(d) { }
+  Period(Date s, unsigned int d) : start_(s), days_(Days{d}) { }
 
   /**
-   * @brief The "start" date of a period
+   * @brief The "start" date of the period
    */
   inline Date start() const { return start_; }
 
   /**
-   * @brief The number of "Days"
+   * @brief The number of days in the period
+   */
+  inline unsigned int days() const { return days_.count(); }
+
+  /**
+   * @brief The number of days represented as a duration object
    */
   inline Days duration() const { return days_; }
 
@@ -119,7 +125,7 @@ struct Period {
    */
   bool operator==(const Period& other) const
   {
-    return start() == other.start() && duration() == other.duration();
+    return start() == other.start() && days() == other.days();
   }
 
   /**
