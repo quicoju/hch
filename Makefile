@@ -1,6 +1,6 @@
 CXX = c++
 
-CXXFLAGS = -Wall -std=c++23 -fPIC \
+CXXFLAGS = -g2 -O0 -Wall -std=c++23 -fPIC \
 	-I/usr/local/include \
 	-I./src \
     -I./src/views \
@@ -37,21 +37,10 @@ LDFLAGS += -lfmt
 CXXFLAGS += -DSPDLOG_USE_STD_FORMAT
 .endif
 
-# Possible GUI backends
-# - Qt
-GUI ?= 0
-
-.if $(GUI) == Qt
-QT_CXXFLAGS != pkg-config --cflags Qt6Widgets Qt6Core
-QT_LDFLAGS != pkg-config --libs Qt6Widgets Qt6Core
-CXXFLAGS += $(QT_CXXFLAGS)
-LDFLAGS += $(QT_LDFLAGS)
-.endif
-
 OBJS = Guest.o Hotel.o RateCalculator.o Reservation.o Room.o Room_common.o
 
 .SUFFIXES: .o .cc .hh
-.PATH.cc: src src/backend src/hch $(BACKEND_DIR) t
+.PATH.cc: src src/backend src/hch src/gui $(BACKEND_DIR) t
 
 .cc.o: src/concepts.hh Makefile
 	$(CXX) $(CXXFLAGS) -c $<
@@ -71,6 +60,11 @@ HotelTests: libhch.a t.o
 
 db/hotel.db: db/schema.sql
 	sqlite3 db/hotel.db ".read $>"
+
+# Build the GUI tests
+.if make(hch-gui) || make(test_gui)
+.include "src/gui/Makefile.inc"
+.endif
 
 # The bindings and test_py targets are included
 # from the relevant makefile.
@@ -99,7 +93,7 @@ cleandb:
 	rm -f db/hotel.db 2>/dev/null
 
 clean:
-	rm -f *.o HotelTests hch db/*.db *.a *so
+	rm -f *.o *Tests hch hch-gui db/*.db *.a *.so *.moc
 
 help:
 	@echo "Available backends: memory, sqlite"

@@ -37,21 +37,9 @@ else
 CXXFLAGS += -DSPDLOG_USE_STD_FORMAT
 endif
 
-# Possible GUI backends
-# - Qt
-GUI ?= 0
-
-ifeq ($(GUI), Qt)
-QT_CXXFLAGS := $(shell pkg-config --cflags Qt6Widgets Qt6Core)
-QT_LDFLAGS := $(shell pkg-config --libs Qt6Widgets Qt6Core)
-CXXFLAGS += $(QT_CXXFLAGS)
-LDFLAGS += $(QT_LDFLAGS)
-endif
-
-
 OBJS = Guest.o Hotel.o RateCalculator.o Reservation.o Room.o Room_common.o
 
-VPATH = src src/backend src/hch $(BACKEND_DIR) t
+VPATH = src src/backend src/hch src/gui $(BACKEND_DIR) t
 
 %.o: %.cc src/concepts.hh GNUmakefile
 	$(CXX) $(CXXFLAGS) -c $<
@@ -72,10 +60,16 @@ HotelTests: libhch.a t.o
 db/hotel.db: db/schema.sql
 	sqlite3 db/hotel.db ".read $^"
 
-# The bindings and test_py targets are included
-# from the relevant makefile.
+# The "GUI" targets are included from the
+# relevant makefile
 # MAKECMDGOALS contains all the goals selected
 # by the user in the command line
+ifneq (,$(filter hch-gui test_gui,$(MAKECMDGOALS)))
+include src/gui/Makefile.inc
+endif
+
+# The bindings and test_py targets are included
+# from the relevant makefile.
 ifneq (,$(filter bindings test_py,$(MAKECMDGOALS)))
 include src/bindings/Makefile.inc
 endif
@@ -101,7 +95,7 @@ cleandb:
 	rm -f db/hotel.db 2>/dev/null
 
 clean:
-	rm -f *.o HotelTests hch db/*.db *.a *.so
+	rm -f *.o *Tests hch hch-gui db/*.db *.a *.so *.moc
 
 help:
 	@echo "Available backends: memory, sqlite"
