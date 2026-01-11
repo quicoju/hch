@@ -35,5 +35,4 @@ jobs:
     - name: test
       run: |
         make clean
-        make BACKEND=${{ matrix.backend }} test test_py
-        make QT_QPA_PLATFORM=offscreen test_gui
+        make BACKEND=${{ matrix.backend }} test test_py test_gui

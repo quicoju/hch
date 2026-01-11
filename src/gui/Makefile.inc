@@ -28,6 +28,6 @@ test_gui: GUITests
 	@echo
 	@echo "GUI TESTS"
 	@echo "---------"
-	@./GUITests
+	@QT_QPA_PLATFORM=offscreen ./GUITests
 
 .PHONY: test_gui
