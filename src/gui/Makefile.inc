@@ -7,6 +7,8 @@
 
 QT_CXXFLAGS != pkg-config --cflags Qt6Widgets Qt6Core Qt6Test
 QT_LDFLAGS != pkg-config --libs Qt6Widgets Qt6Core Qt6Test
+QT_LIBEXEC_PATH != pkg-config --variable=libexecdir Qt6Core
+MOC = $(QT_LIBEXEC_PATH)/moc
 
 CXXFLAGS += $(QT_CXXFLAGS)
 LDFLAGS += $(QT_LDFLAGS)
@@ -15,7 +17,7 @@ hch-gui: hch-gui.o libhch.a
 	$(CXX) $(CXXFLAGS) $(QT_CXXFLAGS) -o $@ hch-gui.o $(LDFLAGS) $(QT_LDFLAGS)
 
 t_hch-gui.moc: t/t_hch-gui.cc
-	moc-qt6 $(QT_CXXFLAGS) t/t_hch-gui.cc -o $@
+	$(MOC) $(QT_CXXFLAGS) t/t_hch-gui.cc -o $@
 
 t_hch-gui.o: t_hch-gui.moc
 
