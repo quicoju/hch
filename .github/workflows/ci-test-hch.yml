@@ -29,7 +29,6 @@ jobs:
           python3-pybind11 \
           libspdlog-dev \
           qt6-base-dev \
-          qt6-base-dev-tools \
           g++ \
           sqlite3
 
