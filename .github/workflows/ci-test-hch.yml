@@ -28,6 +28,7 @@ jobs:
           libyaml-cpp-dev \
           python3-pybind11 \
           libspdlog-dev \
+          qt6-base-dev \
           g++ \
           sqlite3
 
