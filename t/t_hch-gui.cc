@@ -1,9 +1,9 @@
 #include <QtTest/QtTest>
 #include <QtWidgets/QApplication>
 
-#include "../src/gui/QHch.hh"
+#include "dashboard.hh"
 
-struct TestDashboard : public QObject {
+class TestDashboard : public QObject {
   Q_OBJECT
 
 private slots:
