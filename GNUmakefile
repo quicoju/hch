@@ -39,7 +39,7 @@ endif
 
 OBJS = Guest.o Hotel.o RateCalculator.o Reservation.o Room.o Room_common.o
 
-VPATH = src src/backend src/hch src/gui $(BACKEND_DIR) t
+VPATH = src src/backend src/hch $(BACKEND_DIR) t
 
 %.o: %.cc src/concepts.hh GNUmakefile
 	$(CXX) $(CXXFLAGS) -c $<
@@ -65,7 +65,7 @@ db/hotel.db: db/schema.sql
 # MAKECMDGOALS contains all the goals selected
 # by the user in the command line
 ifneq (,$(filter hch-gui test_gui,$(MAKECMDGOALS)))
-include src/gui/Makefile.inc
+include src/gui/GNUmakefile.inc
 endif
 
 # The bindings and test_py targets are included
