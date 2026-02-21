@@ -5,7 +5,7 @@
 # - hch_gui: which builds a Qt based Hch application
 # - test_gui: tests the GUI
 
-VPATH +=  src/gui
+VPATH += src/gui
 
 QT_CXXFLAGS != pkg-config --cflags Qt6Widgets Qt6Core Qt6Test
 QT_LDFLAGS != pkg-config --libs Qt6Widgets Qt6Core Qt6Test
@@ -24,11 +24,11 @@ OBJS = dashboard.o dashboard.moc.o
 hch-gui: hch-gui.o libhch.a  ${OBJS}
 	${CXX} $^ -o $@ ${LDFLAGS}
 
-dashboard.o : dashboard.hh dashboard.cc
-	${CXX} ${CXXFLAGS} -c $< -o $@
+dashboard.o : dashboard.cc
+	${CXX} ${CXXFLAGS} -c $^ -o $@
 
 dashboard.moc.o : dashboard.moc.cc
-	${CXX} ${CXXFLAGS} -c $< -o $@
+	${CXX} ${CXXFLAGS} -c $^ -o $@
 
 dashboard.moc.cc: dashboard.hh
 	${MOC} $^ -o $@
