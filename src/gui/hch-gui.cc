@@ -1,6 +1,6 @@
-#include <QtWidgets/QApplication>
+#include <QApplication>
 
-#include "QHch.hh"
+#include "dashboard.hh"
 
 int main(int argc, char *argv[])
 {
