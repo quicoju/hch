@@ -17,10 +17,10 @@ LDFLAGS += ${QT_LDFLAGS}
 
 MOC = ${QT_LIBEXEC_PATH}/moc
 
-HDRS = dashboard.hh
-SRCS = dashboard.cc
-MOCS = dashboard.moc.cc
-OBJS = dashboard.o dashboard.moc.o
+HDRS = dashboard.hh models.hh
+SRCS = dashboard.cc models.cc
+MOCS = dashboard.moc.cc models.moc.cc
+OBJS = dashboard.o dashboard.moc.o models.o models.moc.o
 
 hch-gui: hch-gui.o libhch.a  ${OBJS}
 	${CXX} $> -o $@ ${LDFLAGS}
@@ -32,6 +32,15 @@ dashboard.moc.o : dashboard.moc.cc
 	${CXX} ${CXXFLAGS} -c $< -o $@
 
 dashboard.moc.cc: dashboard.hh
+	${MOC} $> -o $@
+
+models.o : models.hh models.cc
+	${CXX} ${CXXFLAGS} -c $< -o $@
+
+models.moc.o : models.moc.cc
+	${CXX} ${CXXFLAGS} -c $< -o $@
+
+models.moc.cc: models.hh
 	${MOC} $> -o $@
 
 # build the tests
