@@ -36,10 +36,11 @@ Dashboard::Dashboard(QWidget* parent)
 
   // prepare the model for the reservation
   Hotel hotel = Hotel{"db/hotel.db"};
-  auto reservations = hotel.reservations_starting_on(Date::today());
-  reservations.append_range(hotel.reservations_ending_on(Date::today()));
+  auto arriving = hotel.reservations_starting_on(Date::today());
+  auto leaving = hotel.reservations_starting_on(Date::today());
+  arriving.insert(arriving.end(), leaving.begin(), leaving.end());
 
-  reservation_table->setModel(new ReservationModel{std::move(reservations)});
+  reservation_table->setModel(new ReservationModel{std::move(arriving)});
   reservation_table->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
 
   central_layout->addWidget(main_label);
