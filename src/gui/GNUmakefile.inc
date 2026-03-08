@@ -49,4 +49,5 @@ test_gui: GUITests
 	@echo "---------"
 	@QT_QPA_PLATFORM=offscreen ./GUITests 2>/dev/null
 
+
 .PHONY: test_gui
