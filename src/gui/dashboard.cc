@@ -1,8 +1,8 @@
 #include <QCloseEvent>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QListView>
 #include <QMenuBar>
+#include <QTableView>
 #include <QVBoxLayout>
 #include <QWidget>
 
@@ -26,17 +26,14 @@ Dashboard::Dashboard(QWidget* parent)
   QMenu *fileMenu = menuBar()->addMenu("&File");
   fileMenu->addAction(exitAction);
 
-  // build the base layout
-  auto *central = new QWidget{this};
-  auto *mainLayout = new QVBoxLayout{central};
+  // setup the central layout design
+  auto *central_widget = new QWidget{this};
+  auto *central_layout = new QVBoxLayout{central_widget};
 
-  auto *sectionLabel = new QLabel{"Reservation overview"};
-  mainLayout->addWidget(sectionLabel);
+  auto *main_label = new QLabel{"Reservation overview"};
+  auto *reservation_table = new QTableView{};
+  central_layout->addWidget(main_label);
+  central_layout->addWidget(reservation_table);
 
-  auto *contentLayout = new QHBoxLayout{};
-  auto *reservationView = new QListView{};
-
-  contentLayout->addWidget(reservationView);
-  mainLayout->addLayout(contentLayout);
-  setCentralWidget(central);
+  setCentralWidget(central_widget);
 }
