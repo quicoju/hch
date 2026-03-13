@@ -35,7 +35,7 @@ Dashboard::Dashboard(QWidget* parent)
   auto *reservation_table = new QTableView{};
 
   // prepare the model for the reservation
-  Hotel hotel = Hotel{"db/hotel.db"};
+  Hotel hotel = Hotel{"db/unit_test.db"};
   auto arriving = hotel.reservations_starting_on(Date::today());
   auto leaving = hotel.reservations_starting_on(Date::today());
   arriving.insert(arriving.end(), leaving.begin(), leaving.end());
