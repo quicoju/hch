@@ -10,6 +10,7 @@
 
 Dashboard::Dashboard(QWidget* parent)
   : QMainWindow{parent}
+  , hotel{Hotel{"db/unit_test.db"}}
 {
   auto logger = Log::logger();
   Log::debug(logger, "Setting up the hotel dashboard...");
@@ -28,9 +29,8 @@ Dashboard::Dashboard(QWidget* parent)
   auto *central_widget = new QWidget{this};
   auto *central_layout = new QVBoxLayout{central_widget};
 
-  Hotel hotel = Hotel{"db/unit_test.db"};
   auto *main_label = new QLabel{"Reservation overview"};
-  auto *main_table = reservations_table(hotel);
+  auto *main_table = reservations_table();
 
   central_layout->addWidget(main_label);
   central_layout->addWidget(main_table);
@@ -39,12 +39,12 @@ Dashboard::Dashboard(QWidget* parent)
 }
 
 QTableView*
-Dashboard::reservations_table(Hotel &h) const
+Dashboard::reservations_table()
 {
   auto *table = new QTableView{};
 
-  auto rsv = h.reservations_starting_on(Date::today());
-  auto leaving = h.reservations_ending_on(Date::today());
+  auto rsv = hotel.reservations_starting_on(Date::today());
+  auto leaving = hotel.reservations_ending_on(Date::today());
   rsv.insert(rsv.end(), leaving.begin(), leaving.end());
 
   table->setModel(new ReservationModel{std::move(rsv)});

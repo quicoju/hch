@@ -12,5 +12,8 @@ public:
   explicit Dashboard(QWidget* parent=nullptr);
 
 private:
-  QTableView* reservations_table(Hotel&) const;
+  QTableView* reservations_table();
+
+  // properties
+  Hotel hotel;
 };
