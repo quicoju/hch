@@ -1,4 +1,5 @@
 #include <QCloseEvent>
+#include <QFileDialog>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QMenuBar>
@@ -18,12 +19,17 @@ Dashboard::Dashboard(QWidget* parent)
   setWindowTitle("Hotel Check-in Helper Dashboard");
 
   // start building the menu bar
-  QAction *exitAction = new QAction{"&Exit", this};
-  exitAction->setShortcut(QKeySequence::Quit);
-  connect(exitAction, &QAction::triggered, this, &QWidget::close);
+  QAction *open_action = new QAction{"&Open Hotel File", this};
+  open_action->setShortcut(QKeySequence::Open);
+  connect(open_action, &QAction::triggered, this, &Dashboard::open_file);
+
+  QAction *exit_action = new QAction{"&Exit", this};
+  exit_action->setShortcut(QKeySequence::Quit);
+  connect(exit_action, &QAction::triggered, this, &QWidget::close);
 
   QMenu *fileMenu = menuBar()->addMenu("&File");
-  fileMenu->addAction(exitAction);
+  fileMenu->addAction(open_action);
+  fileMenu->addAction(exit_action);
 
   // setup the central layout design
   auto *central_widget = new QWidget{this};
@@ -51,4 +57,18 @@ Dashboard::reservations_table()
   table->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
 
   return table;
+}
+
+void
+Dashboard::open_file()
+{
+  QString file_name = QFileDialog::getOpenFileName(
+    this, "Open Hotel File", "", "SQLite Files(*.db)");
+
+  if (file_name.isEmpty()) return;
+
+  // TODO
+  // - rebuild the hotel object with the new db file
+  // - reload the reservations model (no need to reload the whole table)
+  // - emit signal to reload the table view
 }

@@ -13,6 +13,7 @@ public:
 
 private:
   QTableView* reservations_table();
+  void open_file();
 
   // properties
   Hotel hotel;
