@@ -2,14 +2,11 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QMenuBar>
-#include <QTableView>
 #include <QVBoxLayout>
 #include <QWidget>
 
 #include "dashboard.hh"
 #include "models.hh"
-
-#include "Hotel.hh"
 
 Dashboard::Dashboard(QWidget* parent)
   : QMainWindow{parent}
@@ -31,20 +28,27 @@ Dashboard::Dashboard(QWidget* parent)
   auto *central_widget = new QWidget{this};
   auto *central_layout = new QVBoxLayout{central_widget};
 
-  auto *main_label = new QLabel{"Reservation overview"};
-  auto *reservation_table = new QTableView{};
-
-  // prepare the model for the reservation
   Hotel hotel = Hotel{"db/unit_test.db"};
-  auto arriving = hotel.reservations_starting_on(Date::today());
-  auto leaving = hotel.reservations_starting_on(Date::today());
-  arriving.insert(arriving.end(), leaving.begin(), leaving.end());
-
-  reservation_table->setModel(new ReservationModel{std::move(arriving)});
-  reservation_table->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+  auto *main_label = new QLabel{"Reservation overview"};
+  auto *main_table = reservations_table(hotel);
 
   central_layout->addWidget(main_label);
-  central_layout->addWidget(reservation_table);
+  central_layout->addWidget(main_table);
 
   setCentralWidget(central_widget);
+}
+
+QTableView*
+Dashboard::reservations_table(Hotel &h) const
+{
+  auto *table = new QTableView{};
+
+  auto rsv = h.reservations_starting_on(Date::today());
+  auto leaving = h.reservations_ending_on(Date::today());
+  rsv.insert(rsv.end(), leaving.begin(), leaving.end());
+
+  table->setModel(new ReservationModel{std::move(rsv)});
+  table->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+
+  return table;
 }
