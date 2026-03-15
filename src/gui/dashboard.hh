@@ -14,7 +14,7 @@ public:
   explicit Dashboard(QWidget* parent=nullptr);
 
 private:
-  QTableView* reservations_table();
+  void load_reservation_model();
   void open_file();
 
   // properties

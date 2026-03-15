@@ -45,21 +45,19 @@ Dashboard::Dashboard(QWidget* parent)
   central_layout->addWidget(main_table);
 
   setCentralWidget(central_widget);
+
+  load_reservation_model();
 }
 
-QTableView*
-Dashboard::reservations_table()
+void
+Dashboard::load_reservation_model()
 {
-  auto *table = new QTableView{};
-
   auto rsv = hotel.reservations_starting_on(Date::today());
   auto leaving = hotel.reservations_ending_on(Date::today());
   rsv.insert(rsv.end(), leaving.begin(), leaving.end());
 
-  table->setModel(new ReservationModel{std::move(rsv)});
-  table->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
-
-  return table;
+  reservation_m->load(std::move(rsv));
+  return;
 }
 
 void
