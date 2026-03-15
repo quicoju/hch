@@ -68,8 +68,6 @@ Dashboard::open_file()
 
   if (file_name.isEmpty()) return;
 
-  // TODO
-  // - rebuild the hotel object with the new db file
-  // - reload the reservations model (no need to reload the whole table)
-  // - emit signal to reload the table view
+  hotel = Hotel{file_name.toStdString()};
+  load_reservation_model();
 }
