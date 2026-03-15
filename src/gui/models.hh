@@ -15,6 +15,8 @@ public:
   QVariant data(const QModelIndex &, int role = Qt::DisplayRole) const override;
   QVariant headerData(int, Qt::Orientation, int role = Qt::DisplayRole) const override;
 
+  void load(Reservations&&);
+
 private:
   Reservations reservations;
 };

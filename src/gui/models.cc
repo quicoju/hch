@@ -64,3 +64,11 @@ ReservationModel::headerData(int section, Qt::Orientation orientation, int role)
 
   return QVariant();
 }
+
+void
+ReservationModel::load(Reservations&& other)
+{
+  beginResetModel();
+  reservations = std::move(other);
+  endResetModel();
+}
