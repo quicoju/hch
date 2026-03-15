@@ -7,11 +7,11 @@
 #include <QWidget>
 
 #include "dashboard.hh"
-#include "models.hh"
 
 Dashboard::Dashboard(QWidget* parent)
   : QMainWindow{parent}
   , hotel{Hotel{"db/unit_test.db"}}
+  , reservation_m{new ReservationModel{}}
 {
   auto logger = Log::logger();
   Log::debug(logger, "Setting up the hotel dashboard...");
@@ -36,7 +36,10 @@ Dashboard::Dashboard(QWidget* parent)
   auto *central_layout = new QVBoxLayout{central_widget};
 
   auto *main_label = new QLabel{"Reservation overview"};
-  auto *main_table = reservations_table();
+  auto *main_table = new QTableView{};
+
+  main_table->setModel(reservation_m);
+  main_table->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
 
   central_layout->addWidget(main_label);
   central_layout->addWidget(main_table);

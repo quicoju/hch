@@ -3,6 +3,8 @@
 #include <QTableView>
 #include <QMainWindow>
 
+#include "models.hh"
+
 #include "Hotel.hh"
 
 class Dashboard : public QMainWindow {
@@ -17,4 +19,5 @@ private:
 
   // properties
   Hotel hotel;
+  ReservationModel *reservation_m;
 };
